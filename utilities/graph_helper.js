@@ -631,6 +631,12 @@ function draw_child_nodes(origin_node) {
     });
 }
 
+
+function load_graph_example() {
+    var x = document.getElementById("graph_examples_selector").value;
+    document.getElementById("demo").innerHTML = "You selected: " + x;
+}
+
 function reset_graph() {
     // retrieve all nodes that are not part of the legend
     let nodes_to_remove = nodes.get({
