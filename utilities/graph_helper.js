@@ -633,8 +633,16 @@ function draw_child_nodes(origin_node) {
 
 
 function load_graph_example() {
-    var x = document.getElementById("graph_examples_selector").value;
-    document.getElementById("demo").innerHTML = "You selected: " + x;
+    var loaded_graph_example = document.getElementById("graph_examples_selector").value;
+
+    $.ajax({
+        async: false,
+        url: loaded_graph_example,
+        dataType: 'text',
+        success: function (data) {
+            console.log(data);
+        }
+    });
 }
 
 function reset_graph() {
