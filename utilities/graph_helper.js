@@ -37,6 +37,330 @@ var subset_nodes_config_obj = JSON.parse('{"oda": {"prefixes": "oda, odas"}}');
 
 const parser = new N3.Parser({ format: 'ttl' });
 
+
+function drawGraph() {
+
+
+    var container = document.getElementById('mynetwork');
+
+
+
+    // parsing and collecting nodes and edges from the python
+    nodes = new vis.DataSet([]);
+    edges = new vis.DataSet([]);
+
+    // adding nodes and edges to the graph
+    data = { nodes: nodes, edges: edges };
+
+
+
+    var options = {
+        autoResize: true,
+        nodes: {
+            scaling: {
+                min: 10,
+                max: 30
+            },
+            font: {
+                size: 14,
+                face: "Tahoma",
+            },
+        },
+        edges: {
+            smooth: false,
+            arrows: {
+                to: {
+                    enabled: true,
+                    scaleFactor: 1.2
+                }
+            },
+            width: 4
+
+        },
+        layout: {
+            hierarchical: {
+                enabled: false
+            }
+        },
+        interaction: {
+
+        },
+    };
+
+    network = new vis.Network(container, data, options);
+
+    parsed_graph = parser.parse(`@prefix ns1: <http://schema.org/> .
+@prefix ns3: <http://www.w3.org/ns/prov#> .
+@prefix ns4: <https://swissdatasciencecenter.github.io/renku-ontology#> .
+@prefix ns5: <http://purl.org/dc/terms/> .
+@prefix ns6: <http://www.w3.org/ns/oa#> .
+@prefix oda: <http://odahub.io/ontology#> .
+@prefix odas: <https://odahub.io/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<file:///home/gabriele/Workspace/renku-aqs/renku-aqs-test-case/0f6615bc-62ef-11ec-bfd9-c71647c8f78e> a oda:Run ;
+oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+oda:isUsing odas:AQModuleSimbadClass ;
+ns5:title "query_object_0f6615bc-62ef-11ec-bfd9-c71647c8f78e" ;
+ns6:hasTarget <file:///activities/776a8ec01e594a369d8d6e3219a45d3e> .
+
+<file:///home/gabriele/Workspace/renku-aqs/renku-aqs-test-case/0f6615bd-62ef-11ec-bfd9-c71647c8f78e> a oda:Run ;
+oda:isRequestingAstroRegion odas:AstroRegionbdba881e38a75f02bfbe5e1e36242cade6fe8487b191365f6904bc420d54533b ;
+oda:isUsing odas:AQModuleSDSSClass ;
+ns5:title "query_region_0f6615bd-62ef-11ec-bfd9-c71647c8f78e" ;
+ns6:hasTarget <file:///activities/776a8ec01e594a369d8d6e3219a45d3e> .
+
+<file:///home/gabriele/Workspace/renku-aqs/renku-aqs-test-case/0f6615be-62ef-11ec-bfd9-c71647c8f78e> a oda:Run ;
+oda:isRequestingAstroImage odas:AstroImage18f20077402d3dcb0808204f4ef4408e510c295074460c6f5e77ae303c51762e ;
+oda:isUsing odas:AQModuleSkyViewClass ;
+ns5:title "get_images_0f6615be-62ef-11ec-bfd9-c71647c8f78e" ;
+ns6:hasTarget <file:///activities/776a8ec01e594a369d8d6e3219a45d3e> .
+
+<file:///activities/776a8ec01e594a369d8d6e3219a45d3e/association> ns3:hadPlan <file:///plans/7b971b36549e49dd84278c1b0c252bac> .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac> a ns1:Action ;
+ns4:command "papermill" ;
+ns4:hasInputs <file:///plans/7b971b36549e49dd84278c1b0c252bac/inputs/1> ;
+ns4:hasOutputs <file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/2>,
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/27209215053a4fb89da46105aad6438e>,
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/8055ab0c37bf4ba0ad758b4e622c1fa4>,
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/a5f49232eb624c2da03ffdf07b06e9b3>,
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/da9249f2d55e4eb78e9428357fc51cc5> .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/inputs/1> a ns4:CommandInput ;
+ns1:defaultValue "final-an.ipynb" ;
+ns4:position 1 .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/2> a ns4:CommandOutput ;
+ns1:defaultValue "out.ipynb" ;
+ns4:position 2 .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/27209215053a4fb89da46105aad6438e> a ns4:CommandOutput ;
+ns1:defaultValue "figs/figure_spectrum.png" .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/8055ab0c37bf4ba0ad758b4e622c1fa4> a ns4:CommandOutput ;
+ns1:defaultValue "figs/figure_sky_model.png" .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/a5f49232eb624c2da03ffdf07b06e9b3> a ns4:CommandOutput ;
+ns1:defaultValue "figs/figure_time.png" .
+
+<file:///plans/7b971b36549e49dd84278c1b0c252bac/outputs/da9249f2d55e4eb78e9428357fc51cc5> a ns4:CommandOutput ;
+ns1:defaultValue "figs/figure_sky.png" .
+
+odas:AQModuleSDSSClass a oda:AstroqueryModule ;
+odas:AQModule "SDSSClass" .
+
+odas:AQModuleSimbadClass a oda:AstroqueryModule ;
+odas:AQModule "SimbadClass" .
+
+odas:AQModuleSkyViewClass a oda:AstroqueryModule ;
+odas:AQModule "SkyViewClass" .
+
+odas:Anglee8a905234095f81070077b05a31a4fc29e87eaabbbc902b8d16eebfc48c375dd a oda:Angle ;
+ns5:title "3arcmin" .
+
+odas:AstroImage18f20077402d3dcb0808204f4ef4408e510c295074460c6f5e77ae303c51762e a oda:AstrophysicalImage ;
+oda:isUsingCoordinates odas:Coordinatesfcc7c6ac1b62f84948cd4a19b2e4fa76033eec52f021777e32e8fc5e4a73c3e6 ;
+oda:isUsingPixels odas:Pixels11eb5a5a0c0a63e5035e37fdf24bb94b469b8c25c5300d289358564f2617542a ;
+oda:isUsingPosition odas:Position3380a95cd9c4ef95c9b99bd7f93ee5968e61e4e2b1cf7d99cd83027654314331 ;
+ns5:title "11 04 27.3139,+38 12 31.798J2000_360,360" .
+
+odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
+odas:AstroObject "Mrk 421" .
+
+odas:AstroRegionbdba881e38a75f02bfbe5e1e36242cade6fe8487b191365f6904bc420d54533b a oda:AstrophysicalRegion ;
+oda:isUsingRadius odas:Anglee8a905234095f81070077b05a31a4fc29e87eaabbbc902b8d16eebfc48c375dd ;
+oda:isUsingSkyCoordinates odas:SkyCoordinates953161d54a0f35a4afebd63349b69ee45f7efa1461ee1e5cf703bb545a63cd7d ;
+ns5:title "3arcmin 166.114 38.2088" .
+
+odas:Coordinatesfcc7c6ac1b62f84948cd4a19b2e4fa76033eec52f021777e32e8fc5e4a73c3e6 a oda:Coordinates ;
+ns5:title "J2000" .
+
+odas:Pixels11eb5a5a0c0a63e5035e37fdf24bb94b469b8c25c5300d289358564f2617542a a oda:Pixels ;
+ns5:title "360,360" .
+
+odas:Position3380a95cd9c4ef95c9b99bd7f93ee5968e61e4e2b1cf7d99cd83027654314331 a oda:Position ;
+ns5:title "11 04 27.3139,+38 12 31.798" .
+
+odas:SkyCoordinates953161d54a0f35a4afebd63349b69ee45f7efa1461ee1e5cf703bb545a63cd7d a oda:SkyCoordinates ;
+ns5:title "166.114 38.2088" .
+
+<file:///activities/776a8ec01e594a369d8d6e3219a45d3e> a ns3:Activity ;
+ns3:qualifiedAssociation <file:///activities/776a8ec01e594a369d8d6e3219a45d3e/association> ;
+ns3:startedAtTime "2021-12-22T07:19:01+01:00"^^xsd:dateTime .
+
+`,
+        function (error, triple, prefixes) {
+            // Always log errors
+            if (error) {
+                console.error(error);
+            }
+            if (triple) {
+                store.addQuad(triple.subject, triple.predicate, triple.object);
+            } else {
+                prefixes_graph = prefixes;
+            }
+
+        }
+    );
+
+    network.on("stabilized", function (e) {
+        stop_animation();
+    });
+
+    network.on("dragStart", function (e) {
+        stop_animation();
+        if (e.nodes[0])
+            fix_release_nodes(false, e.nodes[0]);
+    });
+
+    network.on("click", function (e) {
+        if (e.nodes[0]) {
+            if (nodes.get(e.nodes[0])['clickable']) {
+                let clicked_node = nodes.get(e.nodes[0]);
+                if (!('expanded' in clicked_node) || !clicked_node['expanded']) {
+                    nodes.update({
+                        id: clicked_node.id,
+                        expanded: true
+                    });
+                    // fix all the current nodes
+                    fix_release_nodes();
+                    let checkbox_reduction;
+                    apply_invisibility_new_nodes = false;
+                    if (clicked_node.hasOwnProperty("type_name")) {
+                        checkbox_reduction = document.getElementById('reduction_config_' + clicked_node.type_name);
+                    }
+                    apply_invisibility_new_nodes = true;
+                    (async () => {
+                        const bindingsStreamCall = await myEngine.queryQuads(
+                            format_query_clicked_node(clicked_node.id),
+                            {
+                                sources: [store]
+                            }
+                        );
+                        bindingsStreamCall.on('data', (binding) => {
+                            process_binding(binding, clicked_node, apply_invisibility_new_nodes);
+                        });
+                        bindingsStreamCall.on('end', () => {
+                            // enable/disable subsets of nodes selection from the graph
+                            for (let prefix_idx in prefixes_graph) {
+                                let checkbox_config = document.getElementById(prefix_idx + '_filter');
+                                if (checkbox_config !== null && !checkbox_config.checked) {
+                                    let values_input = checkbox_config.value.split(",");
+                                    for (let value_input_idx in values_input) {
+                                        let nodes_to_filter = nodes.get({
+                                            filter: function (item) {
+                                                return (item.prefix === prefixes_graph[values_input[value_input_idx].trim()]);
+                                            }
+                                        });
+                                        // nodes.remove(nodes_to_filter);
+                                        nodes_to_filter.forEach(node => {
+                                            nodes.update({ id: node.id, hidden: true, filtered_out: true });
+                                        });
+                                    }
+                                }
+                            }
+                            //
+                            // apply layout
+                            let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+                            toggle_layout(checked_radiobox);
+                            //
+                            // apply reductions
+                            if (checkbox_reduction !== undefined &&
+                                checkbox_reduction !== null &&
+                                clicked_node.type_name in graph_reductions_obj) {
+                                let reduction_subset = graph_reductions_obj[clicked_node.type_name];
+                                let predicates_to_absorb_list = reduction_subset["predicates_to_absorb"].split(",");
+                                let origin_node_list = nodes.get({
+                                    filter: function (item) {
+                                        return (item.id === clicked_node.id);
+                                    }
+                                });
+                                if (checkbox_reduction.checked) {
+                                    absorb_nodes(origin_node_list, predicates_to_absorb_list);
+                                }
+                            }
+                            //
+                            // show any hidden nodes
+                            const hidden_nodes_ids = nodes.get({
+                                filter: function (item) {
+                                    return (item.hasOwnProperty("hidden") && item.hidden === true && item.filtered_out === false);
+                                }
+                            });
+                            hidden_nodes_ids.forEach(node => {
+                                nodes.update({ id: node.id, hidden: false });
+                            });
+                            // remove edges that are not visible because one of the connected nodes has been removed
+                            remove_unused_edges();
+                        });
+                        bindingsStreamCall.on('error', (error) => {
+                            console.error(error);
+                        });
+                    })();
+                }
+                else {
+                    let connected_to_nodes = network.getConnectedNodes(clicked_node.id);
+                    let nodes_to_remove = [];
+                    let edges_to_remove = [];
+                    if (connected_to_nodes.length > 0) {
+                        for (let i in connected_to_nodes) {
+                            let connected_to_node = connected_to_nodes[i];
+                            connected_to_connected_to_node = network.getConnectedNodes(connected_to_node);
+                            if (connected_to_connected_to_node.length == 1) {
+                                nodes_to_remove.push(connected_to_node);
+                                edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+                            }
+                        }
+                    }
+
+                    let original_label = clicked_node.hasOwnProperty('original_label') ? clicked_node.original_label : clicked_node.label;
+                    nodes.update({
+                        id: clicked_node.id,
+                        label: original_label,
+                        child_nodes_list_content: [],
+                        expanded: false
+                    });
+
+                    edges.remove(edges_to_remove);
+                    nodes.remove(nodes_to_remove);
+                }
+            }
+        }
+    });
+
+    (async () => {
+        const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+            {
+                sources: [store]
+            }
+        );
+        bindingsStreamCall.on('data', (binding) => {
+            process_binding(binding);
+        });
+        bindingsStreamCall.on('end', () => {
+            let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+            toggle_layout(checked_radiobox);
+        });
+        bindingsStreamCall.on('error', (error) => {
+            console.error(error);
+        });
+    })();
+
+    var container_configure = document.getElementsByClassName("vis-configuration-wrapper");
+    if (container_configure && container_configure.length > 0) {
+        container_configure = container_configure[0];
+        container_configure.style = {};
+        container_configure.style.height = "300px";
+        container_configure.style.overflow = "scroll";
+    }
+
+    // legend
+    reset_legend();
+
+    return network;
+}
+
+
 let prefixes_graph = {};
 const stack_promises = [];
 const store = new N3.Store();
