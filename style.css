@@ -6,3 +6,10 @@
     position: relative;
     float: left;
 }
+
+h1 {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    color: rgb(49, 51, 63);
+    line-height: 1.2;
+}
