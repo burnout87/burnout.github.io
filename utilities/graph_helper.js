@@ -39,11 +39,7 @@ const parser = new N3.Parser({ format: 'ttl' });
 
 
 function drawGraph() {
-
-
     var container = document.getElementById('mynetwork');
-
-
 
     // parsing and collecting nodes and edges from the python
     nodes = new vis.DataSet([]);
@@ -51,8 +47,6 @@ function drawGraph() {
 
     // adding nodes and edges to the graph
     data = { nodes: nodes, edges: edges };
-
-
 
     var options = {
         autoResize: true,
@@ -88,6 +82,15 @@ function drawGraph() {
     };
 
     network = new vis.Network(container, data, options);
+
+    $.ajax({
+        async:false,
+        url: 'graph_data/graph.ttl',
+        dataType: 'text',
+        success: function(data) {
+            console.log(data);
+        }
+    });
 
     parsed_graph = parser.parse(`@prefix ns1: <http://schema.org/> .
 @prefix ns3: <http://www.w3.org/ns/prov#> .
