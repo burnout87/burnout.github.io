@@ -82,46 +82,7 @@ function drawGraph() {
 
     network = new vis.Network(container, data, options);
 
-    $.ajax({
-        async: true,
-        url: 'graph_data/graph.ttl',
-        dataType: 'text',
-        success: function (data) {
-            parsed_graph = parser.parse(data,
-                function (error, triple, prefixes) {
-                    // Always log errors
-                    if (error) {
-                        console.error(error);
-                    }
-                    if (triple) {
-                        store.addQuad(triple.subject, triple.predicate, triple.object);
-                    } else {
-                        prefixes_graph = prefixes;
-                        (async () => {
-                            const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
-                                {
-                                    sources: [store]
-                                }
-                            );
-                            bindingsStreamCall.on('data', (binding) => {
-                                process_binding(binding);
-                            });
-                            bindingsStreamCall.on('end', () => {
-                                let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-                                toggle_layout(checked_radiobox);
-                            });
-                            bindingsStreamCall.on('error', (error) => {
-                                console.error(error);
-                            });
-                        })();
-                    }
-
-                }
-            );
-        }
-    });
-
-
+    parse_and_query_graph_example('graph_data/graph.ttl');
 
     network.on("stabilized", function (e) {
         stop_animation();
@@ -259,6 +220,47 @@ function drawGraph() {
     reset_legend();
 
     return network;
+}
+
+function parse_and_query_graph_example(graph_examples_path) {
+    $.ajax({
+        async: true,
+        url: graph_examples_path,
+        dataType: 'text',
+        success: function (data) {
+            parsed_graph = parser.parse(data,
+                function (error, triple, prefixes) {
+                    // Always log errors
+                    if (error) {
+                        console.error(error);
+                    }
+                    if (triple) {
+                        store.addQuad(triple.subject, triple.predicate, triple.object);
+                    } else {
+                        prefixes_graph = prefixes;
+                        (async () => {
+                            const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+                                {
+                                    sources: [store]
+                                }
+                            );
+                            bindingsStreamCall.on('data', (binding) => {
+                                process_binding(binding);
+                            });
+                            bindingsStreamCall.on('end', () => {
+                                let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+                                toggle_layout(checked_radiobox);
+                            });
+                            bindingsStreamCall.on('error', (error) => {
+                                console.error(error);
+                            });
+                        })();
+                    }
+
+                }
+            );
+        }
+    });
 }
 
 
@@ -635,14 +637,7 @@ function draw_child_nodes(origin_node) {
 function load_graph_example() {
     var loaded_graph_example = document.getElementById("graph_examples_selector").value;
 
-    $.ajax({
-        async: false,
-        url: loaded_graph_example,
-        dataType: 'text',
-        success: function (data) {
-
-        }
-    });
+    parse_and_query_graph_example(loaded_graph_example);
 }
 
 function reset_graph() {
