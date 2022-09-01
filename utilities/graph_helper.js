@@ -266,7 +266,7 @@ function parse_and_query_graph_example(graph_examples_path) {
 
 let prefixes_graph = {};
 const stack_promises = [];
-const store = new N3.Store();
+var store = new N3.Store();
 const myEngine = new Comunica.QueryEngine();
 const query_initial_graph = `CONSTRUCT {
     ?action a <http://schema.org/Action> ;
