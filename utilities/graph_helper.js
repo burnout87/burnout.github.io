@@ -637,11 +637,21 @@ function draw_child_nodes(origin_node) {
 function load_graph_example() {
     var loaded_graph_example = document.getElementById("graph_examples_selector").value;
 
+    let nodes_to_remove = nodes.get({
+        filter: function (item) {
+            return (!item.hasOwnProperty("group") || !(item.group.startsWith("legend_")));
+        }
+    });
+
+    nodes.remove(nodes_to_remove);
+    edges.clear();
+
     parse_and_query_graph_example(loaded_graph_example);
+    // legend
+    reset_legend();
 }
 
 function reset_graph() {
-    // retrieve all nodes that are not part of the legend
     let nodes_to_remove = nodes.get({
         filter: function (item) {
             return (!item.hasOwnProperty("group") || !(item.group.startsWith("legend_")));
