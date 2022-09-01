@@ -636,31 +636,15 @@ function draw_child_nodes(origin_node) {
 
 function load_graph_example() {
     var loaded_graph_example = document.getElementById("graph_examples_selector").value;
-    // // TODO probably not necessary
-    // let nodes_to_remove = nodes.get({
-    //     filter: function (item) {
-    //         return (!item.hasOwnProperty("group") || !(item.group.startsWith("legend_")));
-    //     }
-    // });
-
-    // nodes.remove(nodes_to_remove);
     nodes.clear();
     edges.clear();
     store = new N3.Store();
 
     parse_and_query_graph_example(loaded_graph_example);
-    // legend
     reset_legend();
 }
 
 function reset_graph() {
-    // let nodes_to_remove = nodes.get({
-    //     filter: function (item) {
-    //         return (!item.hasOwnProperty("group") || !(item.group.startsWith("legend_")));
-    //     }
-    // });
-
-    // nodes.remove(nodes_to_remove);
     nodes.clear();
     edges.clear();
 
