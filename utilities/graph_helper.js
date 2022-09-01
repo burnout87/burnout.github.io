@@ -636,7 +636,7 @@ function draw_child_nodes(origin_node) {
 
 function load_graph_example() {
     var loaded_graph_example = document.getElementById("graph_examples_selector").value;
-
+    // TODO probably not necessary
     let nodes_to_remove = nodes.get({
         filter: function (item) {
             return (!item.hasOwnProperty("group") || !(item.group.startsWith("legend_")));
@@ -645,6 +645,7 @@ function load_graph_example() {
 
     nodes.remove(nodes_to_remove);
     edges.clear();
+    store.clear();
 
     parse_and_query_graph_example(loaded_graph_example);
     // legend
