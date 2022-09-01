@@ -83,7 +83,7 @@ function drawGraph() {
     network = new vis.Network(container, data, options);
 
     $.ajax({
-        async: false,
+        async: true,
         url: 'graph_data/graph.ttl',
         dataType: 'text',
         success: function (data) {
@@ -103,6 +103,24 @@ function drawGraph() {
             );
         }
     });
+
+    (async () => {
+        const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+            {
+                sources: [store]
+            }
+        );
+        bindingsStreamCall.on('data', (binding) => {
+            process_binding(binding);
+        });
+        bindingsStreamCall.on('end', () => {
+            let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+            toggle_layout(checked_radiobox);
+        });
+        bindingsStreamCall.on('error', (error) => {
+            console.error(error);
+        });
+    })();
 
 
     network.on("stabilized", function (e) {
@@ -228,24 +246,6 @@ function drawGraph() {
             }
         }
     });
-
-    (async () => {
-        const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
-            {
-                sources: [store]
-            }
-        );
-        bindingsStreamCall.on('data', (binding) => {
-            process_binding(binding);
-        });
-        bindingsStreamCall.on('end', () => {
-            let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-            toggle_layout(checked_radiobox);
-        });
-        bindingsStreamCall.on('error', (error) => {
-            console.error(error);
-        });
-    })();
 
     var container_configure = document.getElementsByClassName("vis-configuration-wrapper");
     if (container_configure && container_configure.length > 0) {
@@ -640,7 +640,7 @@ function load_graph_example() {
         url: loaded_graph_example,
         dataType: 'text',
         success: function (data) {
-            console.log(data);
+
         }
     });
 }
