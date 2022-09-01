@@ -645,7 +645,7 @@ function load_graph_example() {
 
     nodes.remove(nodes_to_remove);
     edges.clear();
-    store.clear();
+    store = new N3.Store();
 
     parse_and_query_graph_example(loaded_graph_example);
     // legend
