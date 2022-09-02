@@ -59,32 +59,46 @@ var options, data;
 
 var nodes_graph_config_obj = {};
 var edges_graph_config_obj = {};
-var graph_reductions_obj = JSON.parse('{"Action": {"name": "Inputs and outputs", "predicates_to_absorb": "hasOutputs,hasInputs"}, "AstrophysicalImage": {"name": "AstrophysicalImage parameters", "predicates_to_absorb": "isUsingPosition,isUsingCoordinates,isUsingPixels,isUsingRadius"}, "AstrophysicalRegion": {"name": "AstrophysicalRegion parameters", "predicates_to_absorb": "isUsingRadius,isUsingSkyCoordinates"}}');
-var subset_nodes_config_obj = JSON.parse('{"oda": {"prefixes": "oda, odas"}}');
+var graph_reductions_obj = {};
+var subset_nodes_config_obj = {};
 
 const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
 
     // load graphican configs
-    var graph_config_paths = ["graph_data/graph_config.json", "graph_data/graph_config_1.json"];
-    var requests = graph_config_paths.map(function (path) {
+    var graph_json_files_paths = [
+        "graph_data/graph_graphical_config/graph_config.json",
+        "graph_data/graph_graphical_config/graph_config_1.json",
+        "graph_data/graph_nodes_subset/graph_nodes_subset_config.json",
+        "graph_data/graph_reduction_config/graph_reduction_config.json"
+    ];
+    var requests = graph_json_files_paths.map(function (path) {
         return $.getJSON(path);
     });
 
     $.when.apply($, requests).then(function () {
         for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i][0].hasOwnProperty("Nodes")) {
-                Object.values(arguments[i][0]["Nodes"]).forEach(val => {
-                    val['config_file'] = graph_config_paths[i];
-                });
-                nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
+            let json_subfolder = graph_json_files_paths[i].split("/")[1];
+            if (json_subfolder === "graph_graphical_config") {
+                if (arguments[i][0].hasOwnProperty("Nodes")) {
+                    Object.values(arguments[i][0]["Nodes"]).forEach(val => {
+                        val['config_file'] = graph_json_files_paths[i];
+                    });
+                    nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
+                }
+                if (arguments[i][0].hasOwnProperty("Edges")) {
+                    Object.values(arguments[i][0]["Edges"]).forEach(val => {
+                        val['config_file'] = graph_json_files_paths[i];
+                    });
+                    edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
+                }
             }
-            if (arguments[i][0].hasOwnProperty("Edges")) {
-                Object.values(arguments[i][0]["Edges"]).forEach(val => {
-                    val['config_file'] = graph_config_paths[i];
-                });
-                edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
+            if (json_subfolder === "graph_nodes_subset") {
+                subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
+            }
+            if (json_subfolder === "graph_reduction_config") {
+                graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };
             }
         }
         draw_graph();
