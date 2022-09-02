@@ -109,6 +109,21 @@ function load_graph() {
             }
             if (json_subfolder === "graph_nodes_subset") {
                 subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
+                for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
+                    let div_checkbox = $('<div>').css("margin", '5px');
+                    let label_checkbox = $('<label>').text(value['description']);
+                    let input_checkbox = $('<input>')
+                        .attr("id", key + "_filter")
+                        .attr("value", value['prefixes'])
+                        .attr("type", "checkbox")
+                        .attr("checked", "")
+                        .change(function () {
+                            enable_filter($(this)[0]);
+                        });
+                    label_checkbox.prepend(input_checkbox);
+                    div_checkbox.append(label_checkbox);
+                    document.getElementById('subset_node_checkboxes').append(div_checkbox[0]);
+                }
             }
             if (json_subfolder === "graph_reduction_config") {
                 graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };

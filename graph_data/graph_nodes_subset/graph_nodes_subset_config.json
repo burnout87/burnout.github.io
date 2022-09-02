@@ -1,5 +1,6 @@
 {
   "oda": {
-    "prefixes": "oda, odas"
+    "prefixes": "oda, odas",
+    "description": "oda astroquery-related nodes"
   }
 }
