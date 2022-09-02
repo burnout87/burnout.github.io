@@ -97,8 +97,13 @@ function load_graph() {
                 let label_checkbox = $('<label>').text(graph_json_files_paths[i]);
                 let input_checkbox = $('<input>')
                     .attr("id", "config_" + graph_json_files_paths[i])
-                    .prop("type", "checkbox");
-                div_checkbox.append(input_checkbox);
+                    .attr("value", graph_json_files_paths[i])
+                    .attr("type", "checkbox")
+                    .attr("checked", "")
+                    .change( function() {
+                        toggle_graph_config($(this)[0]);
+                    });
+                label_checkbox.prepend(input_checkbox);
                 div_checkbox.append(label_checkbox);
                 document.getElementById('configs_checkboxes').append(div_checkbox[0]);
             }

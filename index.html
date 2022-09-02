@@ -1,8 +1,7 @@
-<html>
+<!DOCTYPE html>
 
 <head>
 
-    <h1>ODA Graph Export Quick-Look</h1>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.js" type="application/javascript"></script>
@@ -14,6 +13,7 @@
 
 
 <body>
+    <h1>ODA Graph Export Quick-Look</h1>
     <div style="margin: 5px 0px 15px 5px">
         <h3 style="margin: 15px 0px 10px 5px;">Which graph example would you like to explore?</h3>
         <select name="graph_examples" id="graph_examples_selector" onchange="load_graph_example()">
@@ -67,18 +67,9 @@
                     parameters</label>
             </div>
         </div>
-        <div id="configs_checkboxes" style="border-right: 1px double; padding: 5px; background-color: #F7F7F7; margin: 5px 0px 15px 5px">
+        <div id="configs_checkboxes"
+            style="border-right: 1px double; padding: 5px; background-color: #F7F7F7; margin: 5px 0px 15px 5px">
             <h3 style="margin: 15px 0px 10px 5px;">Enable/disable graphical configurations for the graph</h3>
-            <div style="margin: 5px">
-                <label><input checked="" id="config_graph_data/graph_graphical_config/graph_config.json" onchange="toggle_graph_config(this)"
-                        type="checkbox" value="graph_data/graph_graphical_config/graph_config.json" />
-                    graph_data/graph_config.json</label>
-            </div>
-            <div style="margin: 5px">
-                <label><input checked="" id="config_graph_data/graph_graphical_config/graph_config_1.json" onchange="toggle_graph_config(this)"
-                        type="checkbox" value="graph_data/graph_graphical_config/graph_config_1.json" />
-                    graph_data/graph_config_1.json</label>
-            </div>
         </div>
     </div>
     <div style="display: flex;">
