@@ -93,6 +93,14 @@ function load_graph() {
                     });
                     edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
                 }
+                let div_checkbox = $('<div>').css("margin", '5px');
+                let label_checkbox = $('<label>').text(graph_json_files_paths[i]);
+                let input_checkbox = $('<input>')
+                    .attr("id", "config_" + graph_json_files_paths[i])
+                    .prop("type", "checkbox");
+                div_checkbox.append(input_checkbox);
+                div_checkbox.append(label_checkbox);
+                document.getElementById('configs_checkboxes').append(div_checkbox[0]);
             }
             if (json_subfolder === "graph_nodes_subset") {
                 subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
