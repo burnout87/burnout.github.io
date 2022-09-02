@@ -30,14 +30,68 @@ const graph_edge_config_obj_default = {
     }
 }
 
+let prefixes_graph = {};
+const stack_promises = [];
+var store = new N3.Store();
+const myEngine = new Comunica.QueryEngine();
+const query_initial_graph = `CONSTRUCT {
+    ?action a <http://schema.org/Action> ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
+
+    ?activity a ?activityType ;
+        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+        <http://www.w3.org/ns/prov#hadPlan> ?action .
+    }
+    WHERE { 
+        ?action a <http://schema.org/Action> ;
+            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
+             
+        ?activity a ?activityType ;
+            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+            <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?action .
+    }`
+
+var edges;
+var nodes;
+var network;
+var container;
+var options, data;
+
+var nodes_graph_config_obj = {};
+var edges_graph_config_obj = {};
 var graph_reductions_obj = JSON.parse('{"Action": {"name": "Inputs and outputs", "predicates_to_absorb": "hasOutputs,hasInputs"}, "AstrophysicalImage": {"name": "AstrophysicalImage parameters", "predicates_to_absorb": "isUsingPosition,isUsingCoordinates,isUsingPixels,isUsingRadius"}, "AstrophysicalRegion": {"name": "AstrophysicalRegion parameters", "predicates_to_absorb": "isUsingRadius,isUsingSkyCoordinates"}}');
-var nodes_graph_config_obj = JSON.parse('{"AstroqueryModule": {"shape": "box", "color": "#00CC00", "style": "filled", "value": 35, "level": 0, "displayed_information": "literals", "displayed_literals_format": "AQModule:no", "config_file": "graph_data/graph_config.json"}, "AstrophysicalObject": {"shape": "box", "color": "#6262be", "style": "filled", "value": 35, "level": 1, "displayed_information": "literals", "displayed_literals_format": "AstroObject:no", "config_file": "graph_data/graph_config.json"}, "AstrophysicalRegion": {"shape": "box", "color": "#6262bf", "style": "filled", "value": 35, "level": 1, "displayed_information": "title", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "AstrophysicalImage": {"shape": "box", "color": "#027F45", "style": "filled", "value": 35, "level": 1, "displayed_information": "title", "config_file": "graph_data/graph_config.json"}, "CommandParameter": {"shape": "box", "color": "#6262be", "style": "filled", "value": 15, "level": 3, "config_file": "graph_data/graph_config.json"}, "CommandOutput": {"shape": "box", "color": "#FFFF00", "style": "filled", "value": 25, "level": 5, "displayed_type_name": "Output", "displayed_information": "literals", "displayed_literals_format": "defaultValue:no", "config_file": "graph_data/graph_config.json"}, "CommandOutputNotebook": {"shape": "box", "color": "#DBA3BC", "style": "filled", "value": 25, "level": 5, "displayed_type_name": "Output notebook", "config_file": "graph_data/graph_config.json"}, "CommandOutputImage": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output image", "config_file": "graph_data/graph_config.json"}, "CommandOutputFitsFile": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output fits file", "config_file": "graph_data/graph_config.json"}, "CommandOutputEcsvFile": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output ecsv file", "config_file": "graph_data/graph_config.json"}, "CommandInput": {"shape": "box", "color": "#DBA3BC", "style": "filled", "value": 20, "level": 3, "displayed_type_name": "Input", "displayed_information": "literals", "displayed_literals_format": "defaultValue:no", "config_file": "graph_data/graph_config.json"}, "Action": {"shape": "box", "color": "#D5C15D", "style": "filled", "value": 35, "level": 4, "displayed_type_name": "Plan", "displayed_information": "title", "displayed_literals_format": "command:no", "config_file": "graph_data/graph_config.json"}, "Angle": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "SkyCoordinates": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "Coordinates": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "Position": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "Pixels": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_data/graph_config.json"}, "Run": {"shape": "box", "color": "#adb6ce", "style": "filled", "value": 35, "level": 0, "font": {"size": 24, "face": "courier"}, "displayed_type_name": "Query", "displayed_information": "literals", "displayed_literals_format": "title:no", "literals_keyword_to_substitute": "title:get_images,query_object,query_region", "config_file": "graph_data/graph_config_1.json"}, "Activity": {"shape": "box", "color": "#00FC10", "style": "filled", "value": 35, "level": 0, "config_file": "graph_data/graph_config_1.json"}}');
-var edges_graph_config_obj = JSON.parse('{"hasTarget": {"displayed_type_name": "query", "config_file": "graph_data/graph_config_1.json"}}');
 var subset_nodes_config_obj = JSON.parse('{"oda": {"prefixes": "oda, odas"}}');
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-function drawGraph() {
+function load_graph() {
+
+    // load graphican configs
+    var graph_config_paths = ["graph_data/graph_config.json", "graph_data/graph_config_1.json"];
+    var requests = graph_config_paths.map(function (path) {
+        return $.getJSON(path);
+    });
+
+    $.when.apply($, requests).then(function () {
+        for (var i = 0; i < arguments.length; i++) {
+            if (arguments[i][0].hasOwnProperty("Nodes")) {
+                Object.values(arguments[i][0]["Nodes"]).forEach(val => {
+                    val['config_file'] = graph_config_paths[i];
+                });
+                nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
+            }
+            if (arguments[i][0].hasOwnProperty("Edges")) {
+                Object.values(arguments[i][0]["Edges"]).forEach(val => {
+                    val['config_file'] = graph_config_paths[i];
+                });
+                edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
+            }
+        }
+        draw_graph();
+    });
+}
+
+function draw_graph() {
     var container = document.getElementById('mynetwork');
 
     // parsing and collecting nodes and edges from the python
@@ -262,34 +316,6 @@ function parse_and_query_graph_example(graph_examples_path) {
         }
     });
 }
-
-
-let prefixes_graph = {};
-const stack_promises = [];
-var store = new N3.Store();
-const myEngine = new Comunica.QueryEngine();
-const query_initial_graph = `CONSTRUCT {
-    ?action a <http://schema.org/Action> ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
-
-    ?activity a ?activityType ;
-        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <http://www.w3.org/ns/prov#hadPlan> ?action .
-    }
-    WHERE { 
-        ?action a <http://schema.org/Action> ;
-            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
-             
-        ?activity a ?activityType ;
-            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-            <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?action .
-    }`
-
-var edges;
-var nodes;
-var network;
-var container;
-var options, data;
 
 function fit_graph() {
     network.fit();
@@ -1059,5 +1085,5 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
 }
 
 window.onload = function () {
-    drawGraph();
+    load_graph();
 };
