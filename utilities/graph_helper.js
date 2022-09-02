@@ -100,7 +100,7 @@ function load_graph() {
                     .attr("value", graph_json_files_paths[i])
                     .attr("type", "checkbox")
                     .attr("checked", "")
-                    .change( function() {
+                    .change(function () {
                         toggle_graph_config($(this)[0]);
                     });
                 label_checkbox.prepend(input_checkbox);
@@ -112,6 +112,21 @@ function load_graph() {
             }
             if (json_subfolder === "graph_reduction_config") {
                 graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };
+                for (const [key, value] of Object.entries(graph_reductions_obj)) {
+                    let div_checkbox = $('<div>').css("margin", '5px');
+                    let label_checkbox = $('<label>').text(value['name']);
+                    let input_checkbox = $('<input>')
+                        .attr("id", "reduction_config_" + key)
+                        .attr("value", key)
+                        .attr("type", "checkbox")
+                        .attr("unchecked", "")
+                        .change(function () {
+                            apply_reduction_change($(this)[0]);
+                        });
+                    label_checkbox.prepend(input_checkbox);
+                    div_checkbox.append(label_checkbox);
+                    document.getElementById('reduction_config_checkboxes').append(div_checkbox[0]);
+                }
             }
         }
         draw_graph();
