@@ -48,7 +48,7 @@ const query_initial_graph = `CONSTRUCT {
              
         ?activity a ?activityType ;
             <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-            <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?action .
+            <http://www.w3.org/ns/prov#hadPlan> ?action .
     }`
 
 var edges;
