@@ -193,7 +193,7 @@ function draw_graph() {
 
     network = new vis.Network(container, data, options);
 
-    parse_and_query_graph_example('graph_data/graph.ttl');
+    parse_and_query_graph_example('graph_data/graph_two_commands.ttl');
 
     network.on("stabilized", function (e) {
         stop_animation();
