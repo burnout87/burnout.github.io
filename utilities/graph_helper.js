@@ -777,25 +777,6 @@ function query_type_node(node_id) {
 
 function format_query_clicked_node(clicked_node_id) {
 
-    let filter_s_type = '';
-    let filter_s = '';
-    let filter_o_type = '';
-    let filter_o = '';
-    let filter_p_literal = '';
-    /*                for (let prefix_idx in prefixes_graph) {
-                        let checkbox_config = document.getElementById(prefix_idx + '_filter');
-                        if (checkbox_config !== null && !checkbox_config.checked) {
-                            let values_input = checkbox_config.value.split(",");
-                            for (let value_input_idx in values_input) {
-                                filter_s_type += `FILTER ( ! STRSTARTS(STR(?s_type), "${prefixes_graph[values_input[value_input_idx].trim()]}") ). `;
-                                filter_s += `FILTER ( ! STRSTARTS(STR(?s), "${prefixes_graph[values_input[value_input_idx].trim()]}") ). `;
-                                filter_o_type += `FILTER ( ! STRSTARTS(STR(?o_type), "${prefixes_graph[values_input[value_input_idx].trim()]}") ). `;
-                                filter_o += `FILTER ( ! STRSTARTS(STR(?o), "${prefixes_graph[values_input[value_input_idx].trim()]}") ). `;
-                                filter_p_literal += `FILTER ( ! STRSTARTS(STR(?p_literal), "${prefixes_graph[values_input[value_input_idx].trim()]}") ). `;
-                            }
-                        }
-                    }
-    */
     let query = `CONSTRUCT {
             ?s ?p <${clicked_node_id}> ;
                 a ?s_type ;
@@ -818,28 +799,21 @@ function format_query_clicked_node(clicked_node_id) {
                 ?s a ?s_type .
                 ?s ?p_literal ?s_literal .
                 FILTER isLiteral(?s_literal) .
-                ${filter_s_type}
-                ${filter_p_literal}
                 
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
                 ?s ?p <${clicked_node_id}> .
                 ?s a ?s_type .
-                ${filter_s_type}
                 
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
                 ?s ?p <${clicked_node_id}> .
-                ${filter_s}
                 
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
@@ -847,28 +821,21 @@ function format_query_clicked_node(clicked_node_id) {
                 ?o a ?o_type .
                 ?o ?p_literal ?o_literal .
                 FILTER isLiteral(?o_literal) .
-                ${filter_o_type}
-                ${filter_p_literal}
             
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .                    
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .                    
             }
             UNION
             {
                 <${clicked_node_id}> ?p ?o .
                 ?o a ?o_type
-                ${filter_o_type}
 
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
                 <${clicked_node_id}> ?p ?o .
-                ${filter_o}
                 
-                FILTER (?p != <http://www.w3.org/ns/prov#qualifiedAssociation> && 
-                        ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
@@ -877,7 +844,7 @@ function format_query_clicked_node(clicked_node_id) {
                      
                 ?activity a ?activityType ;
                     <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-                    <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?action .
+                    <http://www.w3.org/ns/prov#hadPlan> ?action .
                 
                 FILTER (?activity = <${clicked_node_id}> ||
                         ?action = <${clicked_node_id}> ) .
