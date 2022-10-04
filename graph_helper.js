@@ -64,12 +64,10 @@ var subset_nodes_config_obj = {};
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-function load_graph(nodes_graph_config_obj, edges_graph_config_obj,
-    subset_nodes_config_obj, graph_reductions_obj) {
+function load_graph() {
 
     var graph_json_files_paths = [];
-    if ((nodes_graph_config_obj === undefined || nodes_graph_config_obj === null) &&
-    edges_graph_config_obj === undefined || edges_graph_config_obj === null)
+    if ( $.isEmptyObject(nodes_graph_config_obj) && $.isEmptyObject(edges_graph_config_obj) )
         graph_json_files_paths.push(
             "graph_data/graph_graphical_config/graph_config.json",
             "graph_data/graph_graphical_config/graph_config_1.json");
