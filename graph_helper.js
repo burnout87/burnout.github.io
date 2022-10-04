@@ -64,11 +64,12 @@ var subset_nodes_config_obj = {};
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-function load_graph() {
+function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes_config_obj, graph_reductions_obj) {
 
     // load various configs, default if not provided
     var graph_json_files_paths = [];
-    if ($.isEmptyObject(nodes_graph_config_obj) && $.isEmptyObject(edges_graph_config_obj) )
+    if ((nodes_graph_config_obj === null || nodes_graph_config_obj === undefined || $.isEmptyObject(nodes_graph_config_obj)) &&
+        (edges_graph_config_obj === null || edges_graph_config_obj === undefined || $.isEmptyObject(edges_graph_config_obj)))
         graph_json_files_paths.push(
             "graph_data/graph_graphical_config/graph_config.json",
             "graph_data/graph_graphical_config/graph_config_1.json");
@@ -378,7 +379,7 @@ function parse_and_query_graph_example(graph_examples_path) {
                                 });
                             })();
                         }
-    
+
                     }
                 );
             }
