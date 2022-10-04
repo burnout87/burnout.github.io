@@ -169,38 +169,39 @@ function draw_graph() {
     // adding nodes and edges to the graph
     data = { nodes: nodes, edges: edges };
 
-    var options = {
-        autoResize: true,
-        nodes: {
-            scaling: {
-                min: 10,
-                max: 30
+    if (options === null || options === undefined || $.isEmptyObject(options))
+        options = {
+            autoResize: true,
+            nodes: {
+                scaling: {
+                    min: 10,
+                    max: 30
+                },
+                font: {
+                    size: 14,
+                    face: "Tahoma",
+                },
             },
-            font: {
-                size: 14,
-                face: "Tahoma",
+            edges: {
+                smooth: false,
+                arrows: {
+                    to: {
+                        enabled: true,
+                        scaleFactor: 1.2
+                    }
+                },
+                width: 4
+
             },
-        },
-        edges: {
-            smooth: false,
-            arrows: {
-                to: {
-                    enabled: true,
-                    scaleFactor: 1.2
+            layout: {
+                hierarchical: {
+                    enabled: false
                 }
             },
-            width: 4
+            interaction: {
 
-        },
-        layout: {
-            hierarchical: {
-                enabled: false
-            }
-        },
-        interaction: {
-
-        },
-    };
+            },
+        };
 
     network = new vis.Network(container, data, options);
 
