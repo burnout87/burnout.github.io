@@ -1152,6 +1152,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
     }
 }
 
-window.onload = function () {
-    load_graph();
-};
+// window.onload = function () {
+//     load_graph();
+// };
