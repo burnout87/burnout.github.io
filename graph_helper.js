@@ -67,15 +67,15 @@ const parser = new N3.Parser({ format: 'ttl' });
 function load_graph() {
 
     var graph_json_files_paths = [];
-    if ( $.isEmptyObject(nodes_graph_config_obj) && $.isEmptyObject(edges_graph_config_obj) )
+    if ($.isEmptyObject(nodes_graph_config_obj) && $.isEmptyObject(edges_graph_config_obj) )
         graph_json_files_paths.push(
             "graph_data/graph_graphical_config/graph_config.json",
             "graph_data/graph_graphical_config/graph_config_1.json");
 
-    if (subset_nodes_config_obj === undefined || subset_nodes_config_obj === null)
+    if ($.isEmptyObject(subset_nodes_config_obj))
         graph_json_files_paths.push("graph_data/graph_nodes_subset/graph_nodes_subset_config.json");
 
-    if (graph_reductions_obj === undefined || graph_reductions_obj === null)
+    if ($.isEmptyObject(graph_reductions_obj))
         graph_json_files_paths.push("graph_data/graph_reduction_config/graph_reduction_config.json");
 
     // load graphican configs
