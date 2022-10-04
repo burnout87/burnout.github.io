@@ -66,6 +66,7 @@ const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
 
+    // load various configs, default if not provided
     var graph_json_files_paths = [];
     if ($.isEmptyObject(nodes_graph_config_obj) && $.isEmptyObject(edges_graph_config_obj) )
         graph_json_files_paths.push(
@@ -78,13 +79,6 @@ function load_graph() {
     if ($.isEmptyObject(graph_reductions_obj))
         graph_json_files_paths.push("graph_data/graph_reduction_config/graph_reduction_config.json");
 
-    // load graphican configs
-    // var graph_json_files_paths = [
-    //     "graph_data/graph_graphical_config/graph_config.json",
-    //     "graph_data/graph_graphical_config/graph_config_1.json",
-    //     "graph_data/graph_nodes_subset/graph_nodes_subset_config.json",
-    //     "graph_data/graph_reduction_config/graph_reduction_config.json"
-    // ];
     if (graph_json_files_paths.length > 0) {
         var requests = graph_json_files_paths.map(function (path) {
             return $.getJSON(path);
@@ -159,6 +153,8 @@ function load_graph() {
             }
             draw_graph();
         });
+    } else {
+        draw_graph();
     }
 
 
