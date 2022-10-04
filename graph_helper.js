@@ -64,88 +64,106 @@ var subset_nodes_config_obj = {};
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-function load_graph() {
+function load_graph(nodes_graph_config_obj, edges_graph_config_obj,
+    subset_nodes_config_obj, graph_reductions_obj) {
+
+    var graph_json_files_paths = [];
+    if ((nodes_graph_config_obj === undefined || nodes_graph_config_obj === null) &&
+    edges_graph_config_obj === undefined || edges_graph_config_obj === null)
+        graph_json_files_paths.push(
+            "graph_data/graph_graphical_config/graph_config.json",
+            "graph_data/graph_graphical_config/graph_config_1.json");
+
+    if (subset_nodes_config_obj === undefined || subset_nodes_config_obj === null)
+        graph_json_files_paths.push("graph_data/graph_nodes_subset/graph_nodes_subset_config.json");
+
+    if (graph_reductions_obj === undefined || graph_reductions_obj === null)
+        graph_json_files_paths.push("graph_data/graph_reduction_config/graph_reduction_config.json");
 
     // load graphican configs
-    var graph_json_files_paths = [
-        "graph_data/graph_graphical_config/graph_config.json",
-        "graph_data/graph_graphical_config/graph_config_1.json",
-        "graph_data/graph_nodes_subset/graph_nodes_subset_config.json",
-        "graph_data/graph_reduction_config/graph_reduction_config.json"
-    ];
-    var requests = graph_json_files_paths.map(function (path) {
-        return $.getJSON(path);
-    });
+    // var graph_json_files_paths = [
+    //     "graph_data/graph_graphical_config/graph_config.json",
+    //     "graph_data/graph_graphical_config/graph_config_1.json",
+    //     "graph_data/graph_nodes_subset/graph_nodes_subset_config.json",
+    //     "graph_data/graph_reduction_config/graph_reduction_config.json"
+    // ];
+    if (graph_json_files_paths.length > 0) {
+        var requests = graph_json_files_paths.map(function (path) {
+            return $.getJSON(path);
+        });
 
-    $.when.apply($, requests).then(function () {
-        for (var i = 0; i < arguments.length; i++) {
-            let json_subfolder = graph_json_files_paths[i].split("/")[1];
-            if (json_subfolder === "graph_graphical_config") {
-                if (arguments[i][0].hasOwnProperty("Nodes")) {
-                    Object.values(arguments[i][0]["Nodes"]).forEach(val => {
-                        val['config_file'] = graph_json_files_paths[i];
-                    });
-                    nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
-                }
-                if (arguments[i][0].hasOwnProperty("Edges")) {
-                    Object.values(arguments[i][0]["Edges"]).forEach(val => {
-                        val['config_file'] = graph_json_files_paths[i];
-                    });
-                    edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
-                }
-                let div_checkbox = $('<div>').css("margin", '5px');
-                let label_checkbox = $('<label>').text(graph_json_files_paths[i]);
-                let input_checkbox = $('<input>')
-                    .attr("id", "config_" + graph_json_files_paths[i])
-                    .attr("value", graph_json_files_paths[i])
-                    .attr("type", "checkbox")
-                    .attr("checked", "")
-                    .change(function () {
-                        toggle_graph_config($(this)[0]);
-                    });
-                label_checkbox.prepend(input_checkbox);
-                div_checkbox.append(label_checkbox);
-                document.getElementById('configs_checkboxes').append(div_checkbox[0]);
-            }
-            if (json_subfolder === "graph_nodes_subset") {
-                subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
-                for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
+        $.when.apply($, requests).then(function () {
+            for (var i = 0; i < arguments.length; i++) {
+                let json_subfolder = graph_json_files_paths[i].split("/")[1];
+                if (json_subfolder === "graph_graphical_config") {
+                    if (arguments[i][0].hasOwnProperty("Nodes")) {
+                        Object.values(arguments[i][0]["Nodes"]).forEach(val => {
+                            val['config_file'] = graph_json_files_paths[i];
+                        });
+                        nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
+                    }
+                    if (arguments[i][0].hasOwnProperty("Edges")) {
+                        Object.values(arguments[i][0]["Edges"]).forEach(val => {
+                            val['config_file'] = graph_json_files_paths[i];
+                        });
+                        edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
+                    }
                     let div_checkbox = $('<div>').css("margin", '5px');
-                    let label_checkbox = $('<label>').text(value['description']);
+                    let label_checkbox = $('<label>').text(graph_json_files_paths[i]);
                     let input_checkbox = $('<input>')
-                        .attr("id", key + "_filter")
-                        .attr("value", value['prefixes'])
+                        .attr("id", "config_" + graph_json_files_paths[i])
+                        .attr("value", graph_json_files_paths[i])
                         .attr("type", "checkbox")
                         .attr("checked", "")
                         .change(function () {
-                            enable_filter($(this)[0]);
+                            toggle_graph_config($(this)[0]);
                         });
                     label_checkbox.prepend(input_checkbox);
                     div_checkbox.append(label_checkbox);
-                    document.getElementById('subset_node_checkboxes').append(div_checkbox[0]);
+                    document.getElementById('configs_checkboxes').append(div_checkbox[0]);
+                }
+                if (json_subfolder === "graph_nodes_subset") {
+                    subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
+                    for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
+                        let div_checkbox = $('<div>').css("margin", '5px');
+                        let label_checkbox = $('<label>').text(value['description']);
+                        let input_checkbox = $('<input>')
+                            .attr("id", key + "_filter")
+                            .attr("value", value['prefixes'])
+                            .attr("type", "checkbox")
+                            .attr("checked", "")
+                            .change(function () {
+                                enable_filter($(this)[0]);
+                            });
+                        label_checkbox.prepend(input_checkbox);
+                        div_checkbox.append(label_checkbox);
+                        document.getElementById('subset_node_checkboxes').append(div_checkbox[0]);
+                    }
+                }
+                if (json_subfolder === "graph_reduction_config") {
+                    graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };
+                    for (const [key, value] of Object.entries(graph_reductions_obj)) {
+                        let div_checkbox = $('<div>').css("margin", '5px');
+                        let label_checkbox = $('<label>').text(value['name']);
+                        let input_checkbox = $('<input>')
+                            .attr("id", "reduction_config_" + key)
+                            .attr("value", key)
+                            .attr("type", "checkbox")
+                            .attr("unchecked", "")
+                            .change(function () {
+                                apply_reduction_change($(this)[0]);
+                            });
+                        label_checkbox.prepend(input_checkbox);
+                        div_checkbox.append(label_checkbox);
+                        document.getElementById('reduction_config_checkboxes').append(div_checkbox[0]);
+                    }
                 }
             }
-            if (json_subfolder === "graph_reduction_config") {
-                graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };
-                for (const [key, value] of Object.entries(graph_reductions_obj)) {
-                    let div_checkbox = $('<div>').css("margin", '5px');
-                    let label_checkbox = $('<label>').text(value['name']);
-                    let input_checkbox = $('<input>')
-                        .attr("id", "reduction_config_" + key)
-                        .attr("value", key)
-                        .attr("type", "checkbox")
-                        .attr("unchecked", "")
-                        .change(function () {
-                            apply_reduction_change($(this)[0]);
-                        });
-                    label_checkbox.prepend(input_checkbox);
-                    div_checkbox.append(label_checkbox);
-                    document.getElementById('reduction_config_checkboxes').append(div_checkbox[0]);
-                }
-            }
-        }
-        draw_graph();
-    });
+            draw_graph();
+        });
+    }
+
+
 }
 
 function draw_graph() {
