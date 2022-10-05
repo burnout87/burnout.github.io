@@ -398,7 +398,7 @@ function parse_and_query_graph_example(graph_examples_path) {
     });
 }
 
-function parse_and_query_ttl_graph(graph_ttl_content) {
+function parse_and_query_ttl_graph() {
     parsed_graph = parser.parse(graph_ttl_content,
         function (error, triple, prefixes) {
             // Always log errors
