@@ -53,18 +53,6 @@ const query_initial_graph = `CONSTRUCT {
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-// var edges;
-// var nodes;
-// var network;
-// var container;
-// var options, data;
-
-// var nodes_graph_config_obj;
-// var edges_graph_config_obj;
-// var graph_reductions_obj;
-// var subset_nodes_config_obj;
-// var graph_ttl_content;
-
 function load_graph() {
 
     // load various configs, default if not provided
@@ -94,14 +82,6 @@ function load_graph() {
         });
 
         $.when.apply($, requests).then((...args) => {
-            // if($.isEmptyObject(window.nodes_graph_config_obj))
-            //     nodes_graph_config_obj = window.nodes_graph_config_obj;
-            // if($.isEmptyObject(window.edges_graph_config_obj))
-            //     edges_graph_config_obj = window.edges_graph_config_obj;
-            // if($.isEmptyObject(window.graph_reductions_obj))
-            //     graph_reductions_obj = window.graph_reductions_obj;
-            // if($.isEmptyObject(window.subset_nodes_config_obj))
-            //     subset_nodes_config_obj = window.subset_nodes_config_obj;
             for (var i = 0; i < args.length; i++) {
                 let json_subfolder = graph_json_files_paths[i].split("/")[1];
                 if (json_subfolder === "graph_graphical_config") {
