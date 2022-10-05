@@ -12,6 +12,12 @@
     <script type="text/javascript" src="graph_helper.js"></script>
 </head>
 
+<script type="text/javascript">
+    window.onload = function () {
+        load_graph();
+    };
+</script>
+
 
 <body>
     <h1>ODA Graph Export Quick-Look</h1>
@@ -44,10 +50,12 @@
                     Hierarchical</label>
             </div>
         </div>
-        <div id="subset_node_checkboxes" style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+        <div id="subset_node_checkboxes"
+            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
             <h3 style="margin: 15px 0px 10px 5px;">Enable/disable selection of subsets of nodes</h3>
         </div>
-        <div id="reduction_config_checkboxes" style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+        <div id="reduction_config_checkboxes"
+            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
             <h3 style="margin: 15px 0px 10px 5px;">Apply reductions on the graph</h3>
         </div>
         <div id="configs_checkboxes"

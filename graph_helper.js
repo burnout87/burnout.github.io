@@ -51,20 +51,20 @@ const query_initial_graph = `CONSTRUCT {
             <http://www.w3.org/ns/prov#hadPlan> ?action .
     }`
 
+const parser = new N3.Parser({ format: 'ttl' });
+
 var edges;
 var nodes;
 var network;
 var container;
 var options, data;
 
-var nodes_graph_config_obj = {};
-var edges_graph_config_obj = {};
-var graph_reductions_obj = {};
-var subset_nodes_config_obj = {};
+var nodes_graph_config_obj;
+var edges_graph_config_obj;
+var graph_reductions_obj;
+var subset_nodes_config_obj;
 
-const parser = new N3.Parser({ format: 'ttl' });
-
-function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes_config_obj, graph_reductions_obj) {
+function load_graph() {
 
     // load various configs, default if not provided
     var graph_json_files_paths = [];
@@ -74,10 +74,10 @@ function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes
             "graph_data/graph_graphical_config/graph_config.json",
             "graph_data/graph_graphical_config/graph_config_1.json");
 
-    if ($.isEmptyObject(subset_nodes_config_obj))
+    if (subset_nodes_config_obj === null || subset_nodes_config_obj === undefined || $.isEmptyObject(subset_nodes_config_obj))
         graph_json_files_paths.push("graph_data/graph_nodes_subset/graph_nodes_subset_config.json");
 
-    if ($.isEmptyObject(graph_reductions_obj))
+    if (graph_reductions_obj === null || graph_reductions_obj === undefined || $.isEmptyObject(graph_reductions_obj))
         graph_json_files_paths.push("graph_data/graph_reduction_config/graph_reduction_config.json");
 
     if (graph_json_files_paths.length > 0) {
@@ -85,21 +85,29 @@ function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes
             return $.getJSON(path);
         });
 
-        $.when.apply($, requests).then(function () {
-            for (var i = 0; i < arguments.length; i++) {
+        $.when.apply($, requests).then( (...args) => {
+            // if($.isEmptyObject(window.nodes_graph_config_obj))
+            //     nodes_graph_config_obj = window.nodes_graph_config_obj;
+            // if($.isEmptyObject(window.edges_graph_config_obj))
+            //     edges_graph_config_obj = window.edges_graph_config_obj;
+            // if($.isEmptyObject(window.graph_reductions_obj))
+            //     graph_reductions_obj = window.graph_reductions_obj;
+            // if($.isEmptyObject(window.subset_nodes_config_obj))
+            //     subset_nodes_config_obj = window.subset_nodes_config_obj;
+            for (var i = 0; i < args.length; i++) {
                 let json_subfolder = graph_json_files_paths[i].split("/")[1];
                 if (json_subfolder === "graph_graphical_config") {
-                    if (arguments[i][0].hasOwnProperty("Nodes")) {
-                        Object.values(arguments[i][0]["Nodes"]).forEach(val => {
+                    if (args[i][0].hasOwnProperty("Nodes")) {
+                        Object.values(args[i][0]["Nodes"]).forEach(val => {
                             val['config_file'] = graph_json_files_paths[i];
                         });
-                        nodes_graph_config_obj = { ...nodes_graph_config_obj, ...arguments[i][0]["Nodes"] };
+                        nodes_graph_config_obj = { ...nodes_graph_config_obj, ...args[i][0]["Nodes"] };
                     }
-                    if (arguments[i][0].hasOwnProperty("Edges")) {
-                        Object.values(arguments[i][0]["Edges"]).forEach(val => {
+                    if (args[i][0].hasOwnProperty("Edges")) {
+                        Object.values(args[i][0]["Edges"]).forEach(val => {
                             val['config_file'] = graph_json_files_paths[i];
                         });
-                        edges_graph_config_obj = { ...edges_graph_config_obj, ...arguments[i][0]["Edges"] };
+                        edges_graph_config_obj = { ...edges_graph_config_obj, ...args[i][0]["Edges"] };
                     }
                     let div_checkbox = $('<div>').css("margin", '5px');
                     let label_checkbox = $('<label>').text(graph_json_files_paths[i]);
@@ -116,7 +124,7 @@ function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes
                     document.getElementById('configs_checkboxes').append(div_checkbox[0]);
                 }
                 if (json_subfolder === "graph_nodes_subset") {
-                    subset_nodes_config_obj = { ...subset_nodes_config_obj, ...arguments[i][0] };
+                    subset_nodes_config_obj = { ...subset_nodes_config_obj, ...args[i][0] };
                     for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
                         let div_checkbox = $('<div>').css("margin", '5px');
                         let label_checkbox = $('<label>').text(value['description']);
@@ -134,7 +142,7 @@ function load_graph(nodes_graph_config_obj, edges_graph_config_obj, subset_nodes
                     }
                 }
                 if (json_subfolder === "graph_reduction_config") {
-                    graph_reductions_obj = { ...graph_reductions_obj, ...arguments[i][0] };
+                    graph_reductions_obj = { ...graph_reductions_obj, ...args[i][0] };
                     for (const [key, value] of Object.entries(graph_reductions_obj)) {
                         let div_checkbox = $('<div>').css("margin", '5px');
                         let label_checkbox = $('<label>').text(value['name']);
@@ -169,8 +177,8 @@ function draw_graph() {
     // adding nodes and edges to the graph
     data = { nodes: nodes, edges: edges };
 
-    if (options === null || options === undefined || $.isEmptyObject(options))
-        options = {
+    if (window.options === null || window.options === undefined || $.isEmptyObject(window.options))
+        window.options = {
             autoResize: true,
             nodes: {
                 scaling: {
@@ -346,7 +354,7 @@ function draw_graph() {
 }
 
 function parse_and_query_graph_example(graph_examples_path) {
-    if (graph_examples_path === undefined || graph_examples_path === null) {
+    if (graph_examples_path !== "") {
         $.ajax({
             async: true,
             url: graph_examples_path,
@@ -1153,3 +1161,4 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         }
     }
 }
+
