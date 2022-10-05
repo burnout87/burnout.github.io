@@ -53,33 +53,40 @@ const query_initial_graph = `CONSTRUCT {
 
 const parser = new N3.Parser({ format: 'ttl' });
 
-var edges;
-var nodes;
-var network;
-var container;
-var options, data;
+// var edges;
+// var nodes;
+// var network;
+// var container;
+// var options, data;
 
-var nodes_graph_config_obj;
-var edges_graph_config_obj;
-var graph_reductions_obj;
-var subset_nodes_config_obj;
-var graph_ttl_content;
+// var nodes_graph_config_obj;
+// var edges_graph_config_obj;
+// var graph_reductions_obj;
+// var subset_nodes_config_obj;
+// var graph_ttl_content;
 
 function load_graph() {
 
     // load various configs, default if not provided
     var graph_json_files_paths = [];
-    if ((nodes_graph_config_obj === null || nodes_graph_config_obj === undefined || $.isEmptyObject(nodes_graph_config_obj)) &&
-        (edges_graph_config_obj === null || edges_graph_config_obj === undefined || $.isEmptyObject(edges_graph_config_obj)))
+    if ((typeof nodes_graph_config_obj === 'undefined' || nodes_graph_config_obj === undefined || nodes_graph_config_obj === null || $.isEmptyObject(nodes_graph_config_obj)) &&
+        (typeof edges_graph_config_obj === 'undefined' || edges_graph_config_obj === undefined || edges_graph_config_obj === null || $.isEmptyObject(edges_graph_config_obj))) {
+        nodes_graph_config_obj = {};
+        edges_graph_config_obj = {};
         graph_json_files_paths.push(
             "graph_data/graph_graphical_config/graph_config.json",
             "graph_data/graph_graphical_config/graph_config_1.json");
+    }
 
-    if (subset_nodes_config_obj === null || subset_nodes_config_obj === undefined || $.isEmptyObject(subset_nodes_config_obj))
+    if (typeof subset_nodes_config_obj === 'undefined' || subset_nodes_config_obj === undefined || subset_nodes_config_obj === null || $.isEmptyObject(subset_nodes_config_obj)) {
+        subset_nodes_config_obj = {};
         graph_json_files_paths.push("graph_data/graph_nodes_subset/graph_nodes_subset_config.json");
+    }
 
-    if (graph_reductions_obj === null || graph_reductions_obj === undefined || $.isEmptyObject(graph_reductions_obj))
+    if (typeof graph_reductions_obj === 'undefined' || graph_reductions_obj === undefined || graph_reductions_obj === null || $.isEmptyObject(graph_reductions_obj)) {
+        graph_reductions_obj = {};
         graph_json_files_paths.push("graph_data/graph_reduction_config/graph_reduction_config.json");
+    }
 
     if (graph_json_files_paths.length > 0) {
         var requests = graph_json_files_paths.map(function (path) {
@@ -214,7 +221,7 @@ function draw_graph() {
 
     network = new vis.Network(container, data, options);
 
-    if(graph_ttl_content!== undefined && graph_ttl_content !== null && graph_ttl_content !== '')
+    if (typeof graph_ttl_content !== 'undefined' && graph_ttl_content !== undefined && graph_ttl_content !== null && graph_ttl_content !== '')
         parse_and_query_ttl_graph();
     else
         parse_and_query_graph_example('graph_data/graph_two_commands.ttl');
