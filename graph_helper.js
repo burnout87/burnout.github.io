@@ -63,6 +63,7 @@ var nodes_graph_config_obj;
 var edges_graph_config_obj;
 var graph_reductions_obj;
 var subset_nodes_config_obj;
+var graph_ttl_content;
 
 function load_graph() {
 
@@ -213,7 +214,7 @@ function draw_graph() {
 
     network = new vis.Network(container, data, options);
 
-    parse_and_query_graph_example('graph_data/graph_two_commands.ttl');
+    parse_and_query_graph_example();
 
     network.on("stabilized", function (e) {
         stop_animation();
