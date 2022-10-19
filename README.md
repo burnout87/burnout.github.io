@@ -12,8 +12,10 @@ The functionalities implemented within the `graph_helper.js` javascript module e
 The module can be imported in the header as such:
 
 ```html
-<script type="text/javascript" src="graph_helper.js"></script>
+<script type="application/javascript" src="graph_helper.js"></script>
 ```
+
+An example of the usage can be found here.
 
 The following javascript libraries have been used:
 
