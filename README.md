@@ -9,6 +9,12 @@ The functionalities implemented within the `graph_helper.js` javascript module e
   * __subset selection of nodes__
   * __absorption/expansion of nodes__
 
+The module can be imported in the header as such:
+
+```html
+<script type="text/javascript" src="graph_helper.js"></script>
+```
+
 The following javascript libraries have been used:
 
 * [Vis netowrk](https://github.com/visjs/vis-network) - to provide the means to draw nodes and edges, with animations and various graphical customization
