@@ -15,7 +15,7 @@ The module can be imported in the header as such:
 <script type="application/javascript" src="graph_helper.js"></script>
 ```
 
-An example of the usage can be found here.
+A code exmaple can be found [here](index.html), and the relative live version of the interactive graph can be found [here](https://odahub.io/renku-aqs-graph-library/). 
 
 The following javascript libraries have been used:
 
