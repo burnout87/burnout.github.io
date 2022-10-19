@@ -15,7 +15,9 @@ The module can be imported in the header as such:
 <script type="application/javascript" src="graph_helper.js"></script>
 ```
 
-A code exmaple can be found [here](index.html), and the relative live version of the interactive graph can be found [here](https://odahub.io/renku-aqs-graph-library/). 
+An exmaple code that uses this library can be found [here](index.html), and the relative live version can be found [here](https://odahub.io/renku-aqs-graph-library/).
+
+Otherwise the [`aqs` renku plugin](https://github.com/oda-hub/renku-aqs/tree/cli-display-graph) makes usage of this library to build the interactive graph via the `show-graph` command.
 
 The following javascript libraries have been used:
 
