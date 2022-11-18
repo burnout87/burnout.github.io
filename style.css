@@ -13,3 +13,9 @@ h1 {
     color: rgb(49, 51, 63);
     line-height: 1.2;
 }
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.0;
+}
