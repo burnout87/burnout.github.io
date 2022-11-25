@@ -26,6 +26,12 @@
    "Edges": {
       "hasTarget": {
          "displayed_type_name": "query"
+      },
+      "hasOutputs": {
+         "displayed_type_name": "generates"
+      },
+      "isInputOf": {
+         "displayed_type_name": "usedBy"
       }
    }
 }
