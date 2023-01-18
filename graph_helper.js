@@ -42,7 +42,8 @@ const myEngine = new Comunica.QueryEngine();
 const query_initial_graph = `CONSTRUCT {
 
     ?activity a ?activityType ;
-        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime .
+        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
     }
     WHERE { 
              
