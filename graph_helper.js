@@ -29,26 +29,25 @@ const graph_edge_config_obj_default = {
         },
     }
 }
+// ?action a <http://schema.org/Action> ;
+//     <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
+// <http://www.w3.org/ns/prov#hadPlan> ?action .
+// ?action a <http://schema.org/Action> ;
+//     <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
 
 let prefixes_graph = {};
 const stack_promises = [];
 var store = new N3.Store();
 const myEngine = new Comunica.QueryEngine();
 const query_initial_graph = `CONSTRUCT {
-    ?action a <http://schema.org/Action> ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
 
     ?activity a ?activityType ;
-        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <http://www.w3.org/ns/prov#hadPlan> ?action .
+        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime .
     }
     WHERE { 
-        ?action a <http://schema.org/Action> ;
-            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
              
         ?activity a ?activityType ;
-            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-            <http://www.w3.org/ns/prov#hadPlan> ?action .
+            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime .
     }`
 
 const parser = new N3.Parser({ format: 'ttl' });
