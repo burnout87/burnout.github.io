@@ -43,12 +43,13 @@ const query_initial_graph = `CONSTRUCT {
 
     ?activity a ?activityType ;
         <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
+        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
     }
     WHERE { 
              
         ?activity a ?activityType ;
-            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime .
+            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
     }`
 
 const parser = new N3.Parser({ format: 'ttl' });
