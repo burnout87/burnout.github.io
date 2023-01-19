@@ -1,0 +1,104 @@
+@prefix ns1: <http://www.w3.org/ns/prov#> .
+@prefix ns2: <https://swissdatasciencecenter.github.io/renku-ontology#> .
+@prefix ns3: <http://www.w3.org/ns/oa#> .
+@prefix ns5: <http://purl.org/dc/terms/> .
+@prefix oda: <http://odahub.io/ontology#> .
+@prefix odas: <https://odahub.io/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a> a ns1:Activity ;
+    ns1:startedAtTime "2022-11-08T13:14:00+01:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/ef6fc42318ab1eafaf8b2ea84a3298ccf95b88b2/out.ipynb> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7> a ns1:Activity ;
+    ns1:startedAtTime "2022-11-08T13:06:54+01:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/6fcb3291cc02a95d30ae82a6609a6a20222a766f/out.ipynb> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d> a ns1:Activity ;
+    ns1:startedAtTime "2022-11-08T13:12:57+01:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/e3a9c54ccf3537284e8385239660e4338504107c/out.ipynb> .
+
+<https://renkulab.io0c084ace-59c6-11ed-9be0-bbb33dc1b217/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns5:title "query_object_0c084ace-59c6-11ed-9be0-bbb33dc1b217" ;
+    ns3:hasTarget <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> .
+
+<https://renkulab.io270a20a8-5f5d-11ed-9fbd-79aa6168c336/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns5:title "query_object_270a20a8-5f5d-11ed-9fbd-79aa6168c336" ;
+    ns3:hasTarget <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389> .
+
+<https://renkulab.io50d226aa-3a7e-11ed-9d8a-ad4d9920c29e/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns5:title "query_object_50d226aa-3a7e-11ed-9d8a-ad4d9920c29e" ;
+    ns3:hasTarget <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570> .
+
+<https://renkulab.ioa7078452-3a7e-11ed-9d8a-ad4d9920c29e/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns5:title "query_object_a7078452-3a7e-11ed-9d8a-ad4d9920c29e" ;
+    ns3:hasTarget <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4> a ns1:Activity ;
+    ns1:startedAtTime "2022-09-22T15:58:33+02:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/8f02fbeb80a9365f77420b3842fae29fec3ae31e/out.ipynb> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570> a ns1:Activity ;
+    ns1:startedAtTime "2022-09-22T15:56:08+02:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/0259a446183a9bf3bedacd7ca84d59b494b33e14/out.ipynb> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389> a ns1:Activity ;
+    ns1:startedAtTime "2022-11-08T13:01:58+01:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/85551ff3c66e5a9ad2094a6d02dcea2680edab22/out.ipynb> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> a ns1:Activity ;
+    ns1:startedAtTime "2022-11-01T10:17:43+01:00"^^xsd:dateTime ;
+    ns2:command "papermill" ;
+    ns2:hasInputs <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> ;
+    ns2:hasOutputs <https://renkulab.io/entities/d07d46bf77481ca601612781207b0db6f4f828ce/out.ipynb> .
+
+<https://renkulab.io/entities/0259a446183a9bf3bedacd7ca84d59b494b33e14/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/6fcb3291cc02a95d30ae82a6609a6a20222a766f/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/85551ff3c66e5a9ad2094a6d02dcea2680edab22/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/8f02fbeb80a9365f77420b3842fae29fec3ae31e/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/d07d46bf77481ca601612781207b0db6f4f828ce/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/e3a9c54ccf3537284e8385239660e4338504107c/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+<https://renkulab.io/entities/ef6fc42318ab1eafaf8b2ea84a3298ccf95b88b2/out.ipynb> a ns2:CommandOutput ;
+    ns1:atLocation "out.ipynb" .
+
+odas:AQModuleSimbadClass a oda:AstroqueryModule ;
+    odas:AQModule "SimbadClass" .
+
+odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
+    odas:AstroObject "Mrk 421" .
+
+<https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> a ns1:Entity ;
+    ns1:atLocation "fermi_lc.ipynb" .
+

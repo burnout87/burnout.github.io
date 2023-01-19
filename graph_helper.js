@@ -200,7 +200,7 @@ function draw_graph() {
     if (typeof graph_ttl_content !== 'undefined' && graph_ttl_content !== undefined && graph_ttl_content !== null && graph_ttl_content !== '')
         parse_and_query_ttl_graph();
     else
-        parse_and_query_graph_example('graph_data/graph_two_commands.ttl');
+        parse_and_query_graph_example('graph_data/graph_example.ttl');
 
     network.on("stabilized", function (e) {
         stop_animation();
