@@ -29,11 +29,6 @@ const graph_edge_config_obj_default = {
         },
     }
 }
-// ?action a <http://schema.org/Action> ;
-//     <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
-// <http://www.w3.org/ns/prov#hadPlan> ?action .
-// ?action a <http://schema.org/Action> ;
-//     <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
 
 let prefixes_graph = {};
 const stack_promises = [];
@@ -832,12 +827,9 @@ function format_query_clicked_node(clicked_node_id) {
             ?o a ?o_type . 
             ?o ?p_literal ?o_literal .
         
-            ?action a <http://schema.org/Action> ;
-                <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
-    
             ?activity a ?activityType ;
                 <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-                <http://www.w3.org/ns/prov#hadPlan> ?action .
+                <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
         }
         WHERE {
             {
@@ -845,21 +837,15 @@ function format_query_clicked_node(clicked_node_id) {
                 ?s a ?s_type .
                 ?s ?p_literal ?s_literal .
                 FILTER isLiteral(?s_literal) .
-                
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
                 ?s ?p <${clicked_node_id}> .
-                ?s a ?s_type .
-                
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
+                ?s a ?s_type .                
             }
             UNION
             {
                 ?s ?p <${clicked_node_id}> .
-                
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
@@ -867,33 +853,24 @@ function format_query_clicked_node(clicked_node_id) {
                 ?o a ?o_type .
                 ?o ?p_literal ?o_literal .
                 FILTER isLiteral(?o_literal) .
-            
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .                    
             }
             UNION
             {
                 <${clicked_node_id}> ?p ?o .
                 ?o a ?o_type
-
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
                 <${clicked_node_id}> ?p ?o .
-                
-                FILTER ( ?p != <http://www.w3.org/ns/prov#hadPlan> ) .
             }
             UNION
             {
-                ?action a <http://schema.org/Action> ;
-                    <https://swissdatasciencecenter.github.io/renku-ontology#command> ?actionCommand .
                      
                 ?activity a ?activityType ;
                     <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-                    <http://www.w3.org/ns/prov#hadPlan> ?action .
+                    <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
                 
-                FILTER (?activity = <${clicked_node_id}> ||
-                        ?action = <${clicked_node_id}> ) .
+                FILTER (?activity = <${clicked_node_id}>) .
                 
             }
         }`;
