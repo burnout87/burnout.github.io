@@ -1067,8 +1067,9 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     if (subj_node_to_update !== null && 'type_name' in subj_node_to_update) {
                         let type_name = subj_node_to_update['type_name']
                         let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj[type_name] ? nodes_graph_config_obj[type_name] : graph_node_config_obj_default['default']) };
-                        // displayed_literals_format:defaultValue:yes / defaultValue:no
-                        // displayed_information:title / literals / both
+                        // displayed_literals_format: defaultValue:yes / defaultValue:no
+                        // displayed_information: title / literals / both
+                        // literals_keyword_to_substitute: title:get_images,query_object,query_region (search keywords to substitue eg title, withn a certain literal and apply substitution)
                         if ('literals_keyword_to_substitute' in node_properties) {
                             let literals_keyword_to_substitute = node_properties['literals_keyword_to_substitute'].split(";");
                             for (let i in literals_keyword_to_substitute) {
