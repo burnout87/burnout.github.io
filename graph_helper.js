@@ -47,7 +47,8 @@ const query_initial_graph = `CONSTRUCT {
             <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
     }`
 
-const parser = new N3.Parser({ format: 'ttl' });
+const parser = new N3.Parser({ format: 'ttl' }),
+    inputStream = fs.createReadStream('graph.ttl');
 
 function load_graph() {
 
