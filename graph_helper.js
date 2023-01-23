@@ -382,7 +382,7 @@ function parse_and_query_graph_example(graph_examples_path) {
 }
 
 function parse_and_query_ttl_graph() {
-    const ttl_graph_path = 'file://graph.ttl';
+    const ttl_graph_path = 'graph.ttl';
     
     fetch(ttl_graph_path)
         .then(response => response.text())
