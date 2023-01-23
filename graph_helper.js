@@ -47,8 +47,7 @@ const query_initial_graph = `CONSTRUCT {
             <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
     }`
 
-const parser = new N3.Parser({ format: 'ttl' }),
-    inputStream = fs.createReadStream('graph.ttl');
+const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
 
@@ -383,37 +382,45 @@ function parse_and_query_graph_example(graph_examples_path) {
 }
 
 function parse_and_query_ttl_graph() {
-    parsed_graph = parser.parse(graph_ttl_content,
-        function (error, triple, prefixes) {
-            // Always log errors
-            if (error) {
-                console.error(error);
-            }
-            if (triple) {
-                store.addQuad(triple.subject, triple.predicate, triple.object);
-            } else {
-                prefixes_graph = prefixes;
-                (async () => {
-                    const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
-                        {
-                            sources: [store]
-                        }
-                    );
-                    bindingsStreamCall.on('data', (binding) => {
-                        process_binding(binding);
-                    });
-                    bindingsStreamCall.on('end', () => {
-                        let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-                        toggle_layout(checked_radiobox);
-                    });
-                    bindingsStreamCall.on('error', (error) => {
+    const ttl_graph_path = 'graph.ttl';
+    $.ajax({
+        async: true,
+        url: ttl_graph_path,
+        dataType: 'text',
+        success: function (data) {
+            parsed_graph = parser.parse(data,
+                function (error, triple, prefixes) {
+                    // Always log errors
+                    if (error) {
                         console.error(error);
-                    });
-                })();
-            }
-
+                    }
+                    if (triple) {
+                        store.addQuad(triple.subject, triple.predicate, triple.object);
+                    } else {
+                        prefixes_graph = prefixes;
+                        (async () => {
+                            const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+                                {
+                                    sources: [store]
+                                }
+                            );
+                            bindingsStreamCall.on('data', (binding) => {
+                                process_binding(binding);
+                            });
+                            bindingsStreamCall.on('end', () => {
+                                let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+                                toggle_layout(checked_radiobox);
+                            });
+                            bindingsStreamCall.on('error', (error) => {
+                                console.error(error);
+                            });
+                        })();
+                    }
+        
+                }
+            );
         }
-    );
+    });
 }
 
 function fit_graph() {
