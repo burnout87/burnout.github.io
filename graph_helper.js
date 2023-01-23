@@ -382,21 +382,14 @@ function parse_and_query_graph_example(graph_examples_path) {
 }
 
 function parse_and_query_ttl_graph() {
-    const ttl_graph_path = 'graph.ttl';
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", ttl_graph_path, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
-    }
-    rawFile.send(null);
+    const ttl_graph_path = 'file://graph.ttl';
+    
+    fetch(ttl_graph_path)
+        .then(response => response.text())
+        .then(text => console.log(text))
+        // outputs the content of the text file
+  
+
     $.ajax({
         async: true,
         url: ttl_graph_path,
