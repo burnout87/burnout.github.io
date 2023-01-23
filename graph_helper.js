@@ -383,6 +383,20 @@ function parse_and_query_graph_example(graph_examples_path) {
 
 function parse_and_query_ttl_graph() {
     const ttl_graph_path = 'graph.ttl';
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", ttl_graph_path, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
     $.ajax({
         async: true,
         url: ttl_graph_path,
