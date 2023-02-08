@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Graph visualization</title>
+    <link rel="icon" type="image/x-icon" href="graph_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.js" type="application/javascript"></script>
+    <script src="https://unpkg.com/n3/browser/n3.min.js" type="application/javascript"></script>
+    <script src="https://rdf.js.org/comunica-browser/versions/latest/engines/query-sparql-rdfjs/comunica-browser.js"
+        type="application/javascript"></script>
+    <script type="application/javascript" src="graph_helper.js"></script>
+</head>
+
+<script type="text/javascript">
+    window.onload = function () {
+        load_graph();
+    };
+</script>
+
+
+<body>
+    <h1>ODA Graph Export Quick-Look</h1>
+    <div style="margin: 5px 0px 15px 5px">
+        <h3 style="margin: 15px 0px 10px 5px;">Which graph example would you like to explore?</h3>
+        <select name="graph_examples" id="graph_examples_selector" onchange="load_graph_example()">
+            <option value="graph_data/graph__example.ttl">renku-aqs-test-case example</option>
+        </select>
+    </div>
+
+    <div style="margin: 5px 0px 15px 5px">
+        <button onclick="reset_graph()" type="button">Reset graph!</button>
+        <button onclick="fit_graph()" type="button">Fit graph!</button>
+        <button onclick="stop_animation()" type="button">Stop animation!</button>
+    </div>
+
+    <div style="display:flex;">
+        <div
+            style="background-color: #F7F7F7; border-left: 1px double; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+            <h3 style="margin: 15px 0px 10px 5px;">Change graph layout</h3>
+            <div style="margin: 5px">
+                <label><input checked="" id="repulsion_layout" name="graph_layout" onchange="toggle_layout(this)"
+                        type="radio" value="repulsion" />
+                    Random</label>
+            </div>
+            <div style="margin: 5px">
+                <label><input id="hierarchical_layout" name="graph_layout" onchange="toggle_layout(this)" type="radio"
+                        unchecked="" value="hierarchicalRepulsion" />
+                    Hierarchical</label>
+            </div>
+        </div>
+        <div id="subset_node_checkboxes"
+            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+            <h3 style="margin: 15px 0px 10px 5px;">Enable/disable selection of subsets of nodes</h3>
+        </div>
+        <div id="reduction_config_checkboxes"
+            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+            <h3 style="margin: 15px 0px 10px 5px;">Apply reductions on the graph</h3>
+        </div>
+        <div id="configs_checkboxes"
+            style="border-right: 1px double; padding: 5px; background-color: #F7F7F7; margin: 5px 0px 15px 5px">
+            <h3 style="margin: 15px 0px 10px 5px;">Enable/disable graphical configurations for the graph</h3>
+        </div>
+    </div>
+    <div style="display: flex;">
+        <div style="margin:10px;">
+            <div style="margin: 0px 0px 5px 5px; font-weight: bold; ">Legend</div>
+            <ul id="legend_container"
+                style="overflow: scroll; padding-right:15px; overflow-x:hidden; background-color: #F7F7F7"></ul>
+        </div>
+        <div id="mynetwork"></div>
+    </div>
+</body>
+
+</html>

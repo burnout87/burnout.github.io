@@ -1,75 +1,718 @@
 <!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <script src="lib/bindings/utils.js">
+  </script>
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+  <script crossorigin="anonymous" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js">
+  </script>
+  <!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" rel="stylesheet"/>
+  <script crossorigin="anonymous" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://unpkg.com/n3/browser/n3.min.js" type="application/javascript">
+  </script>
+  <script src="https://rdf.js.org/comunica-browser/versions/latest/engines/query-sparql-rdfjs/comunica-browser.js" type="application/javascript">
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="application/javascript">
+  </script>
+  <script src="../renku-aqs-graph-library/graph_helper.js" type="application/javascript">
+  </script>
+  <link href="../renku-aqs-graph-library/style.css" rel="stylesheet" type="text/css"/>
+  <title>
+   Graph visualization
+  </title>
+  <script type="application/javascript">
+   // initialize global variables.
+    var nodes_graph_config_obj = JSON.parse('{"Run": {"shape": "box", "color": "#adb6ce", "style": "filled", "value": 35, "level": 0, "font": {"size": 24, "face": "courier"}, "displayed_type_name": "Query", "displayed_information": "literals", "displayed_literals_format": "title:no", "literals_keyword_to_substitute": "title:get_images,query_object,query_region", "config_file": "graph_graphical_config.json"}, "Activity": {"shape": "box", "color": "#00FC10", "style": "filled", "value": 35, "level": 0, "displayed_literals_format": "command:no", "config_file": "graph_graphical_config.json"}, "AstroqueryModule": {"shape": "box", "color": "#00CC00", "style": "filled", "value": 35, "level": 0, "displayed_information": "literals", "displayed_literals_format": "AQModule:no", "config_file": "graph_graphical_config.json"}, "AstrophysicalObject": {"shape": "box", "color": "#6262be", "style": "filled", "value": 35, "level": 1, "displayed_information": "literals", "displayed_literals_format": "AstroObject:no", "config_file": "graph_graphical_config.json"}, "AstrophysicalRegion": {"shape": "box", "color": "#6262bf", "style": "filled", "value": 35, "level": 1, "displayed_information": "title", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}, "AstrophysicalImage": {"shape": "box", "color": "#027F45", "style": "filled", "value": 35, "level": 1, "displayed_information": "title", "config_file": "graph_graphical_config.json"}, "CommandParameter": {"shape": "box", "color": "#6262be", "style": "filled", "value": 15, "level": 3, "config_file": "graph_graphical_config.json"}, "Entity": {"shape": "box", "color": "#DBA3BC", "style": "filled", "value": 20, "level": 3, "displayed_type_name": "Input", "displayed_information": "literals", "displayed_literals_format": "atLocation:no", "config_file": "graph_graphical_config.json"}, "CommandOutput": {"shape": "box", "color": "#FFFF00", "style": "filled", "value": 25, "level": 5, "displayed_type_name": "Output", "displayed_information": "literals", "displayed_literals_format": "atLocation:no", "config_file": "graph_graphical_config.json"}, "CommandOutputNotebook": {"shape": "box", "color": "#DBA3BC", "style": "filled", "value": 25, "level": 5, "displayed_type_name": "Output notebook", "config_file": "graph_graphical_config.json"}, "CommandOutputImage": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output image", "config_file": "graph_graphical_config.json"}, "CommandOutputFitsFile": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output fits file", "config_file": "graph_graphical_config.json"}, "CommandOutputEcsvFile": {"shape": "box", "color": "#FFFFFF", "style": "filled", "border": 1, "value": 25, "level": 5, "displayed_type_name": "Output ecsv file", "config_file": "graph_graphical_config.json"}, "CommandInput": {"shape": "box", "color": "#DBA3BC", "style": "filled", "value": 20, "level": 3, "displayed_type_name": "Input", "displayed_information": "literals", "displayed_literals_format": "defaultValue:no", "config_file": "graph_graphical_config.json"}, "Action": {"shape": "box", "color": "#D5C15D", "style": "filled", "value": 35, "level": 4, "displayed_type_name": "Plan", "displayed_information": "title", "displayed_literals_format": "command:no", "config_file": "graph_graphical_config.json"}, "Angle": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}, "SkyCoordinates": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}, "Coordinates": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}, "Position": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}, "Pixels": {"shape": "box", "color": "#1B81FB", "style": "filled", "value": 35, "level": 2, "displayed_information": "both", "displayed_literals_format": "title:no", "config_file": "graph_graphical_config.json"}}');
+    var edges_graph_config_obj = JSON.parse('{"hasTarget": {"displayed_type_name": "query", "config_file": "graph_graphical_config.json"}}');
+    var subset_nodes_config_obj = JSON.parse('{"oda": {"prefixes": "oda, odas", "description": "oda astroquery-related nodes", "query_construct": "?run <http://odahub.io/ontology#isRequestingAstroObject> ?a_object ;\\n                <http://odahub.io/ontology#isRequestingAstroRegion> ?a_region ;\\n                <http://odahub.io/ontology#isRequestingAstroImage> ?a_image ;\\n                <http://purl.org/dc/terms/title> ?run_title ;\\n                <http://odahub.io/ontology#isUsing> ?aq_module ;\\n                <http://www.w3.org/ns/oa#hasTarget> ?activity ;\\n                a ?run_rdf_type .\\n            \\n            ?aq_module <https://odahub.io/ontology#AQModule> ?aq_module_name ;\\n                a ?aq_mod_rdf_type .\\n\\n            ?a_object <https://odahub.io/ontology#AstroObject> ?a_object_name ;\\n                a ?a_obj_rdf_type .\\n\\n            ?a_region a ?a_region_type ; \\n                <http://purl.org/dc/terms/title> ?a_region_name ;\\n                <http://odahub.io/ontology#isUsingSkyCoordinates> ?a_sky_coordinates ;\\n                <http://odahub.io/ontology#isUsingRadius> ?a_radius .\\n\\n            ?a_image a ?a_image_type ;\\n                <http://purl.org/dc/terms/title> ?a_image_name ;\\n                <http://odahub.io/ontology#isUsingCoordinates> ?a_coordinates ;\\n                <http://odahub.io/ontology#isUsingPosition> ?a_position ;\\n                <http://odahub.io/ontology#isUsingRadius> ?a_radius ;\\n                <http://odahub.io/ontology#isUsingPixels> ?a_pixels ;\\n                <http://odahub.io/ontology#isUsingImageBand> ?a_image_band .\\n\\n            ?a_pixels a ?a_pixels_type ;\\n                <http://purl.org/dc/terms/title> ?a_pixels_name .\\n\\n            ?a_image_band a ?a_image_band_type ;\\n                <http://purl.org/dc/terms/title> ?a_image_band_name .\\n\\n            ?a_coordinates a ?a_coordinates_type ;\\n                <http://purl.org/dc/terms/title> ?a_coordinates_name .\\n                \\n            ?a_sky_coordinates a ?a_sky_coordinates_type ;\\n                <http://purl.org/dc/terms/title> ?a_sky_coordinates_name .\\n                \\n            ?a_position a ?a_position_type ;\\n                <http://purl.org/dc/terms/title> ?a_position_name .\\n\\n            ?a_radius a ?a_radius_type ;\\n                <http://purl.org/dc/terms/title> ?a_radius_name .", "query_where": "{\\n                        ?run <http://odahub.io/ontology#isUsing> ?aq_module ;\\n                            <http://odahub.io/ontology#isRequestingAstroObject> ?a_object ;\\n                            a ?run_rdf_type ;\\n                            ^<http://www.w3.org/ns/oa#hasBody>/<http://www.w3.org/ns/oa#hasTarget> ?activity .\\n                    \\n                        ?aq_module <http://purl.org/dc/terms/title> ?aq_module_name ;\\n                            a ?aq_mod_rdf_type .\\n\\n                        ?a_object <http://purl.org/dc/terms/title> ?a_object_name ;\\n                            a ?a_obj_rdf_type .\\n\\n                        OPTIONAL { ?run <http://purl.org/dc/terms/title> ?run_title . } .\\n\\n                        ?run ?p ?o .\\n\\n                        FILTER (!CONTAINS(str(?a_object), \\" \\")) .\\n                    }\\n                    UNION\\n                    {\\n                        ?run <http://odahub.io/ontology#isUsing> ?aq_module ;\\n                            <http://odahub.io/ontology#isRequestingAstroRegion> ?a_region ;\\n                            a ?run_rdf_type ;\\n                            ^<http://www.w3.org/ns/oa#hasBody>/<http://www.w3.org/ns/oa#hasTarget> ?activity .\\n\\n                        ?aq_module a ?aq_mod_rdf_type ;\\n                            <http://purl.org/dc/terms/title> ?aq_module_name .\\n\\n                        ?a_region a ?a_region_type ; \\n                            <http://purl.org/dc/terms/title> ?a_region_name ;\\n                            <http://odahub.io/ontology#isUsingSkyCoordinates> ?a_sky_coordinates ;\\n                            <http://odahub.io/ontology#isUsingRadius> ?a_radius .\\n\\n                        ?a_sky_coordinates a ?a_sky_coordinates_type ;\\n                            <http://purl.org/dc/terms/title> ?a_sky_coordinates_name .\\n\\n                        ?a_radius a ?a_radius_type ;\\n                            <http://purl.org/dc/terms/title> ?a_radius_name .\\n\\n                        OPTIONAL { ?run <http://purl.org/dc/terms/title> ?run_title . } .\\n\\n                        ?run ?p ?o .\\n                    }\\n                    UNION\\n                    {\\n                        ?run <http://odahub.io/ontology#isUsing> ?aq_module ;\\n                            <http://odahub.io/ontology#isRequestingAstroImage> ?a_image ;\\n                            a ?run_rdf_type ;\\n                            ^<http://www.w3.org/ns/oa#hasBody>/<http://www.w3.org/ns/oa#hasTarget> ?activity .\\n\\n                        ?aq_module a ?aq_mod_rdf_type ;\\n                            <http://purl.org/dc/terms/title> ?aq_module_name .\\n\\n                        ?a_image a ?a_image_type ;\\n                            <http://purl.org/dc/terms/title> ?a_image_name ;\\n\\n                        OPTIONAL { ?a_image <http://odahub.io/ontology#isUsingCoordinates> ?a_coordinates .\\n                            ?a_coordinates a ?a_coordinates_type ;\\n                                <http://purl.org/dc/terms/title> ?a_coordinates_name .\\n                        }\\n                        OPTIONAL { ?a_image <http://odahub.io/ontology#isUsingPosition> ?a_position .\\n                            ?a_position a ?a_position_type ;\\n                                <http://purl.org/dc/terms/title> ?a_position_name .\\n                        }\\n                        OPTIONAL { ?a_image <http://odahub.io/ontology#isUsingRadius> ?a_radius .\\n                            ?a_radius a ?a_radius_type ;\\n                                <http://purl.org/dc/terms/title> ?a_radius_name .\\n                        }\\n                        OPTIONAL { ?a_image <http://odahub.io/ontology#isUsingPixels> ?a_pixels .\\n                            ?a_pixels a ?a_pixels_type ;\\n                                <http://purl.org/dc/terms/title> ?a_pixels_name .\\n                        }\\n                        OPTIONAL { ?a_image <http://odahub.io/ontology#isUsingImageBand> ?a_image_band .\\n                            ?a_image_band a ?a_image_band_type ;\\n                                <http://purl.org/dc/terms/title> ?a_image_band_name .\\n                        }\\n\\n                        OPTIONAL { ?run <http://purl.org/dc/terms/title> ?run_title . } .\\n\\n                        ?run ?p ?o .\\n                    }"}}');
+    var graph_reductions_obj = JSON.parse('{"Action": {"name": "Inputs and outputs", "predicates_to_absorb": "hasOutputs,hasInputs"}, "AstrophysicalImage": {"name": "AstrophysicalImage parameters", "predicates_to_absorb": "isUsingPosition,isUsingCoordinates,isUsingPixels,isUsingRadius"}, "AstrophysicalRegion": {"name": "AstrophysicalRegion parameters", "predicates_to_absorb": "isUsingRadius,isUsingSkyCoordinates"}}');
+    var graph_ttl_content = `@prefix ns1: <http://www.w3.org/ns/prov#> .
+@prefix ns2: <http://schema.org/> .
+@prefix ns3: <https://swissdatasciencecenter.github.io/renku-ontology#> .
+@prefix ns4: <http://purl.org/dc/terms/> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix oda: <http://odahub.io/ontology#> .
+@prefix odas: <https://odahub.io/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<head>
-    <title>Graph visualization</title>
-    <link rel="icon" type="image/x-icon" href="graph_favicon.ico">
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.js" type="application/javascript"></script>
-    <script src="https://unpkg.com/n3/browser/n3.min.js" type="application/javascript"></script>
-    <script src="https://rdf.js.org/comunica-browser/versions/latest/engines/query-sparql-rdfjs/comunica-browser.js"
-        type="application/javascript"></script>
-    <script type="application/javascript" src="graph_helper.js"></script>
-</head>
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/annotations/aqs/a7078452-3a7e-11ed-9d8a-ad4d9920c29e> a oa:Annotation ;
+    ns4:creator "AQS plugin" ;
+    oa:hasBody <https://renkulab.ioa7078452-3a7e-11ed-9d8a-ad4d9920c29e/> ;
+    oa:hasTarget <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4> .
 
-<script type="text/javascript">
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/annotations/aqs/50d226aa-3a7e-11ed-9d8a-ad4d9920c29e> a oa:Annotation ;
+    ns4:creator "AQS plugin" ;
+    oa:hasBody <https://renkulab.io50d226aa-3a7e-11ed-9d8a-ad4d9920c29e/> ;
+    oa:hasTarget <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/annotations/aqs/270a20a8-5f5d-11ed-9fbd-79aa6168c336> a oa:Annotation ;
+    ns4:creator "AQS plugin" ;
+    oa:hasBody <https://renkulab.io270a20a8-5f5d-11ed-9fbd-79aa6168c336/> ;
+    oa:hasTarget <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/annotations/aqs/0c084ace-59c6-11ed-9be0-bbb33dc1b217> a oa:Annotation ;
+    ns4:creator "AQS plugin" ;
+    oa:hasBody <https://renkulab.io0c084ace-59c6-11ed-9be0-bbb33dc1b217/> ;
+    oa:hasTarget <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> .
+
+<https://renkulab.io/entities/0259a446183a9bf3bedacd7ca84d59b494b33e14/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/generations/0a3bc821e0b24a8096dbedf2e21b4915> ;
+    ns3:checksum "0259a446183a9bf3bedacd7ca84d59b494b33e14" .
+
+<https://renkulab.io/entities/6fcb3291cc02a95d30ae82a6609a6a20222a766f/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/generations/bcedac8a0d0c4fe4af4372546f6538d4> ;
+    ns3:checksum "6fcb3291cc02a95d30ae82a6609a6a20222a766f" .
+
+<https://renkulab.io/entities/85551ff3c66e5a9ad2094a6d02dcea2680edab22/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/generations/e9f260e4fcbf42aaae4ee83ad9fd676c> ;
+    ns3:checksum "85551ff3c66e5a9ad2094a6d02dcea2680edab22" .
+
+<https://renkulab.io/entities/8f02fbeb80a9365f77420b3842fae29fec3ae31e/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/generations/1fc57c28b2ec4470b3bd49c6fc1f3855> ;
+    ns3:checksum "8f02fbeb80a9365f77420b3842fae29fec3ae31e" .
+
+<https://renkulab.io/entities/d07d46bf77481ca601612781207b0db6f4f828ce/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/generations/27880a047a774047bd9fae5f2798122d> ;
+    ns3:checksum "d07d46bf77481ca601612781207b0db6f4f828ce" .
+
+<https://renkulab.io/entities/e3a9c54ccf3537284e8385239660e4338504107c/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/generations/0e4fc917d3494ddc88e6bfdb4b388546> ;
+    ns3:checksum "e3a9c54ccf3537284e8385239660e4338504107c" .
+
+<https://renkulab.io/entities/ef6fc42318ab1eafaf8b2ea84a3298ccf95b88b2/out.ipynb> a ns1:Entity ;
+    ns1:atLocation "out.ipynb" ;
+    ns1:qualifiedGeneration <https://renkulab.io/activities/23eabae66865427fac7891803876244a/generations/5d4918e3dfca401291adf0510fd56a79> ;
+    ns3:checksum "ef6fc42318ab1eafaf8b2ea84a3298ccf95b88b2" .
+
+<https://renkulab.io/projects/astronomy/mmoda/fermi> a ns2:Project,
+        ns1:Location ;
+    ns2:agent "1.6.0" ;
+    ns2:creator <mailto:andrii.neronov@gmail.com> ;
+    ns2:dateCreated "2022-08-31T12:47:03+00:00" ;
+    ns2:description "" ;
+    ns2:name "fermi" ;
+    ns2:schemaVersion "9" ;
+    ns3:automatedTemplateUpdate true ;
+    ns3:hasActivity <https://renkulab.io/activities/23eabae66865427fac7891803876244a>,
+        <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7>,
+        <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4>,
+        <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d>,
+        <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570>,
+        <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389>,
+        <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> ;
+    ns3:hasPlan <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671>,
+        <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6>,
+        <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc>,
+        <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6> ;
+    ns3:templateId "python-minimal" ;
+    ns3:templateReference "0.3.4" ;
+    ns3:templateSource "https://github.com/SwissDataScienceCenter/renku-project-template" ;
+    ns3:templateVersion "fc5953b87e53ec5bd5a3288ce6660b39a9f0107c" .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0> ;
+    ns1:hadPlan <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6> .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a/generations/5d4918e3dfca401291adf0510fd56a79> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/23eabae66865427fac7891803876244a> .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a/parameter-value/4e4db189f1c749e08486fe06c40cdc05> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/outputs/2> .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a/parameter-value/9403377aeac74d9cb417ea3fd3cab875> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/inputs/1> .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a/usages/bc6f41e18ce245bd84d92888c76a1501> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0> ;
+    ns1:hadPlan <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/generations/bcedac8a0d0c4fe4af4372546f6538d4> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/parameter-value/43b12d77dfe7450c87b64d4c4e5fde23> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/outputs/2> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/parameter-value/9f04de5bb17548c5a05b6bd343f97956> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/usages/10e544e0e418469da7b272b74f183158> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.7.1> ;
+    ns1:hadPlan <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/generations/1fc57c28b2ec4470b3bd49c6fc1f3855> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/parameter-value/26477424f89447b1b443628a4b1cd493> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/outputs/2> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/parameter-value/39d92db6b263446cacf6302718024759> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/inputs/1> .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/usages/923fce9f37f04e4e9bf861fdc21568d5> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0> ;
+    ns1:hadPlan <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/generations/0e4fc917d3494ddc88e6bfdb4b388546> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/parameter-value/8c9457604b3b46b4afb561933d063141> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/parameter-value/99562b885fb8476ea1d8f761421e9114> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/outputs/2> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/usages/f7cc56ba68b64912869409b49c41da42> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.7.1> ;
+    ns1:hadPlan <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/generations/0a3bc821e0b24a8096dbedf2e21b4915> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/parameter-value/21de19cb1a134e9b908d9e7f42b03ef0> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/outputs/2> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/parameter-value/e6d4d757537041b3923548928e0a0107> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/inputs/1> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/usages/00ebc4265f634241ac1f0a201f665c78> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0> ;
+    ns1:hadPlan <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/generations/e9f260e4fcbf42aaae4ee83ad9fd676c> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/parameter-value/c6069bd4d59b40f887e6f9b49ec2af1a> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/parameter-value/e04c296d11834d039983e3ee4b46ac04> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/outputs/2> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/usages/0a184c58a00c457c8a64155efb891db5> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/association> a ns1:Association ;
+    ns1:agent <https://github.com/swissdatasciencecenter/renku-python/tree/v1.8.1> ;
+    ns1:hadPlan <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/generations/27880a047a774047bd9fae5f2798122d> a ns1:Generation ;
+    ns1:activity <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/parameter-value/c51d6237c9044f9186349c701afd7ada> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "out.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/outputs/2> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/parameter-value/fc71046e219d4b548d152e2063a5ea76> a ns2:PropertyValue,
+        ns3:ParameterValue ;
+    ns2:value "fermi_lc.ipynb" ;
+    ns2:valueReference <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/inputs/1> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/usages/504276febc6a40b186cb232f480025d8> a ns1:Usage ;
+    ns1:entity <https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> .
+
+<https://renkulab.io0c084ace-59c6-11ed-9be0-bbb33dc1b217/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns4:title "query_object_0c084ace-59c6-11ed-9be0-bbb33dc1b217" .
+
+<https://renkulab.io270a20a8-5f5d-11ed-9fbd-79aa6168c336/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns4:title "query_object_270a20a8-5f5d-11ed-9fbd-79aa6168c336" .
+
+<https://renkulab.io50d226aa-3a7e-11ed-9d8a-ad4d9920c29e/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns4:title "query_object_50d226aa-3a7e-11ed-9d8a-ad4d9920c29e" .
+
+<https://renkulab.ioa7078452-3a7e-11ed-9d8a-ad4d9920c29e/> a oda:Run ;
+    oda:isRequestingAstroObject odas:AstroObjectMrk_421 ;
+    oda:isUsing odas:AQModuleSimbadClass ;
+    ns4:title "query_object_a7078452-3a7e-11ed-9d8a-ad4d9920c29e" .
+
+<mailto:andrii.neronov@gmail.com> a ns2:Person,
+        ns1:Person ;
+    ns2:email "andrii.neronov@gmail.com" ;
+    ns2:name "Andrii Neronov" .
+
+<https://github.com/swissdatasciencecenter/renku-python/tree/v1.8.1> a ns1:SoftwareAgent ;
+    ns2:name "renku 1.8.1" .
+
+<https://renkulab.io/activities/23eabae66865427fac7891803876244a> a ns1:Activity ;
+    ns1:endedAtTime "2022-11-08T13:14:16+01:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/23eabae66865427fac7891803876244a/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/23eabae66865427fac7891803876244a/usages/bc6f41e18ce245bd84d92888c76a1501> ;
+    ns1:startedAtTime "2022-11-08T13:14:00+01:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/23eabae66865427fac7891803876244a/parameter-value/4e4db189f1c749e08486fe06c40cdc05>,
+        <https://renkulab.io/activities/23eabae66865427fac7891803876244a/parameter-value/9403377aeac74d9cb417ea3fd3cab875> .
+
+<https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7> a ns1:Activity ;
+    ns1:endedAtTime "2022-11-08T13:07:08+01:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/usages/10e544e0e418469da7b272b74f183158> ;
+    ns1:startedAtTime "2022-11-08T13:06:54+01:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/parameter-value/43b12d77dfe7450c87b64d4c4e5fde23>,
+        <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7/parameter-value/9f04de5bb17548c5a05b6bd343f97956> .
+
+<https://renkulab.io/activities/ab71b1173878481287a2554fba55263d> a ns1:Activity ;
+    ns1:endedAtTime "2022-11-08T13:13:13+01:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/usages/f7cc56ba68b64912869409b49c41da42> ;
+    ns1:startedAtTime "2022-11-08T13:12:57+01:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/parameter-value/8c9457604b3b46b4afb561933d063141>,
+        <https://renkulab.io/activities/ab71b1173878481287a2554fba55263d/parameter-value/99562b885fb8476ea1d8f761421e9114> .
+
+<https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671> a ns2:Action,
+        ns2:CreativeWork,
+        ns1:Plan,
+        ns3:Plan ;
+    ns2:dateCreated "2022-09-22T15:56:22+02:00" ;
+    ns2:name "papermill-fermi_lc_-628fc" ;
+    ns3:command "papermill" ;
+    ns3:hasInputs <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/inputs/1> ;
+    ns3:hasOutputs <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/outputs/2> .
+
+<https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/inputs/1> a ns2:Property,
+        ns3:CommandInput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "fermi_lc.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "input-1" ;
+    ns3:position 1 .
+
+<https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/outputs/2> a ns2:Property,
+        ns3:CommandOutput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "out.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "output-2" ;
+    ns3:createFolder true ;
+    ns3:position 2 .
+
+<https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc> a ns2:Action,
+        ns2:CreativeWork,
+        ns1:Plan,
+        ns3:Plan ;
+    ns2:dateCreated "2022-11-01T10:17:48+01:00" ;
+    ns2:name "papermill-fermi_lc_-32666" ;
+    ns3:command "papermill" ;
+    ns3:hasInputs <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/inputs/1> ;
+    ns3:hasOutputs <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/outputs/2> .
+
+<https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/inputs/1> a ns2:Property,
+        ns3:CommandInput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "fermi_lc.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "input-1" ;
+    ns3:position 1 .
+
+<https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/outputs/2> a ns2:Property,
+        ns3:CommandOutput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "out.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "output-2" ;
+    ns3:createFolder true ;
+    ns3:position 2 .
+
+<https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4> a ns1:Activity ;
+    ns1:endedAtTime "2022-09-22T15:58:38+02:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/usages/923fce9f37f04e4e9bf861fdc21568d5> ;
+    ns1:startedAtTime "2022-09-22T15:58:33+02:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.7.1>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/parameter-value/26477424f89447b1b443628a4b1cd493>,
+        <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4/parameter-value/39d92db6b263446cacf6302718024759> .
+
+<https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570> a ns1:Activity ;
+    ns1:endedAtTime "2022-09-22T15:56:22+02:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/usages/00ebc4265f634241ac1f0a201f665c78> ;
+    ns1:startedAtTime "2022-09-22T15:56:08+02:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.7.1>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/parameter-value/21de19cb1a134e9b908d9e7f42b03ef0>,
+        <https://renkulab.io/activities/b8880d453bf346fdb44f60fba947f570/parameter-value/e6d4d757537041b3923548928e0a0107> .
+
+<https://renkulab.io/activities/ba892e29660041468d3bb13f64016389> a ns1:Activity ;
+    ns1:endedAtTime "2022-11-08T13:02:04+01:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/usages/0a184c58a00c457c8a64155efb891db5> ;
+    ns1:startedAtTime "2022-11-08T13:01:58+01:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/parameter-value/c6069bd4d59b40f887e6f9b49ec2af1a>,
+        <https://renkulab.io/activities/ba892e29660041468d3bb13f64016389/parameter-value/e04c296d11834d039983e3ee4b46ac04> .
+
+<https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84> a ns1:Activity ;
+    ns1:endedAtTime "2022-11-01T10:17:48+01:00"^^xsd:dateTime ;
+    ns1:qualifiedAssociation <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/association> ;
+    ns1:qualifiedUsage <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/usages/504276febc6a40b186cb232f480025d8> ;
+    ns1:startedAtTime "2022-11-01T10:17:43+01:00"^^xsd:dateTime ;
+    ns1:wasAssociatedWith <https://github.com/swissdatasciencecenter/renku-python/tree/v1.8.1>,
+        <mailto:gabriele.barni@gmail.com> ;
+    ns3:parameter <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/parameter-value/c51d6237c9044f9186349c701afd7ada>,
+        <https://renkulab.io/activities/fdbef6ecf8e746d9b772ebb5cae53d84/parameter-value/fc71046e219d4b548d152e2063a5ea76> .
+
+<https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6> a ns2:Action,
+        ns2:CreativeWork,
+        ns1:Plan,
+        ns3:Plan ;
+    ns2:dateCreated "2022-09-22T15:58:38+02:00" ;
+    ns2:name "papermill-fermi_lc_-55deb" ;
+    ns3:command "papermill" ;
+    ns3:hasInputs <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/inputs/1> ;
+    ns3:hasOutputs <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/outputs/2> .
+
+<https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/inputs/1> a ns2:Property,
+        ns3:CommandInput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "fermi_lc.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "input-1" ;
+    ns3:position 1 .
+
+<https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/outputs/2> a ns2:Property,
+        ns3:CommandOutput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "out.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "output-2" ;
+    ns3:createFolder true ;
+    ns3:position 2 .
+
+<https://github.com/swissdatasciencecenter/renku-python/tree/v1.7.1> a ns1:SoftwareAgent ;
+    ns2:name "renku 1.7.1" .
+
+odas:AQModuleSimbadClass a oda:AstroqueryModule ;
+    ns4:title "SimbadClass" .
+
+odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
+    ns4:title "Mrk 421" .
+
+<https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6> a ns2:Action,
+        ns2:CreativeWork,
+        ns1:Plan,
+        ns3:Plan ;
+    ns2:creator <mailto:gabriele.barni@gmail.com> ;
+    ns2:dateCreated "2022-11-08T13:02:04+01:00" ;
+    ns2:name "papermill-fermi_lc_-def32" ;
+    ns3:command "papermill" ;
+    ns3:hasInputs <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> ;
+    ns3:hasOutputs <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/outputs/2> .
+
+<https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> a ns2:Property,
+        ns3:CommandInput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "fermi_lc.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "input-1" ;
+    ns3:position 1 .
+
+<https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/outputs/2> a ns2:Property,
+        ns3:CommandOutput,
+        ns3:CommandParameterBase ;
+    ns2:defaultValue "out.ipynb" ;
+    ns2:encodingFormat "application/octet-stream" ;
+    ns2:name "output-2" ;
+    ns3:createFolder true ;
+    ns3:position 2 .
+
+<https://renkulab.io/entities/faf23f747aad17760f38f3e5dbf3fbf1258d51ec/fermi_lc.ipynb> a ns1:Entity ;
+    ns1:atLocation "fermi_lc.ipynb" ;
+    ns3:checksum "faf23f747aad17760f38f3e5dbf3fbf1258d51ec" .
+
+<https://github.com/swissdatasciencecenter/renku-python/tree/v1.9.0> a ns1:SoftwareAgent ;
+    ns2:name "renku 1.9.0" .
+
+<mailto:gabriele.barni@gmail.com> a ns2:Person,
+        ns1:Person ;
+    ns2:email "gabriele.barni@gmail.com" ;
+    ns2:name "burnout87" .
+
+`;
+    
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var data;
+    var options = {
+        autoResize: true,
+        nodes: {
+            scaling: {
+                min: 10,
+                max: 30
+            },
+            font: {
+                size: 14,
+                face: "Tahoma",
+            },
+        },
+        edges: {
+            smooth: false,
+            arrows: {
+              to: {
+                enabled: true,
+                scaleFactor: 1.2
+                }
+            },
+            width: 4
+
+        },
+        layout: {
+            hierarchical: {
+                enabled: false
+            }
+        },
+        interaction: {
+
+        },
+    };
+    
     window.onload = function () {
         load_graph();
     };
-</script>
-
-
-<body>
-    <h1>ODA Graph Export Quick-Look</h1>
-    <div style="margin: 5px 0px 15px 5px">
-        <h3 style="margin: 15px 0px 10px 5px;">Which graph example would you like to explore?</h3>
-        <select name="graph_examples" id="graph_examples_selector" onchange="load_graph_example()">
-            <option value="graph_data/graph__example.ttl">renku-aqs-test-case example</option>
-        </select>
+  </script>
+ </head>
+ <body>
+  <div class="card" style="width: 100%">
+   <h1>
+    ODA Graph Export Quick-Look
+   </h1>
+   <div style="margin: 5px 0px 15px 5px">
+    <button class="btn btn-secondary btn-sm" onclick="reset_graph()" type="button">
+     Reset graph!
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="fit_graph()" type="button">
+     Fit graph!
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="stop_animation()" type="button">
+     Stop animation!
+    </button>
+   </div>
+   <div style="display:flex;">
+    <div style="background-color: #F7F7F7; border-left: 1px double; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+     <h3 style="margin: 15px 0px 10px 5px;">
+      Change graph layout
+     </h3>
+     <div style="margin: 5px">
+      <label>
+       <input checked="" id="repulsion_layout" name="graph_layout" onchange="toggle_layout(this)" type="radio" value="repulsion"/>
+       Random
+      </label>
+     </div>
+     <div style="margin: 5px">
+      <label>
+       <input id="hierarchical_layout" name="graph_layout" onchange="toggle_layout(this)" type="radio" unchecked="" value="hierarchicalRepulsion"/>
+       Hierarchical
+      </label>
+     </div>
     </div>
-
-    <div style="margin: 5px 0px 15px 5px">
-        <button onclick="reset_graph()" type="button">Reset graph!</button>
-        <button onclick="fit_graph()" type="button">Fit graph!</button>
-        <button onclick="stop_animation()" type="button">Stop animation!</button>
+    <div style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+     <h3 style="margin: 15px 0px 10px 5px;">
+      Enable/disable selections
+     </h3>
+     <div style="margin: 5px">
+      <label>
+       <input checked="" id="oda_filter" onchange="enable_filter(this)" type="checkbox" value="oda, odas"/>
+       oda astroquery-related nodes
+      </label>
+     </div>
     </div>
-
-    <div style="display:flex;">
-        <div
-            style="background-color: #F7F7F7; border-left: 1px double; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
-            <h3 style="margin: 15px 0px 10px 5px;">Change graph layout</h3>
-            <div style="margin: 5px">
-                <label><input checked="" id="repulsion_layout" name="graph_layout" onchange="toggle_layout(this)"
-                        type="radio" value="repulsion" />
-                    Random</label>
-            </div>
-            <div style="margin: 5px">
-                <label><input id="hierarchical_layout" name="graph_layout" onchange="toggle_layout(this)" type="radio"
-                        unchecked="" value="hierarchicalRepulsion" />
-                    Hierarchical</label>
-            </div>
-        </div>
-        <div id="subset_node_checkboxes"
-            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
-            <h3 style="margin: 15px 0px 10px 5px;">Enable/disable selection of subsets of nodes</h3>
-        </div>
-        <div id="reduction_config_checkboxes"
-            style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
-            <h3 style="margin: 15px 0px 10px 5px;">Apply reductions on the graph</h3>
-        </div>
-        <div id="configs_checkboxes"
-            style="border-right: 1px double; padding: 5px; background-color: #F7F7F7; margin: 5px 0px 15px 5px">
-            <h3 style="margin: 15px 0px 10px 5px;">Enable/disable graphical configurations for the graph</h3>
-        </div>
+    <div style="background-color: #F7F7F7; border-right: 1px double; padding: 5px; margin: 5px 0px 10px 5px">
+     <h3 style="margin: 15px 0px 10px 5px;">
+      Apply reductions
+     </h3>
+     <div style="margin: 5px">
+      <label>
+       <input id="reduction_config_Action" onchange="apply_reduction_change(this)" type="checkbox" unchecked="" value="Action"/>
+       Inputs and outputs
+      </label>
+     </div>
+     <div style="margin: 5px">
+      <label>
+       <input id="reduction_config_AstrophysicalImage" onchange="apply_reduction_change(this)" type="checkbox" unchecked="" value="AstrophysicalImage"/>
+       AstrophysicalImage parameters
+      </label>
+     </div>
+     <div style="margin: 5px">
+      <label>
+       <input id="reduction_config_AstrophysicalRegion" onchange="apply_reduction_change(this)" type="checkbox" unchecked="" value="AstrophysicalRegion"/>
+       AstrophysicalRegion parameters
+      </label>
+     </div>
     </div>
-    <div style="display: flex;">
-        <div style="margin:10px;">
-            <div style="margin: 0px 0px 5px 5px; font-weight: bold; ">Legend</div>
-            <ul id="legend_container"
-                style="overflow: scroll; padding-right:15px; overflow-x:hidden; background-color: #F7F7F7"></ul>
-        </div>
-        <div id="mynetwork"></div>
+    <div style="border-right: 1px double; padding: 5px; background-color: #F7F7F7; margin: 5px 0px 15px 5px">
+     <h3 style="margin: 15px 0px 10px 5px;">
+      Enable/disable graphical configurations
+     </h3>
+     <div style="margin: 5px">
+      <label>
+       <input checked="" id="config_graph_graphical_config.json" onchange="toggle_graph_config(this)" type="checkbox" value="graph_graphical_config.json"/>
+       graph_graphical_config.json
+      </label>
+     </div>
     </div>
-</body>
+   </div>
+   <div style="display: flex;">
+    <div style="margin:10px;">
+     <div style="margin: 0px 0px 5px 5px; font-weight: bold; ">
+      Legend
+     </div>
+     <ul id="legend_container" style="overflow: scroll; padding-right:15px; overflow-x:hidden; background-color: #F7F7F7">
+     </ul>
+    </div>
+    <div id="mynetwork">
+    </div>
+   </div>
+  </div>
+  <script type="text/javascript">
+   // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
 
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+  </script>
+ </body>
 </html>
