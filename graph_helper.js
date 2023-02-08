@@ -198,10 +198,7 @@ function draw_graph() {
 
     network = new vis.Network(container, data, options);
 
-    // if (typeof graph_ttl_content !== 'undefined' && graph_ttl_content !== undefined && graph_ttl_content !== null && graph_ttl_content !== '')
     parse_and_query_ttl_graph();
-    // else
-    //     parse_and_query_graph_example('graph_data/graph_example.ttl');
 
     network.on("stabilized", function (e) {
         stop_animation();
@@ -340,47 +337,6 @@ function draw_graph() {
 
     return network;
 }
-
-// function parse_and_query_graph_example(graph_examples_path) {
-//     $.ajax({
-//         async: true,
-//         url: graph_examples_path,
-//         dataType: 'text',
-//         success: function (data) {
-//             parsed_graph = parser.parse(data,
-//                 function (error, triple, prefixes) {
-//                     // Always log errors
-//                     if (error) {
-//                         console.error(error);
-//                     }
-//                     if (triple) {
-//                         store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
-//                     } else {
-//                         prefixes_graph = prefixes;
-//                         (async () => {
-//                             const bindingsStreamCall = await myEngine.queryQuads(format_full_graph_query(),
-//                                 {
-//                                     sources: [store_full_graph]
-//                                 }
-//                             );
-//                             bindingsStreamCall.on('data', (binding) => {
-//                                 process_binding(binding);
-//                             });
-//                             bindingsStreamCall.on('end', () => {
-//                                 let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-//                                 toggle_layout(checked_radiobox);
-//                             });
-//                             bindingsStreamCall.on('error', (error) => {
-//                                 console.error(error);
-//                             });
-//                         })();
-//                     }
-
-//                 }
-//             );
-//         }
-//     });
-// }
 
 function parse_and_query_ttl_graph() {
     parsed_graph = parser.parse(graph_ttl_content,
@@ -772,17 +728,6 @@ function draw_child_nodes(origin_node) {
         child_nodes_list_content: []
     });
 }
-
-
-// function load_graph_example() {
-//     var loaded_graph_example = document.getElementById("graph_examples_selector").value;
-//     nodes.clear();
-//     edges.clear();
-//     store = new N3.Store();
-
-//     parse_and_query_graph_example(loaded_graph_example);
-//     reset_legend();
-// }
 
 function reset_graph() {
     nodes.clear();
