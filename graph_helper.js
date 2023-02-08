@@ -32,7 +32,8 @@ const graph_edge_config_obj_default = {
 
 let prefixes_graph = {};
 const stack_promises = [];
-var store = new N3.Store();
+var store_full_graph = new N3.Store();
+var store_graph_to_explore = new N3.Store();
 const myEngine = new Comunica.QueryEngine();
 const query_initial_graph = `CONSTRUCT {
 
@@ -233,7 +234,7 @@ function draw_graph() {
                         const bindingsStreamCall = await myEngine.queryQuads(
                             format_query_clicked_node(clicked_node.id),
                             {
-                                sources: [store]
+                                sources: [store_graph_to_explore]
                             }
                         );
                         bindingsStreamCall.on('data', (binding) => {
@@ -353,13 +354,13 @@ function parse_and_query_graph_example(graph_examples_path) {
                         console.error(error);
                     }
                     if (triple) {
-                        store.addQuad(triple.subject, triple.predicate, triple.object);
+                        store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
                     } else {
                         prefixes_graph = prefixes;
                         (async () => {
-                            const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+                            const bindingsStreamCall = await myEngine.queryQuads(format_full_graph_query(),
                                 {
-                                    sources: [store]
+                                    sources: [store_full_graph]
                                 }
                             );
                             bindingsStreamCall.on('data', (binding) => {
@@ -389,23 +390,38 @@ function parse_and_query_ttl_graph() {
                 console.error(error);
             }
             if (triple) {
-                store.addQuad(triple.subject, triple.predicate, triple.object);
+                store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
             } else {
                 prefixes_graph = prefixes;
                 (async () => {
-                    const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
+                    const bindingsStreamCallFullGraph = await myEngine.queryQuads(format_full_graph_query(),
                         {
-                            sources: [store]
+                            sources: [store_full_graph]
                         }
                     );
-                    bindingsStreamCall.on('data', (binding) => {
-                        process_binding(binding);
+                    bindingsStreamCallFullGraph.on('data', (binding) => {
+                        store_graph_to_explore.addQuad(binding.subject, binding.predicate, binding.object);
                     });
-                    bindingsStreamCall.on('end', () => {
-                        let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-                        toggle_layout(checked_radiobox);
+                    bindingsStreamCallFullGraph.on('end', () => {
+                        (async () => {
+                            const bindingsStreamCallInitialGraph = await myEngine.queryQuads(query_initial_graph,
+                                {
+                                    sources: [store_graph_to_explore]
+                                }
+                            );
+                            bindingsStreamCallInitialGraph.on('data', (binding) => {
+                                process_binding(binding);
+                            });
+                            bindingsStreamCallInitialGraph.on('end', () => {
+                                let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+                                toggle_layout(checked_radiobox);
+                            });
+                            bindingsStreamCallInitialGraph.on('error', (error) => {
+                                console.error(error);
+                            });
+                        })();
                     });
-                    bindingsStreamCall.on('error', (error) => {
+                    bindingsStreamCallFullGraph.on('error', (error) => {
                         console.error(error);
                     });
                 })();
@@ -775,7 +791,7 @@ function reset_graph() {
     (async () => {
         const bindingsStreamCall = await myEngine.queryQuads(query_initial_graph,
             {
-                sources: [store]
+                sources: [store_graph_to_explore]
             }
         );
         bindingsStreamCall.on('data', (binding) => {
@@ -813,6 +829,56 @@ function query_type_node(node_id) {
             sources: [store]
         }
     );
+}
+
+function format_full_graph_query() {
+
+    let construct_query_full_graph = `CONSTRUCT {
+    ?entityOutput a <https://swissdatasciencecenter.github.io/renku-ontology#CommandOutput> ;
+            <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
+        
+    ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
+        <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
+    
+    ?activity a ?activityType ;
+        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#hasInputs> ?entityInput ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#hasOutputs> ?entityOutput .
+`
+
+    let where_query_full_graph = `WHERE {
+        
+    ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
+    <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
+                
+    ?entityOutput a <http://www.w3.org/ns/prov#Entity> ; 
+    <http://www.w3.org/ns/prov#qualifiedGeneration>/<http://www.w3.org/ns/prov#activity> ?activity ;
+    <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
+    
+    
+    ?activity a ?activityType ;
+    <https://swissdatasciencecenter.github.io/renku-ontology#parameter> ?parameter_value ;
+    <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+    <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan>/<https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
+    <http://www.w3.org/ns/prov#qualifiedUsage>/<http://www.w3.org/ns/prov#entity> ?entityInput .
+
+    OPTIONAL 
+    {
+        
+ `
+
+    for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
+        construct_query_full_graph += value['query_construct'];
+        where_query_full_graph += value['query_where'];
+    }
+
+    construct_query_full_graph += `}`;
+    where_query_full_graph += `   }
+    }`
+
+    return construct_query_full_graph + where_query_full_graph;
+
 }
 
 
