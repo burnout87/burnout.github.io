@@ -18,9 +18,9 @@
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="application/javascript">
   </script>
-  <script src="../renku-aqs-graph-library/graph_helper.js" type="application/javascript">
+  <script src="https://odahub.io/renku-aqs-graph-library/graph_helper.js" type="application/javascript">
   </script>
-  <link href="../renku-aqs-graph-library/style.css" rel="stylesheet" type="text/css"/>
+  <link href="https://odahub.io/renku-aqs-graph-library/style.css" rel="stylesheet" type="text/css"/>
   <title>
    Graph visualization
   </title>
@@ -96,13 +96,12 @@
 
 <https://renkulab.io/projects/astronomy/mmoda/fermi> a ns2:Project,
         ns1:Location ;
-    ns2:agent "1.6.0" ;
+    ns2:agent "2.1.0" ;
     ns2:creator <mailto:andrii.neronov@gmail.com> ;
     ns2:dateCreated "2022-08-31T12:47:03+00:00" ;
     ns2:description "" ;
     ns2:name "fermi" ;
-    ns2:schemaVersion "9" ;
-    ns3:automatedTemplateUpdate true ;
+    ns2:schemaVersion "10" ;
     ns3:hasActivity <https://renkulab.io/activities/23eabae66865427fac7891803876244a>,
         <https://renkulab.io/activities/4be27a9510ca4e99a10d710b017940c7>,
         <https://renkulab.io/activities/8b8eddf0132e492ba0cbd14afbb8e0a4>,
@@ -115,6 +114,7 @@
         <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc>,
         <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6> ;
     ns3:templateId "python-minimal" ;
+    ns3:templateMetadata "{\\"__template_source__\\": \\"https://github.com/SwissDataScienceCenter/renku-project-template\\", \\"__template_ref__\\": \\"0.3.4\\", \\"__template_id__\\": \\"python-minimal\\", \\"__namespace__\\": \\"astronomy/mmoda\\", \\"__automated_update__\\": true, \\"__repository__\\": \\"https://renkulab.io/gitlab\\", \\"__sanitized_project_name__\\": \\"fermi\\", \\"__project_slug__\\": \\"astronomy/mmoda/fermi\\", \\"__project_description__\\": \\"\\", \\"__renku_version__\\": \\"1.6.0\\", \\"name\\": \\"fermi\\", \\"__name__\\": \\"fermi\\", \\"__template_version__\\": \\"fc5953b87e53ec5bd5a3288ce6660b39a9f0107c\\"}" ;
     ns3:templateReference "0.3.4" ;
     ns3:templateSource "https://github.com/SwissDataScienceCenter/renku-project-template" ;
     ns3:templateVersion "fc5953b87e53ec5bd5a3288ce6660b39a9f0107c" .
@@ -321,7 +321,8 @@
         ns2:CreativeWork,
         ns1:Plan,
         ns3:Plan ;
-    ns2:dateCreated "2022-09-22T15:56:22+02:00" ;
+    ns2:dateCreated "2022-09-22T15:56:08+02:00" ;
+    ns2:dateModified "2022-09-22T15:56:08+02:00" ;
     ns2:name "papermill-fermi_lc_-628fc" ;
     ns3:command "papermill" ;
     ns3:hasInputs <https://renkulab.io/plans/1f54312ff77a4a949d70c4eaea24c671/inputs/1> ;
@@ -348,7 +349,8 @@
         ns2:CreativeWork,
         ns1:Plan,
         ns3:Plan ;
-    ns2:dateCreated "2022-11-01T10:17:48+01:00" ;
+    ns2:dateCreated "2022-11-01T10:17:43+01:00" ;
+    ns2:dateModified "2022-11-01T10:17:43+01:00" ;
     ns2:name "papermill-fermi_lc_-32666" ;
     ns3:command "papermill" ;
     ns3:hasInputs <https://renkulab.io/plans/8f920b5249354f3087dd0335c48262fc/inputs/1> ;
@@ -415,7 +417,8 @@
         ns2:CreativeWork,
         ns1:Plan,
         ns3:Plan ;
-    ns2:dateCreated "2022-09-22T15:58:38+02:00" ;
+    ns2:dateCreated "2022-09-22T15:58:33+02:00" ;
+    ns2:dateModified "2022-09-22T15:58:33+02:00" ;
     ns2:name "papermill-fermi_lc_-55deb" ;
     ns3:command "papermill" ;
     ns3:hasInputs <https://renkulab.io/plans/fd68a739920f40228d73d3a6a0fc15b6/inputs/1> ;
@@ -452,7 +455,8 @@ odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
         ns1:Plan,
         ns3:Plan ;
     ns2:creator <mailto:gabriele.barni@gmail.com> ;
-    ns2:dateCreated "2022-11-08T13:02:04+01:00" ;
+    ns2:dateCreated "2022-11-08T13:01:58+01:00" ;
+    ns2:dateModified "2022-11-08T13:01:58+01:00" ;
     ns2:name "papermill-fermi_lc_-def32" ;
     ns3:command "papermill" ;
     ns3:hasInputs <https://renkulab.io/plans/701f7696986a4fc8923b6a7c319565e6/inputs/1> ;
@@ -583,7 +587,7 @@ odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
      </h3>
      <div style="margin: 5px">
       <label>
-       <input id="reduction_config_Action" onchange="apply_reduction_change(this)" type="checkbox" unchecked="" value="Action"/>
+       <input id="reduction_config_Activity" onchange="apply_reduction_change(this)" type="checkbox" unchecked="" value="Activity"/>
        Inputs and outputs
       </label>
      </div>
@@ -694,25 +698,10 @@ odas:AstroObjectMrk_421 a oda:AstrophysicalObject ;
     }
 };
 
-                  
+        network = new vis.Network(container, data, options);
+        return network;
 
-
-                  
-
-                  network = new vis.Network(container, data, options);
-
-                  
-
-                  
-
-                  
-
-
-                  
-
-                  return network;
-
-              }
+    }
   </script>
  </body>
 </html>
