@@ -51,10 +51,6 @@ const query_initial_graph = `CONSTRUCT {
 const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
-    draw_graph();
-}
-
-function draw_graph() {
     var container = document.getElementById('mynetwork');
 
     // parsing and collecting nodes and edges from the python
