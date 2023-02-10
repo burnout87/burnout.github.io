@@ -712,8 +712,11 @@ function format_full_graph_query() {
  `
 
     for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
-        construct_query_full_graph += value['query_construct'];
-        where_query_full_graph += value['query_where'];
+        if ('query_construct' in value && value['query_construct'] !== undefined
+         && 'query_where' in value && value['query_where'] !== undefined) {
+            construct_query_full_graph += value['query_construct'];
+            where_query_full_graph += value['query_where'];
+        }
     }
 
     construct_query_full_graph += `}`;
