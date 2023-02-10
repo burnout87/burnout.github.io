@@ -51,7 +51,12 @@ const query_initial_graph = `CONSTRUCT {
 const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
-    var container = document.getElementById('mynetwork');
+    var container = document.getElementById("mynetwork");
+
+    let loader_container = document.createElement("div");
+    loader_container.id = "loader";
+    loader_container.classList.add("center");
+    container.before(loader_container);
 
     // parsing and collecting nodes and edges from the python
     nodes = new vis.DataSet([]);
