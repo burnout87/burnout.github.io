@@ -238,7 +238,7 @@ function load_graph() {
 
 function parse_and_query_ttl_graph() {
     console.log("started loading full graph");
-    if(document.getElementById("loader") !== undefined)
+    if(document.getElementById("loader") !== null)
         document.getElementById("loader").style.visibility = "visible";
     parsed_graph = parser.parse(graph_ttl_content,
         function (error, triple, prefixes) {
@@ -261,7 +261,7 @@ function parse_and_query_ttl_graph() {
                     });
                     bindingsStreamCallFullGraph.on('end', () => {
                         console.log("completed loading full graph");
-                        if(document.getElementById("loader") !== undefined)
+                        if(document.getElementById("loader") !== null)
                             document.getElementById("loader").style.display = "none";
                         (async () => {
                             const bindingsStreamCallInitialGraph = await myEngine.queryQuads(query_initial_graph,
