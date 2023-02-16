@@ -638,6 +638,10 @@ function draw_child_nodes(origin_node) {
     });
 }
 
+function refresh_graph() {
+    window.location.reload();
+}
+
 function reset_graph() {
     nodes.clear();
     edges.clear();
