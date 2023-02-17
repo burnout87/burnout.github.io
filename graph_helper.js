@@ -51,6 +51,21 @@ const query_initial_graph = `CONSTRUCT {
 const parser = new N3.Parser({ format: 'ttl' });
 
 function load_graph() {
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+
     var container = document.getElementById("mynetwork");
 
     let loader_container = document.createElement("div");
@@ -243,7 +258,7 @@ function load_graph() {
 
 function parse_and_query_ttl_graph() {
     console.log("started loading full graph");
-    if(document.getElementById("loader") !== null)
+    if (document.getElementById("loader") !== null)
         document.getElementById("loader").style.visibility = "visible";
     parsed_graph = parser.parse(graph_ttl_content,
         function (error, triple, prefixes) {
@@ -266,7 +281,7 @@ function parse_and_query_ttl_graph() {
                     });
                     bindingsStreamCallFullGraph.on('end', () => {
                         console.log("completed loading full graph");
-                        if(document.getElementById("loader") !== null)
+                        if (document.getElementById("loader") !== null)
                             document.getElementById("loader").style.display = "none";
                         (async () => {
                             const bindingsStreamCallInitialGraph = await myEngine.queryQuads(query_initial_graph,
@@ -643,18 +658,18 @@ function refresh_graph() {
 }
 
 function open_ttl_content() {
-    let params = `scrollbars=yes,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=600,height=300,left=100,top=100`;
-    let newWin = window.open("about:blank", 'graph_ttl_content_popup', params);
-    
-    newWin.onload = function() {
+    var ttl_content_container = document.getElementById("ttl_content");
+    if (ttl_content_container.innerHTML.trim() === '') {
         let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
-                                .replace(/</g, "&lt;")
-                                .replace(/>/g, "&gt;")
-                                .replace(/"/g, "&quot;")
-                                .replace(/'/g, "&#39;");
-        let html = `<div style="font-size:12px"><pre>${escape_ttl_content}</pre></div>`;
-        newWin.document.write(html);
-      };
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/"/g, "&quot;")
+                                    .replace(/'/g, "&#39;");
+        let ttl_content_pre = `<pre class="ttl_content_code">${escape_ttl_content}</pre></div>`;
+        ttl_content_container.innerHTML = ttl_content_pre
+    } 
+    else
+        ttl_content_container.innerHTML = ''
 }
 
 function reset_graph() {
@@ -743,7 +758,7 @@ function format_full_graph_query() {
 
     for (const [key, value] of Object.entries(subset_nodes_config_obj)) {
         if ('query_construct' in value && value['query_construct'] !== undefined
-         && 'query_where' in value && value['query_where'] !== undefined) {
+            && 'query_where' in value && value['query_where'] !== undefined) {
             construct_query_full_graph += value['query_construct'];
             where_query_full_graph += value['query_where'];
         }
