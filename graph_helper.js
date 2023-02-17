@@ -643,7 +643,7 @@ function refresh_graph() {
 }
 
 function open_ttl_content() {
-    window.open(`/ttl_graph?ttl_content=${graph_ttl_content}`, '_blank');
+    window.open(`/ttl_graph?ttl_content=${encodeURIComponent(graph_ttl_content)}`, '_blank');
 }
 
 function reset_graph() {
