@@ -642,6 +642,10 @@ function refresh_graph() {
     window.location.reload();
 }
 
+function open_ttl_content() {
+    window.open(`/ttl_graph?ttl_content=${graph_ttl_content}`, '_blank');
+}
+
 function reset_graph() {
     nodes.clear();
     edges.clear();
