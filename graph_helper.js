@@ -643,7 +643,18 @@ function refresh_graph() {
 }
 
 function open_ttl_content() {
-    window.open(`/ttl_graph?ttl_content=${encodeURIComponent(graph_ttl_content)}`, '_blank');
+    let params = `scrollbars=yes,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=600,height=300,left=100,top=100`;
+    let newWin = window.open("about:blank", 'graph_ttl_content_popup', params);
+    
+    newWin.onload = function() {
+        let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;")
+                                .replace(/"/g, "&quot;")
+                                .replace(/'/g, "&#39;");
+        let html = `<div style="font-size:12px"><pre>${escape_ttl_content}</pre></div>`;
+        newWin.document.write(html);
+      };
 }
 
 function reset_graph() {
