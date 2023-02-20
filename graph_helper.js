@@ -68,12 +68,6 @@ function load_graph() {
         });
     }
 
-    // let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
-    //                                 .replace(/</g, "&lt;")
-    //                                 .replace(/>/g, "&gt;")
-    //                                 .replace(/"/g, "&quot;")
-    //                                 .replace(/'/g, "&#39;");
-
     ttl_content_pre = $('<pre>').addClass('ttl_content_code').text(graph_ttl_content)[0];
     var ttl_content_container = document.getElementById("ttl_content");
 
@@ -275,6 +269,13 @@ function load_graph() {
 }
 
 function parse_and_query_ttl_graph() {
+
+    console.log("started loading ttl graph content");
+    $.get("/ttl_graph", function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+        console.log("ended loading full graph content");
+      });
+
     console.log("started loading full graph");
     if (document.getElementById("loader") !== null)
         document.getElementById("loader").style.visibility = "visible";
