@@ -68,13 +68,13 @@ function load_graph() {
         });
     }
 
-    let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
-                                    .replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;")
-                                    .replace(/"/g, "&quot;")
-                                    .replace(/'/g, "&#39;");
+    // let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
+    //                                 .replace(/</g, "&lt;")
+    //                                 .replace(/>/g, "&gt;")
+    //                                 .replace(/"/g, "&quot;")
+    //                                 .replace(/'/g, "&#39;");
 
-    ttl_content_pre = $('<pre>').addClass('ttl_content_code').text(escape_ttl_content)[0];
+    ttl_content_pre = $('<pre>').addClass('ttl_content_code').text(graph_ttl_content)[0];
     var ttl_content_container = document.getElementById("ttl_content");
 
     ttl_content_pre.onmousedown = function dragMouseDown(e) {
