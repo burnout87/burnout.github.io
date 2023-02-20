@@ -50,10 +50,12 @@ const query_initial_graph = `CONSTRUCT {
 
 const parser = new N3.Parser({ format: 'ttl' });
 
+var ttl_content_pre;
+
 function load_graph() {
 
     var coll = document.getElementsByClassName("collapsible");
-    var i;
+    let i;
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
@@ -65,6 +67,22 @@ function load_graph() {
             }
         });
     }
+
+    let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/"/g, "&quot;")
+                                    .replace(/'/g, "&#39;");
+
+    ttl_content_pre = $('<pre>').addClass('ttl_content_code').text(escape_ttl_content)[0];
+    var ttl_content_container = document.getElementById("ttl_content");
+
+    ttl_content_pre.onmousedown = function dragMouseDown(e) {
+        document.onmousemove = function onMouseMove(e) {
+            ttl_content_container.style.maxHeight = ttl_content_container.style.height = Number(ttl_content_pre.style.height.substring(0, ttl_content_pre.style.height.length-2)) + 10 + "px";
+        }
+        document.onmouseup = () => document.onmousemove = document.onmouseup = null;
+      }
 
     var container = document.getElementById("mynetwork");
 
@@ -660,13 +678,7 @@ function refresh_graph() {
 function open_ttl_content() {
     var ttl_content_container = document.getElementById("ttl_content");
     if (ttl_content_container.innerHTML.trim() === '') {
-        let escape_ttl_content = graph_ttl_content.replace(/&/g, "&amp;")
-                                    .replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;")
-                                    .replace(/"/g, "&quot;")
-                                    .replace(/'/g, "&#39;");
-        let ttl_content_pre = `<pre class="ttl_content_code">${escape_ttl_content}</pre></div>`;
-        ttl_content_container.innerHTML = ttl_content_pre
+        ttl_content_container.append(ttl_content_pre);
     } 
     else
         ttl_content_container.innerHTML = ''

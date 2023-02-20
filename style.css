@@ -73,8 +73,9 @@ h3 {
 }
 
 .ttl_content_code {
+    width: 85%;
+    resize: both;
     height: 150px;
-    width: 75%;
     overflow-y: scroll;
-    background-color: #f1f1f1;
+    background-color: #b9b2b2;
 }
