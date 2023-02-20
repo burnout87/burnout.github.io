@@ -272,7 +272,7 @@ function parse_and_query_ttl_graph() {
 
     console.log("started loading ttl graph content");
     $.get("/ttl_graph", function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        console.log("Data: " + data + "\nStatus: " + status);
         console.log("ended loading full graph content");
       });
 
