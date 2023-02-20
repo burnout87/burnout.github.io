@@ -270,64 +270,65 @@ function load_graph() {
 
 function parse_and_query_ttl_graph() {
 
-    console.log("started loading ttl graph content");
-    $.get("/ttl_graph", function(data, status){
-        console.log("Data: " + data + "\nStatus: " + status);
-        console.log("ended loading full graph content");
-      });
-
     console.log("started loading full graph");
     if (document.getElementById("loader") !== null)
         document.getElementById("loader").style.visibility = "visible";
-    parsed_graph = parser.parse(graph_ttl_content,
-        function (error, triple, prefixes) {
-            // Always log errors
-            if (error) {
-                console.error(error);
-            }
-            if (triple) {
-                store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
-            } else {
-                prefixes_graph = prefixes;
-                (async () => {
-                    const bindingsStreamCallFullGraph = await myEngine.queryQuads(format_full_graph_query(),
-                        {
-                            sources: [store_full_graph]
-                        }
-                    );
-                    bindingsStreamCallFullGraph.on('data', (binding) => {
-                        store_graph_to_explore.addQuad(binding.subject, binding.predicate, binding.object);
-                    });
-                    bindingsStreamCallFullGraph.on('end', () => {
-                        console.log("completed loading full graph");
-                        if (document.getElementById("loader") !== null)
-                            document.getElementById("loader").style.display = "none";
+    $.get("/ttl_graph", function(data, status){
+        if (data != null) {
+            graph_ttl_content = data;
+            parsed_graph = parser.parse(graph_ttl_content,
+                function (error, triple, prefixes) {
+                    // Always log errors
+                    if (error) {
+                        console.error(error);
+                    }
+                    if (triple) {
+                        store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
+                    } else {
+                        prefixes_graph = prefixes;
                         (async () => {
-                            const bindingsStreamCallInitialGraph = await myEngine.queryQuads(query_initial_graph,
+                            const bindingsStreamCallFullGraph = await myEngine.queryQuads(format_full_graph_query(),
                                 {
-                                    sources: [store_graph_to_explore]
+                                    sources: [store_full_graph]
                                 }
                             );
-                            bindingsStreamCallInitialGraph.on('data', (binding) => {
-                                process_binding(binding);
+                            bindingsStreamCallFullGraph.on('data', (binding) => {
+                                store_graph_to_explore.addQuad(binding.subject, binding.predicate, binding.object);
                             });
-                            bindingsStreamCallInitialGraph.on('end', () => {
-                                let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
-                                toggle_layout(checked_radiobox);
+                            bindingsStreamCallFullGraph.on('end', () => {
+                                console.log("completed loading full graph");
+                                if (document.getElementById("loader") !== null)
+                                    document.getElementById("loader").style.display = "none";
+                                (async () => {
+                                    const bindingsStreamCallInitialGraph = await myEngine.queryQuads(query_initial_graph,
+                                        {
+                                            sources: [store_graph_to_explore]
+                                        }
+                                    );
+                                    bindingsStreamCallInitialGraph.on('data', (binding) => {
+                                        process_binding(binding);
+                                    });
+                                    bindingsStreamCallInitialGraph.on('end', () => {
+                                        let checked_radiobox = document.querySelector('input[name="graph_layout"]:checked');
+                                        toggle_layout(checked_radiobox);
+                                    });
+                                    bindingsStreamCallInitialGraph.on('error', (error) => {
+                                        console.error(error);
+                                    });
+                                })();
                             });
-                            bindingsStreamCallInitialGraph.on('error', (error) => {
+                            bindingsStreamCallFullGraph.on('error', (error) => {
                                 console.error(error);
                             });
                         })();
-                    });
-                    bindingsStreamCallFullGraph.on('error', (error) => {
-                        console.error(error);
-                    });
-                })();
-            }
+                    }
+        
+                }
+            );
 
         }
-    );
+    });
+
 }
 
 function fit_graph() {
