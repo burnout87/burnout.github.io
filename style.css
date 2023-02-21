@@ -78,4 +78,5 @@ h3 {
     height: 150px;
     overflow-y: scroll;
     background-color: #b9b2b2;
+    padding: 3px;
 }

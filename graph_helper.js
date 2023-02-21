@@ -68,12 +68,15 @@ function load_graph() {
         });
     }
 
-    ttl_content_pre = $('<pre>').addClass('ttl_content_code').text(graph_ttl_content)[0];
+    ttl_content_pre = document.createElement("pre");
+    ttl_content_pre.classList.add("ttl_content_code");
+    ttl_content_pre.innerText = graph_ttl_content;
     var ttl_content_container = document.getElementById("ttl_content");
 
     ttl_content_pre.onmousedown = function dragMouseDown(e) {
         document.onmousemove = function onMouseMove(e) {
-            ttl_content_container.style.maxHeight = ttl_content_container.style.height = Number(ttl_content_pre.style.height.substring(0, ttl_content_pre.style.height.length-2)) + 10 + "px";
+            if (ttl_content_pre.style.height !== "")
+                ttl_content_container.style.maxHeight = ttl_content_container.style.height = Number(ttl_content_pre.style.height.substring(0, ttl_content_pre.style.height.length-2)) + 10 + "px";
         }
         document.onmouseup = () => document.onmousemove = document.onmouseup = null;
       }
