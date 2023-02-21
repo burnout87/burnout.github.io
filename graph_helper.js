@@ -712,7 +712,7 @@ function refresh_graph() {
 
 function open_ttl_content() {
     var ttl_content_container = document.getElementById("ttl_content");
-    if (ttl_content_container.innerHTML.trim() === '') {
+    if (ttl_content_container.innerHTML.trim() === '' && graph_ttl_content !== '') {
         ttl_content_container.append(ttl_content_pre);
     } 
     else
