@@ -135,7 +135,7 @@ function load_graph() {
                     data = JSON.parse(data);
                     if ('graph_ttl_content' in data) {
                         graph_ttl_content = data['graph_ttl_content'];
-                        ttl_content_pre.text = graph_ttl_content;
+                        ttl_content_pre.innerText = graph_ttl_content;
                     }
                     if ('graph_version' in data)
                         graph_version =  data['graph_version']; 
