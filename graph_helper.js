@@ -131,7 +131,14 @@ function load_graph() {
     if (graph_ttl_content == '') 
         $.get("/ttl_graph", function(data, status) {
             if (data != null) {
-                graph_ttl_content = data;
+                try {
+                    data = JSON.parse(data);
+                    if ('graph_ttl_content' in data)
+                        graph_ttl_content = data['graph_ttl_content'];
+                    if ('graph_version' in data)
+                        graph_version =  data['graph_version']; 
+                } catch(e) {
+                }
                 parse_and_query_ttl_graph(graph_ttl_content);
                 reset_legend();
             }
