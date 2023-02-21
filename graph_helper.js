@@ -311,6 +311,10 @@ function parse_and_query_ttl_graph(ttl_data_to_parse) {
                     });
                     bindingsStreamCallFullGraph.on('end', () => {
                         console.log("completed loading full graph");
+                        if (graph_version !== '') {
+                            start_timer_graph_version();
+                            console.log("timer for the graph version started");
+                        }
                         if (document.getElementById("loader") !== null)
                             document.getElementById("loader").style.display = "none";
                         (async () => {
@@ -681,6 +685,19 @@ function draw_child_nodes(origin_node) {
         id: origin_node.id,
         label: origin_node.original_label,
         child_nodes_list_content: []
+    });
+}
+
+function start_timer_graph_version() {
+    setInterval(query_graph_version, 1000);
+}
+
+function query_graph_version() {
+    $.get("/graph_version", function(data, status) {
+        if (data != null && graph_version !== data) {
+            console.log("graph version check detected a new graph version, the graph will be refreshed");
+            refresh_graph();
+        }
     });
 }
 
