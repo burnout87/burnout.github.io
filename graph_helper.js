@@ -698,7 +698,7 @@ function start_timer_graph_version() {
 }
 
 function query_graph_version() {
-    $.get("/graph_version", function(data, status) {
+    $.get("graph_version", function(data, status) {
         if (data != null && graph_version !== data) {
             console.log("graph version check detected a new graph version, the graph will be refreshed");
             refresh_graph();
