@@ -132,7 +132,7 @@ function load_graph() {
     network = new vis.Network(container, data, options);
 
     if (graph_ttl_content == '') 
-        $.get("interactive_graph/ttl_graph", function(data, status) {
+        $.get("ttl_graph", function(data, status) {
             if (data != null) {
                 try {
                     data = JSON.parse(data);
