@@ -37,18 +37,27 @@ var store_graph_to_explore = new N3.Store();
 const myEngine = new Comunica.QueryEngine();
 const query_initial_graph = `CONSTRUCT {
 
-    ?activity a ?activityType ;
-        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue .
-    }
-    WHERE { 
-             
         ?activity a ?activityType ;
             <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
+            <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
+            <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValueConcat .
+    }
+    WHERE { 
+        {
+            ?activity a ?activityType ;
+                <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+                <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
+        }
+             
+        {
+            SELECT ?activity (group_concat(?entityArgumentDefaultValue; separator=" ") AS ?entityArgumentDefaultValueConcat) WHERE {
 
-        OPTIONAL { ?activity <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue }
+                OPTIONAL { ?activity <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue }
+                    
+            }
+            GROUP BY ?activity
+        }
+
     }`
 
 const parser = new N3.Parser({ format: 'ttl' });
