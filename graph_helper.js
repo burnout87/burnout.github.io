@@ -39,13 +39,16 @@ const query_initial_graph = `CONSTRUCT {
 
     ?activity a ?activityType ;
         <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
+        <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue .
     }
     WHERE { 
              
         ?activity a ?activityType ;
             <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
             <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
+
+        OPTIONAL { ?activity <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue }
     }`
 
 const parser = new N3.Parser({ format: 'ttl' });
@@ -772,34 +775,39 @@ function format_full_graph_query() {
     ?entityOutput a <https://swissdatasciencecenter.github.io/renku-ontology#CommandOutput> ;
             <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
         
-    ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
+    ?entityInput a <http://www.w3.org/ns/prov#EntityInput> ;
         <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
     
     ?activity a ?activityType ;
         <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
         <https://swissdatasciencecenter.github.io/renku-ontology#hasInputs> ?entityInput ;
         <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#hasOutputs> ?entityOutput .
+        <https://swissdatasciencecenter.github.io/renku-ontology#hasOutputs> ?entityOutput ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#arguments> ?entityArgumentDefaultValue .
 `
 
     let where_query_full_graph = `WHERE {
+    
+        ?activity a ?activityType ;
+            <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+            <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan>/<https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
+            <http://www.w3.org/ns/prov#qualifiedUsage>/<http://www.w3.org/ns/prov#entity> ?entityInput .
         
-    ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
-        <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
-                
-    ?entityOutput a <http://www.w3.org/ns/prov#Entity> ; 
-        <http://www.w3.org/ns/prov#qualifiedGeneration>/<http://www.w3.org/ns/prov#activity> ?activity ;
-        <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
+        OPTIONAL { ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
+                            <http://www.w3.org/ns/prov#hadPlan>/
+                            <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments>/
+                            <http://schema.org/defaultValue> ?entityArgumentDefaultValue } 
     
     
-    ?activity a ?activityType ;
-        <https://swissdatasciencecenter.github.io/renku-ontology#parameter> ?parameter_value ;
-        <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
-        <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan>/<https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
-        <http://www.w3.org/ns/prov#qualifiedUsage>/<http://www.w3.org/ns/prov#entity> ?entityInput .
+        ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
+            <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
+                    
+        ?entityOutput a <http://www.w3.org/ns/prov#Entity> ; 
+            <http://www.w3.org/ns/prov#qualifiedGeneration>/<http://www.w3.org/ns/prov#activity> ?activity ;
+            <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
 
-    OPTIONAL 
-    {
+        OPTIONAL 
+        {
         
  `
 
@@ -812,7 +820,7 @@ function format_full_graph_query() {
     }
 
     construct_query_full_graph += `}`;
-    where_query_full_graph += `   }
+    where_query_full_graph += `}
     }`
 
     return construct_query_full_graph + where_query_full_graph;
