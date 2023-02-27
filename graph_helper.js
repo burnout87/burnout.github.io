@@ -801,11 +801,6 @@ function format_full_graph_query() {
             <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan>/<https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
             <http://www.w3.org/ns/prov#qualifiedUsage>/<http://www.w3.org/ns/prov#entity> ?entityInput .
 
-        OPTIONAL { ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
-            <http://www.w3.org/ns/prov#hadPlan>/
-            <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments>/
-            <https://swissdatasciencecenter.github.io/renku-ontology#prefix> ?entityArgumentPrefix }
-        
         OPTIONAL 
         {
         
@@ -823,16 +818,31 @@ function format_full_graph_query() {
     where_query_full_graph += `}
         
         {
-            SELECT ?activity (GROUP_CONCAT(?entityArgumentDefaultValue; separator=" ") AS ?entityArgumentDefaultValueConcat) WHERE {
-                    OPTIONAL { ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
+            SELECT ?activity (GROUP_CONCAT(?entityArgumentPrefixedDefaultValue; separator=" ") AS ?entityArgument) 
+            WHERE 
+            {
+                {
+                    SELECT ?activity (CONCAT(COALESCE(?entityArgumentPrefix, "")," ",?entityArgumentDefaultValue) AS ?entityArgumentPrefixedDefaultValue) ?entityArgumentDefaultValue
+                    WHERE {
+                        OPTIONAL {
+                            ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
                                     <http://www.w3.org/ns/prov#hadPlan>/
-                                    <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments>/
-                                    <http://schema.org/defaultValue> ?entityArgumentDefaultValue }
+                                    <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments> ?argument .
+                        
+                            ?argument <https://swissdatasciencecenter.github.io/renku-ontology#position> ?entityArgumentPosition ;
+                                    <http://schema.org/defaultValue> ?entityArgumentDefaultValue .
+    
+                            OPTIONAL {
+                                ?argument <https://swissdatasciencecenter.github.io/renku-ontology#prefix> ?entityArgumentPrefix .
+                            }
+                        }
+                    
+                    }
+                    ORDER BY ASC(?entityArgumentPosition)
+                }
             }
             GROUP BY ?activity
         }
-
-        BIND(CONCAT(?entityArgumentPrefix, " ", ?entityArgumentDefaultValueConcat) AS ?entityArgument)
 
     }`
 
