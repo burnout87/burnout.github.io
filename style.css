@@ -95,3 +95,10 @@ h3 {
     background-color: #b9b2b2;
     padding: 3px;
 }
+
+#menu_container {
+    padding: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
