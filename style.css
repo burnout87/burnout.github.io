@@ -102,3 +102,15 @@ h3 {
     overflow: hidden;
     transition: max-height 0.2s ease-out;
 }
+
+.menu_item_first_left {
+    border-left: 1px double; 
+}
+
+.menu_item {
+    background-color: #F7F7F7; 
+    padding-right:5px; 
+    padding-left:5px; 
+    border-right: 1px double; 
+    margin: 5px 0px 10px 5px
+}
