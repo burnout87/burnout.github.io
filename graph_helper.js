@@ -54,10 +54,11 @@ const query_initial_graph = `CONSTRUCT {
 const parser = new N3.Parser({ format: 'ttl' });
 
 var ttl_content_pre;
+var legend_content_main;
 
 function load_graph() {
 
-    var coll = document.getElementsByClassName("collapsible");
+    var coll = document.getElementsByClassName("collapsible_vertical");
     let i;
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
@@ -67,6 +68,19 @@ function load_graph() {
                 content.style.maxHeight = null;
             } else {
                 content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+
+    coll = document.getElementsByClassName("collapsible_horizontal");
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.maxWidth) {
+                content.style.maxWidth = null;
+            } else {
+                content.style.maxWidth = content.scrollWidth + "px";
             }
         });
     }
@@ -468,7 +482,13 @@ function reset_legend() {
         span_config_list[i].remove();
     }
 
-    let legend_container = document.getElementById('legend_container');
+    let legend_content = document.createElement("ul");
+    legend_content.id = "legend_content";
+    legend_content.style.overflow = "scroll";
+    legend_content.style.paddingRight = "15px";
+    legend_content.style.overflowX = "hidden";
+    legend_content.style.backgroundColor = "#F7F7F7";
+    // let legend_content = document.getElementById('legend_content');
     for (let config in nodes_graph_config_obj) {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
         if (check_box_config && check_box_config.checked) {
@@ -493,9 +513,11 @@ function reset_legend() {
             outer_li.appendChild(color_span);
             outer_li.appendChild(name_span);
 
-            legend_container.append(outer_li);
+            legend_content.append(outer_li);
         }
     }
+
+    legend_content_main = legend_content.innerHTML;
 }
 
 function toggle_graph_config(check_box_element) {
@@ -720,6 +742,15 @@ function open_ttl_content() {
     } 
     else
         ttl_content_container.innerHTML = ''
+}
+
+function open_legend_content() {
+    var legend_content_container = document.getElementById("legend_container");
+    if (legend_content_container.innerHTML.trim() === '') {
+        legend_content_container.innerHTML = legend_content_main;
+    } 
+    else
+        legend_content_container.innerHTML = ''
 }
 
 function reset_graph() {

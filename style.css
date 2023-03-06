@@ -49,7 +49,8 @@ h3 {
     margin: auto;
 }
 
-.collapsible {
+.collapsible_vertical,
+.collapsible_horizontal {
     color: white;
     cursor: pointer;
     border: none;
@@ -60,11 +61,25 @@ h3 {
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active,
-.collapsible:hover {
+.collapsible_vertical:hover,
+.collapsible_horizontal:hover {
     background-color: #555;
 }
 
-/* Style the collapsible content. Note: hidden by default */
+.legend_container {
+    padding: 10px;
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 0.2s ease-out;
+}
+
+#legend_content {
+    width: 150px;
+    background-color: #b9b2b2;
+    padding: 3px;
+    margin:10px;
+}
+
 #ttl_content {
     padding: 10px;
     max-height: 0;
