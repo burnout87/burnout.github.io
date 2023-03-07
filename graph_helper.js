@@ -89,6 +89,7 @@ function load_graph() {
     ttl_content_pre.classList.add("ttl_content_code");
     ttl_content_pre.innerText = graph_ttl_content;
     var ttl_content_container = document.getElementById("ttl_content");
+    ttl_content_container.append(ttl_content_pre);
 
     ttl_content_pre.onmousedown = function dragMouseDown(e) {
         document.onmousemove = function onMouseMove(e) {
@@ -731,15 +732,6 @@ function query_graph_version() {
 
 function refresh_graph() {
     window.location.reload();
-}
-
-function open_ttl_content() {
-    var ttl_content_container = document.getElementById("ttl_content");
-    if (ttl_content_container.innerHTML.trim() === '' && graph_ttl_content !== '') {
-        ttl_content_container.append(ttl_content_pre);
-    } 
-    else
-        ttl_content_container.innerHTML = ''
 }
 
 function reset_graph() {
