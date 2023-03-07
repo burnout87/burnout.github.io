@@ -483,11 +483,7 @@ function reset_legend() {
     }
 
     let legend_content = document.createElement("ul");
-    legend_content.id = "legend_content";
-    legend_content.style.overflow = "scroll";
-    legend_content.style.paddingRight = "15px";
-    legend_content.style.overflowX = "hidden";
-    legend_content.style.backgroundColor = "#F7F7F7";
+    legend_content.classList.add("legend_content");
     // let legend_content = document.getElementById('legend_content');
     for (let config in nodes_graph_config_obj) {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
@@ -496,10 +492,11 @@ function reset_legend() {
             let outer_li = document.createElement("li");
             outer_li.setAttribute("id", `span_${config}`);
             outer_li.setAttribute("style", "position: relative; margin: 5px; font-size: small;");
+            outer_li.classList.add("legend_item")
 
             let color_span = document.createElement("span");
             let color = nodes_graph_config_obj[config]['color'];
-            color_span.setAttribute("style", `border-style: solid; border-width: 1px; width: 14px; height: 14px; display: inline-block; position: absolute; background-color: ${color};`);
+            color_span.setAttribute("style", `margin-top: 3px; border-style: solid; border-width: 1px; width: 14px; height: 14px; display: inline-block; position: absolute; background-color: ${color};`);
 
             let name_span = document.createElement("span");
             name_span.setAttribute("style", "margin-left: 20px;");
@@ -517,7 +514,7 @@ function reset_legend() {
         }
     }
 
-    legend_content_main = legend_content.innerHTML;
+    legend_content_main = legend_content.outerHTML;
 }
 
 function toggle_graph_config(check_box_element) {
