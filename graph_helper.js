@@ -55,10 +55,19 @@ const parser = new N3.Parser({ format: 'ttl' });
 
 var ttl_content_pre;
 var legend_content_main;
+var context_menu;
 
 function load_graph() {
+    // creating html of the context menu
+    var context_menu = document.createElement("ul");
+    context_menu.classList.add('custom-context-menu');
+    let context_menu_item = document.createElement("li");
+    context_menu_item.textContent = "Hide node";
+    context_menu.appendChild(context_menu_item);
 
-    // var coll = document.getElementsByClassName("collapsible_vertical");
+    document.body.appendChild(context_menu);
+
+
     var coll = document.querySelectorAll('[class^="collapsible_vertical_"],[class*=" collapsible_vertical_"]');
     let i;
     for (i = 0; i < coll.length; i++) {
@@ -197,6 +206,26 @@ function load_graph() {
         stop_animation();
         if (e.nodes[0])
             fix_release_nodes(false, e.nodes[0]);
+    });
+
+    network.on("oncontext", function (params) {
+        params.event.preventDefault();
+        let right_clicked_node = network.getNodeAt(params.pointer.DOM);
+        if(right_clicked_node !== undefined) {
+            $(".custom-context-menu").finish().toggle(100);
+            $(".custom-context-menu").css({
+                top: params.event.pageY + "px",
+                left: params.event.pageX + "px"
+            });
+        }
+    });
+
+    // If the document is clicked somewhere the context menu should disappear if visible
+    $(document).bind("mousedown", function (e) {
+        // If the clicked element is the menu hide it
+        if (!$(e.target).parents(".custom-context-menu").length > 0) {
+            $(".custom-context-menu").hide(100);
+        }
     });
 
     network.on("click", function (e) {
