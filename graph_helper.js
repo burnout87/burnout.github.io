@@ -58,29 +58,46 @@ var legend_content_main;
 
 function load_graph() {
 
-    var coll = document.getElementsByClassName("collapsible_vertical");
+    // var coll = document.getElementsByClassName("collapsible_vertical");
+    var coll = document.querySelectorAll('[class^="collapsible_vertical_"],[class*=" collapsible_vertical_"]');
     let i;
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
-            let content = this.nextElementSibling;
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
+            let class_list = this.classList;
+            for (j = 0; j < class_list.length; j++) {
+                let class_element = class_list[j];
+                if (class_element.startsWith('collapsible_vertical_')) {
+                    let class_to_find = `content_${class_element}`;
+                    let content_element = document.getElementsByClassName(class_to_find)[0];
+                    if (content_element.style.maxHeight) {
+                        content_element.style.maxHeight = null;
+                    } else {
+                        content_element.style.maxHeight = content_element.scrollHeight + "px";
+                    }
+                    break;
+                }
             }
         });
     }
 
-    coll = document.getElementsByClassName("collapsible_horizontal");
+    coll = document.querySelectorAll('[class^="collapsible_horizontal"],[class*=" collapsible_horizontal"]');
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
-            let content = this.nextElementSibling;
-            if (content.style.maxWidth) {
-                content.style.maxWidth = null;
-            } else {
-                content.style.maxWidth = content.scrollWidth + "px";
+            let class_list = this.classList;
+            for (j = 0; j < class_list.length; j++) {
+                let class_element = class_list[j];
+                if (class_element.startsWith('collapsible_horizontal_')) {
+                    let class_to_find = `content_${class_element}`;
+                    let content_element = document.getElementsByClassName(class_to_find)[0];
+                    if (content_element.style.maxWidth) {
+                        content_element.style.maxWidth = null;
+                    } else {
+                        content_element.style.maxWidth = content_element.scrollWidth + "px";
+                    }
+                    break;
+                }
             }
         });
     }
