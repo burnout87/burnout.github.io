@@ -99,10 +99,11 @@ h3 {
 }
 
 #menu_container {
-    padding: 10px;
+    margin: 10px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
+    background-color: #F7F7F7
 }
 
 .menu_item_first_left {
@@ -110,7 +111,6 @@ h3 {
 }
 
 .menu_item {
-    background-color: #F7F7F7; 
     padding-right:5px; 
     padding-left:5px; 
     border-right: 1px double; 

@@ -514,7 +514,8 @@ function reset_legend() {
         }
     }
 
-    legend_content_main = legend_content.outerHTML;
+    var legend_content_container = document.getElementById("legend_container");
+    legend_content_container.innerHTML = legend_content.outerHTML;
 }
 
 function toggle_graph_config(check_box_element) {
@@ -739,15 +740,6 @@ function open_ttl_content() {
     } 
     else
         ttl_content_container.innerHTML = ''
-}
-
-function open_legend_content() {
-    var legend_content_container = document.getElementById("legend_container");
-    if (legend_content_container.innerHTML.trim() === '') {
-        legend_content_container.innerHTML = legend_content_main;
-    } 
-    else
-        legend_content_container.innerHTML = ''
 }
 
 function reset_graph() {
