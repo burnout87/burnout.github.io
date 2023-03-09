@@ -56,6 +56,7 @@ const parser = new N3.Parser({ format: 'ttl' });
 var ttl_content_pre;
 var legend_content_main;
 var context_menu;
+var right_clicked_node;
 
 function load_graph() {
     // creating html of the context menu
@@ -64,9 +65,12 @@ function load_graph() {
     let context_menu_item = document.createElement("li");
     context_menu_item.textContent = "Hide node";
     context_menu.appendChild(context_menu_item);
+    context_menu_item.onclick = function () {
+        hide_right_clicked_node();
+        $(".custom-context-menu").hide(100);
+    };
 
     document.body.appendChild(context_menu);
-
 
     var coll = document.querySelectorAll('[class^="collapsible_vertical_"],[class*=" collapsible_vertical_"]');
     let i;
@@ -120,10 +124,10 @@ function load_graph() {
     ttl_content_pre.onmousedown = function dragMouseDown(e) {
         document.onmousemove = function onMouseMove(e) {
             if (ttl_content_pre.style.height !== "")
-                ttl_content_container.style.maxHeight = ttl_content_container.style.height = Number(ttl_content_pre.style.height.substring(0, ttl_content_pre.style.height.length-2)) + 10 + "px";
+                ttl_content_container.style.maxHeight = ttl_content_container.style.height = Number(ttl_content_pre.style.height.substring(0, ttl_content_pre.style.height.length - 2)) + 10 + "px";
         }
         document.onmouseup = () => document.onmousemove = document.onmouseup = null;
-      }
+    }
 
     var container = document.getElementById("mynetwork");
 
@@ -175,8 +179,8 @@ function load_graph() {
 
     network = new vis.Network(container, data, options);
 
-    if (graph_ttl_content == '') 
-        $.get("ttl_graph", function(data, status) {
+    if (graph_ttl_content == '')
+        $.get("ttl_graph", function (data, status) {
             if (data != null) {
                 try {
                     data = JSON.parse(data);
@@ -185,8 +189,8 @@ function load_graph() {
                         ttl_content_pre.innerText = graph_ttl_content;
                     }
                     if ('graph_version' in data)
-                        graph_version =  data['graph_version']; 
-                } catch(e) {
+                        graph_version = data['graph_version'];
+                } catch (e) {
                 }
                 parse_and_query_ttl_graph(graph_ttl_content);
                 reset_legend();
@@ -210,8 +214,8 @@ function load_graph() {
 
     network.on("oncontext", function (params) {
         params.event.preventDefault();
-        let right_clicked_node = network.getNodeAt(params.pointer.DOM);
-        if(right_clicked_node !== undefined) {
+        right_clicked_node = network.getNodeAt(params.pointer.DOM);
+        if (right_clicked_node !== undefined) {
             $(".custom-context-menu").finish().toggle(100);
             $(".custom-context-menu").css({
                 top: params.event.pageY + "px",
@@ -298,7 +302,10 @@ function load_graph() {
                             // show any hidden nodes
                             const hidden_nodes_ids = nodes.get({
                                 filter: function (item) {
-                                    return (item.hasOwnProperty("hidden") && item.hidden === true && item.filtered_out === false);
+                                    return (item.hasOwnProperty("hidden") &&
+                                        item.hidden === true && 
+                                        item.filtered_out === false &&
+                                        item.right_clicked_hidden === false);
                                 }
                             });
                             hidden_nodes_ids.forEach(node => {
@@ -512,7 +519,6 @@ function apply_layout(layout_name) {
     }
 }
 
-
 function remove_unused_edges() {
     // remove edges that are not visible because one of the connected nodes has been removed
     let edges_to_remove = edges.get({
@@ -665,6 +671,35 @@ function stop_animation() {
         network.setOptions({ "physics": { enabled: false } });
 }
 
+function hide_right_clicked_node() {
+    let connected_to_nodes = network.getConnectedNodes(right_clicked_node);
+    let nodes_to_remove = [];
+    let edges_to_remove = [];
+    if (connected_to_nodes.length > 0) {
+        for (let i in connected_to_nodes) {
+            let connected_to_node = connected_to_nodes[i];
+            connected_to_connected_to_node = network.getConnectedNodes(connected_to_node);
+            if (connected_to_connected_to_node.length == 1) {
+                nodes_to_remove.push(connected_to_node);
+                edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+            }
+        }
+    }
+
+    let original_label = right_clicked_node.hasOwnProperty('original_label') ? right_clicked_node.original_label : right_clicked_node.label;
+    nodes.update({
+        id: right_clicked_node,
+        label: original_label,
+        child_nodes_list_content: [],
+        expanded: false,
+        hidden: true,
+        right_clicked_hidden: true
+    });
+
+    edges.remove(edges_to_remove);
+    nodes.remove(nodes_to_remove);
+}
+
 function absorb_nodes(origin_node_list, predicates_to_absorb_list) {
     for (i in origin_node_list) {
         let origin_node = origin_node_list[i];
@@ -768,7 +803,7 @@ function start_timer_graph_version() {
 }
 
 function query_graph_version() {
-    $.get("graph_version", function(data, status) {
+    $.get("graph_version", function (data, status) {
         if (data != null && graph_version !== data) {
             console.log("graph version check detected a new graph version, the graph will be refreshed");
             refresh_graph();
@@ -997,6 +1032,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         title: subj_id,
         clickable: true,
         filtered_out: false,
+        right_clicked_hidden: false,
         color: graph_node_config_obj_default['default']['color'],
         shape: graph_node_config_obj_default['default']['shape'],
         style: graph_node_config_obj_default['default']['style'],
@@ -1026,6 +1062,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         title: obj_id,
         clickable: true,
         filtered_out: false,
+        right_clicked_hidden: false,
         color: graph_node_config_obj_default['default']['color'],
         shape: graph_node_config_obj_default['default']['shape'],
         style: graph_node_config_obj_default['default']['style'],
