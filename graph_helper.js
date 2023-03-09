@@ -671,10 +671,28 @@ function stop_animation() {
         network.setOptions({ "physics": { enabled: false } });
 }
 
+function show_right_clicked_hidden_nodes() {
+    // show any hidden nodes
+    const right_click_hidden_nodes_ids = nodes.get({
+        filter: function (item) {
+            return (item.right_clicked_hidden);
+        }
+    });
+    right_click_hidden_nodes_ids.forEach(node => {
+        nodes.update({ 
+            id: node.id, 
+            hidden: false, 
+            right_clicked_hidden: false,
+
+         });
+    });
+}
+
 function hide_right_clicked_node() {
+    let right_clicked_node_obj = nodes.get(right_clicked_node);
     let connected_to_nodes = network.getConnectedNodes(right_clicked_node);
     let nodes_to_remove = [];
-    let edges_to_remove = [];
+    let edges_to_remove = [...network.getConnectedEdges(right_clicked_node)];
     if (connected_to_nodes.length > 0) {
         for (let i in connected_to_nodes) {
             let connected_to_node = connected_to_nodes[i];
@@ -686,7 +704,7 @@ function hide_right_clicked_node() {
         }
     }
 
-    let original_label = right_clicked_node.hasOwnProperty('original_label') ? right_clicked_node.original_label : right_clicked_node.label;
+    let original_label = right_clicked_node_obj.hasOwnProperty('original_label') ? right_clicked_node_obj.original_label : right_clicked_node_obj.label;
     nodes.update({
         id: right_clicked_node,
         label: original_label,
