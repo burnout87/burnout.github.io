@@ -63,8 +63,20 @@ function load_graph() {
     // creating html of the context menu
     var context_menu = document.createElement("ul");
     context_menu.classList.add('custom-context-menu');
+
+    let context_menu_eye_icon = document.createElement("i");
+    context_menu_eye_icon.classList.add("bi");
+    context_menu_eye_icon.classList.add("bi-eye-slash");
+    context_menu_eye_icon.classList.add("me-1");
+    
+    let context_menu_text = document.createElement("span");
+    context_menu_text.innerText = "Hide node";
+
     let context_menu_item = document.createElement("li");
-    context_menu_item.textContent = "Hide node";
+    context_menu_item.classList.add("align-items-center")
+    context_menu_item.appendChild(context_menu_eye_icon);
+    context_menu_item.appendChild(context_menu_text);
+
     context_menu.appendChild(context_menu_item);
     context_menu_item.onclick = function () {
         hide_right_clicked_node();
