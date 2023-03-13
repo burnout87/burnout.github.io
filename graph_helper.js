@@ -687,7 +687,9 @@ function show_right_clicked_hidden_nodes() {
     // show any hidden nodes
     const right_click_hidden_nodes_ids = nodes.get({
         filter: function (item) {
-            return (item.right_clicked_hidden);
+            return (item.right_clicked_hidden &&
+                item.hasOwnProperty("hidden") && item.hidden &&
+                item.filtered_out === false);
         }
     });
     right_click_hidden_nodes_ids.forEach(node => {
