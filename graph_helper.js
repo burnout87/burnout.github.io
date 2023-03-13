@@ -59,6 +59,7 @@ var context_menu;
 var right_clicked_node;
 
 function load_graph() {
+    $('#right-click-hide-button').prop("disabled", true);
     // creating html of the context menu
     var context_menu = document.createElement("ul");
     context_menu.classList.add('custom-context-menu');
@@ -686,6 +687,8 @@ function show_right_clicked_hidden_nodes() {
 
          });
     });
+
+    $('#right-click-hide-button').prop("disabled", true);
 }
 
 function hide_right_clicked_node() {
@@ -716,6 +719,8 @@ function hide_right_clicked_node() {
 
     edges.remove(edges_to_remove);
     nodes.remove(nodes_to_remove);
+
+    $('#right-click-hide-button').prop("disabled", false);
 }
 
 function absorb_nodes(origin_node_list, predicates_to_absorb_list) {
