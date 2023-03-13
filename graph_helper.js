@@ -73,7 +73,6 @@ function load_graph() {
     context_menu_text.innerText = "Hide node";
 
     let context_menu_item = document.createElement("li");
-    context_menu_item.classList.add("align-items-center")
     context_menu_item.appendChild(context_menu_eye_icon);
     context_menu_item.appendChild(context_menu_text);
 

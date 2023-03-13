@@ -133,7 +133,6 @@ h3 {
     overflow: hidden;
     border: 1px solid #CCC;
     white-space: nowrap;
-    font-family: sans-serif;
     background: #FFF;
     color: #333;
     border-radius: 5px;
@@ -142,7 +141,7 @@ h3 {
 
 /* Each of the items in the list */
 .custom-context-menu li {
-    padding: 8px 12px;
+    padding: 4px 8px;
     cursor: pointer;
     list-style-type: none;
     transition: all .3s ease;
