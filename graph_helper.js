@@ -708,12 +708,14 @@ function hide_right_clicked_node() {
     let right_clicked_node_obj = nodes.get(right_clicked_node);
     let connected_to_nodes = network.getConnectedNodes(right_clicked_node);
     let nodes_to_remove = [];
-    let edges_to_remove = [...network.getConnectedEdges(right_clicked_node)];
+    // let edges_to_remove = [...network.getConnectedEdges(right_clicked_node)];
+    let edges_to_remove = [];
     if (connected_to_nodes.length > 0) {
         for (let i in connected_to_nodes) {
             let connected_to_node = connected_to_nodes[i];
+            let connected_to_node_obj = nodes.get(connected_to_node);
             connected_to_connected_to_node = network.getConnectedNodes(connected_to_node);
-            if (connected_to_connected_to_node.length == 1) {
+            if (!connected_to_node_obj.right_clicked_hidden && connected_to_connected_to_node.length == 1) {
                 nodes_to_remove.push(connected_to_node);
                 edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
             }
