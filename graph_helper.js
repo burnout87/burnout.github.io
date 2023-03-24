@@ -338,10 +338,21 @@ function load_graph() {
                     if (connected_to_nodes.length > 0) {
                         for (let i in connected_to_nodes) {
                             let connected_to_node = connected_to_nodes[i];
-                            connected_to_connected_to_node = network.getConnectedNodes(connected_to_node);
-                            if (connected_to_connected_to_node.length == 1) {
-                                nodes_to_remove.push(connected_to_node);
-                                edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+                            let connected_to_node_obj = nodes.get(connected_to_node);
+                            let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
+                            if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
+                                let absorb_node = true;
+                                for (let j in connected_to_connected_to_nodes) {
+                                    if (connected_to_connected_to_nodes[j] !== clicked_node.id) {
+                                        let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
+                                        if (!connected_to_connected_to_node_obj.hidden)
+                                            absorb_node = false;
+                                    }
+                                }
+                                if(absorb_node) {
+                                    nodes_to_remove.push(connected_to_node);
+                                    edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+                                }
                             }
                         }
                     }
