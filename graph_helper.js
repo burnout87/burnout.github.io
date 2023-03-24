@@ -714,10 +714,20 @@ function hide_right_clicked_node() {
         for (let i in connected_to_nodes) {
             let connected_to_node = connected_to_nodes[i];
             let connected_to_node_obj = nodes.get(connected_to_node);
-            connected_to_connected_to_node = network.getConnectedNodes(connected_to_node);
-            if (!connected_to_node_obj.right_clicked_hidden && connected_to_connected_to_node.length == 1) {
-                nodes_to_remove.push(connected_to_node);
-                edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+            let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
+            if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
+                let right_click_hide_node = true;
+                for (let j in connected_to_connected_to_nodes) {
+                    if (connected_to_connected_to_nodes[j] !== right_clicked_node) {
+                        let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
+                        if (!connected_to_connected_to_node_obj.hidden)
+                            right_click_hide_node = false;
+                    }
+                }
+                if (right_click_hide_node) {
+                    nodes_to_remove.push(connected_to_node);
+                    edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+                }
             }
         }
     }
