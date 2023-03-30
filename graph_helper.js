@@ -925,10 +925,12 @@ function format_full_graph_query() {
 
     let construct_query_full_graph = `CONSTRUCT {
     ?entityOutput a <https://swissdatasciencecenter.github.io/renku-ontology#CommandOutput> ;
-            <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
+        <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#checksum> ?entityOutputChecksum .
         
     ?entityInput a <http://www.w3.org/ns/prov#EntityInput> ;
-        <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
+        <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation ;
+        <https://swissdatasciencecenter.github.io/renku-ontology#checksum> ?entityInputChecksum .
     
     ?activity a ?activityType ;
         <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
@@ -942,11 +944,13 @@ function format_full_graph_query() {
     let where_query_full_graph = `WHERE {
 
         ?entityInput a <http://www.w3.org/ns/prov#Entity> ;
-            <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation .
+            <http://www.w3.org/ns/prov#atLocation> ?entityInputLocation ;
+            <https://swissdatasciencecenter.github.io/renku-ontology#checksum> ?entityInputChecksum .
                     
         ?entityOutput a <http://www.w3.org/ns/prov#Entity> ; 
             <http://www.w3.org/ns/prov#qualifiedGeneration>/<http://www.w3.org/ns/prov#activity> ?activity ;
-            <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation .
+            <http://www.w3.org/ns/prov#atLocation> ?entityOutputLocation ;
+            <https://swissdatasciencecenter.github.io/renku-ontology#checksum> ?entityOutputChecksum .
     
         ?activity a ?activityType ;
             <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
