@@ -565,9 +565,11 @@ function reset_legend() {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
         if (check_box_config && check_box_config.checked) {
 
+            let legend_label = config;
             let outer_li = document.createElement("li");
             outer_li.setAttribute("id", `span_${config}`);
             outer_li.setAttribute("style", "position: relative; margin: 5px; font-size: small;");
+            outer_li.setAttribute("title", legend_label)
             outer_li.classList.add("legend_item")
 
             let color_span = document.createElement("span");
@@ -577,7 +579,6 @@ function reset_legend() {
             let name_span = document.createElement("span");
             name_span.setAttribute("style", "margin-left: 20px;");
 
-            let legend_label = config;
             if (nodes_graph_config_obj[config].hasOwnProperty("displayed_type_name"))
                 legend_label = nodes_graph_config_obj[config].displayed_type_name;
 
