@@ -552,18 +552,52 @@ function remove_unused_edges() {
     edges.remove(edges_to_remove);
 }
 
+
+    
 function reset_legend() {
     let span_config_list = document.querySelectorAll('[id^="span_"]');
     for (i = 0; i < span_config_list.length; i++) {
         span_config_list[i].remove();
     }
+        
+    // get list of classes in the graph
+    let types_array = [];
 
+    (async () => {
+        const bindingsStreamCall = await myEngine.queryBindings(`
+        SELECT DISTINCT ?s_type_extracted
+        {
+            ?s rdf:type ?s_type .
+            
+            BIND(STRAFTER(STR(?s_type), "#") AS ?s_type_extracted) .
+        }`, 
+        {
+            sources: [store_full_graph],
+        });
+
+        bindingsStreamCall.on('data', (binding) => {
+            types_array.push(binding.get('s_type_extracted').value);
+        });
+        bindingsStreamCall.on('end', () => {
+            console.log(types_array);
+            build_legend(types_array)
+        });
+        bindingsStreamCall.on('error', (error) => {
+            console.error(error);
+            build_legend(null);
+        });
+    })();
+    
+}
+
+function build_legend(types_array) {
     let legend_content = document.createElement("ul");
     legend_content.classList.add("legend_content");
     // let legend_content = document.getElementById('legend_content');
     for (let config in nodes_graph_config_obj) {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
-        if (check_box_config && check_box_config.checked) {
+        console.log(config);
+        if (check_box_config && check_box_config.checked && (types_array === null || types_array.indexOf(config) > -1)) {
 
             let legend_label = config;
             let outer_li = document.createElement("li");
@@ -909,17 +943,6 @@ function extract_info_string(string_to_parse) {
             return [type_name, string_to_parse.replace(type_name, '')];
         }
     }
-}
-
-function query_type_node(node_id) {
-    let type;
-    let query = `SELECT ?type WHERE { <${node_id}> a ?type }`;
-    return myEngine.queryBindings(
-        query,
-        {
-            sources: [store]
-        }
-    );
 }
 
 function format_full_graph_query() {
