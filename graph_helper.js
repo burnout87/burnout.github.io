@@ -1023,36 +1023,25 @@ function format_query_clicked_node(clicked_node_id) {
                 <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand .
         }
         WHERE {
+
             {
                 ?s ?p <${clicked_node_id}> .
-                ?s a ?s_type .
-                ?s ?p_literal ?s_literal .
-                FILTER isLiteral(?s_literal) .
-            }
-            UNION
-            {
-                ?s ?p <${clicked_node_id}> .
-                ?s a ?s_type .                
-            }
-            UNION
-            {
-                ?s ?p <${clicked_node_id}> .
+                
+                OPTIONAL {
+                    ?s a ?s_type .
+                    ?s ?p_literal ?s_literal .
+                    FILTER isLiteral(?s_literal)
+                }
             }
             UNION
             {
                 <${clicked_node_id}> ?p ?o .
-                ?o a ?o_type .
-                ?o ?p_literal ?o_literal .
-                FILTER isLiteral(?o_literal) .
-            }
-            UNION
-            {
-                <${clicked_node_id}> ?p ?o .
-                ?o a ?o_type
-            }
-            UNION
-            {
-                <${clicked_node_id}> ?p ?o .
+                
+                OPTIONAL {
+                    ?o a ?o_type .
+                    ?o ?p_literal ?o_literal .
+                    FILTER isLiteral(?o_literal)
+                }
             }
             UNION
             {
