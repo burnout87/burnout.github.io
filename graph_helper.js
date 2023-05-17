@@ -269,6 +269,7 @@ function load_graph() {
                             }
                         );
                         bindingsStreamCall.on('data', (binding) => {
+                            // console.log(binding.subject.id + " " + binding.predicate.id + " " + binding.object.id);
                             process_binding(binding, clicked_node, apply_invisibility_new_nodes);
                         });
                         bindingsStreamCall.on('end', () => {
@@ -579,7 +580,6 @@ function reset_legend() {
             types_array.push(binding.get('s_type_extracted').value);
         });
         bindingsStreamCall.on('end', () => {
-            console.log(types_array);
             build_legend(types_array)
         });
         bindingsStreamCall.on('error', (error) => {
@@ -596,7 +596,6 @@ function build_legend(types_array) {
     // let legend_content = document.getElementById('legend_content');
     for (let config in nodes_graph_config_obj) {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
-        console.log(config);
         if (check_box_config && check_box_config.checked && (types_array === null || types_array.indexOf(config) > -1)) {
 
             let legend_label = config;
