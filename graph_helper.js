@@ -643,7 +643,8 @@ function toggle_graph_config(check_box_element) {
             let node_properties = { ...graph_node_config_obj_default['default'], ...node_config_subset[config_idx][1] };
             let nodes_to_update = nodes.get({
                 filter: function (node) {
-                    return (node.type_name === node_config_subset[config_idx][0]);
+                    type_key_splitted = node_config_subset[config_idx][0].split(",");
+                    return (type_key_splitted.indexOf(node.type_name) > -1);
                 }
             });
             // update_nodes(nodes_to_update, node_properties);
@@ -652,13 +653,14 @@ function toggle_graph_config(check_box_element) {
                 nodes.update({
                     id: node_to_update_id,
                     color: node_properties['color'],
-                    border: node_properties['color'],
-                    cellborder: node_properties['color'],
+                    border: node_properties['border'],
+                    cellborder: node_properties['cellborder'],
                     shape: node_properties['shape'],
                     style: node_properties['style'],
                     value: node_properties['value'],
                     config_file: node_properties['config_file'],
-                    label: nodes_to_update[i]['original_label']
+                    label: nodes_to_update[i]['original_label'],
+                    font: node_properties['font']
                 });
             }
         }
@@ -694,13 +696,14 @@ function toggle_graph_config(check_box_element) {
             nodes.update({
                 id: node_to_update_id,
                 color: node_properties['color'],
-                border: node_properties['color'],
-                cellborder: node_properties['color'],
+                border: node_properties['border'],
+                cellborder: node_properties['cellborder'],
                 shape: node_properties['shape'],
                 style: node_properties['style'],
                 value: node_properties['value'],
                 config_file: node_properties['config_file'],
-                label: nodes_to_update[i]['default_label']
+                label: nodes_to_update[i]['default_label'],
+                font: node_properties['font']
             });
         }
 
@@ -1257,8 +1260,8 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 prefix: prefix,
                 displayed_type_name: node_properties['displayed_type_name'] ? node_properties['displayed_type_name'] : type_name,
                 color: node_properties['color'],
-                border: node_properties['color'],
-                cellborder: node_properties['color'],
+                border: node_properties['border'],
+                cellborder: node_properties['cellborder'],
                 shape: node_properties['shape'],
                 style: node_properties['style'],
                 value: node_properties['value'],
