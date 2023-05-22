@@ -1198,7 +1198,13 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         let subj_node_to_update = nodes.get(subj_id);
         // check type_name property of the node ahs already been defined previously
         if (subj_node_to_update !== null && !('type_name' in subj_node_to_update)) {
-            let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj[type_name] ? nodes_graph_config_obj[type_name] : graph_node_config_obj_default['default']) };
+            let nodes_graph_config_obj_type_entry = undefined;
+            Object.keys(nodes_graph_config_obj).forEach(type_key => {
+                type_key_splitted = type_key.split(",");
+                if (type_key_splitted.indexOf(type_name) > -1)
+                    nodes_graph_config_obj_type_entry = nodes_graph_config_obj[type_key];
+            });
+            let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj_type_entry ? nodes_graph_config_obj_type_entry : graph_node_config_obj_default['default']) };
             // displayed_literals_format:defaultValue:yes/defaultValue:no
             // displayed_information:title/literals/both
             cleaned_title = type_name;
@@ -1299,8 +1305,15 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     let literal_label = '';
 
                     if (subj_node_to_update !== null && 'type_name' in subj_node_to_update) {
-                        let type_name = subj_node_to_update['type_name']
-                        let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj[type_name] ? nodes_graph_config_obj[type_name] : graph_node_config_obj_default['default']) };
+                        let type_name = subj_node_to_update['type_name'];
+                        let nodes_graph_config_obj_type_entry = undefined;
+                        Object.keys(nodes_graph_config_obj).forEach(type_key => {
+                            type_key_splitted = type_key.split(",");
+                            if (type_key_splitted.indexOf(type_name) > -1)
+                                nodes_graph_config_obj_type_entry = nodes_graph_config_obj[type_key];
+                        });
+
+                        let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj_type_entry ? nodes_graph_config_obj_type_entry : graph_node_config_obj_default['default']) };
                         // displayed_literals_format: defaultValue:yes / defaultValue:no
                         // displayed_information: title / literals / both
                         // literals_keyword_to_substitute: title:get_images,query_object,query_region (search keywords to substitue eg title, withn a certain literal and apply substitution)
