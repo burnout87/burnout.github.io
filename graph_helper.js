@@ -1250,10 +1250,11 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 node_properties = graph_node_config_obj_default['default'];
                 subj_node_to_update['label'] = type_name;
             }
+            let default_label = `<b>${type_name}</b>\n`;
             nodes.update({
                 id: subj_id,
                 label: subj_node_to_update['label'],
-                default_label: type_name,
+                default_label: default_label,
                 original_label: subj_node_to_update['label'],
                 title: subj_node_to_update['title'],
                 type_name: type_name,
@@ -1306,7 +1307,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     }
 
                     let literal_label = '';
-
+                    let default_literal_label = '';
                     if (subj_node_to_update !== null && 'type_name' in subj_node_to_update) {
                         let type_name = subj_node_to_update['type_name'];
                         let nodes_graph_config_obj_type_entry = undefined;
@@ -1336,7 +1337,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                                 }
                             }
                         }
-
+                        default_literal_label = literal_predicate + ': ' + obj_node['label'];
                         if ('displayed_information' in node_properties && node_properties['displayed_information'] !== "title" &&
                             'displayed_literals_format' in node_properties) {
                             if (node_properties['displayed_literals_format'].indexOf(`${literal_predicate}:`) > -1) {
@@ -1367,11 +1368,13 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     if (literal_label !== '' && subj_node_to_update['label'].indexOf(literal_label) === -1) {
                         if (subj_node_to_update['label']) {
                             literal_label = "\n" + literal_label;
+                            default_literal_label = "\n" + default_literal_label;
                         }
                         nodes.update({
                             id: subj_id,
                             label: subj_node_to_update['label'] + literal_label,
                             original_label: subj_node_to_update['label'] + literal_label,
+                            default_label: subj_node_to_update['default_label'] + default_literal_label
                         });
                     }
                 }
