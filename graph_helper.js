@@ -397,6 +397,7 @@ function parse_and_query_ttl_graph(ttl_data_to_parse) {
                 console.error(error);
             }
             if (triple) {
+                // console.log(triple.subject.id + " " + triple.predicate.id + " " + triple.object.id);
                 store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
             } else {
                 prefixes_graph = prefixes;
@@ -407,6 +408,8 @@ function parse_and_query_ttl_graph(ttl_data_to_parse) {
                         }
                     );
                     bindingsStreamCallFullGraph.on('data', (binding) => {
+                        // console.log(binding.subject.id + " " + binding.predicate.value + " ");
+                        // console.log(binding.object);
                         store_graph_to_explore.addQuad(binding.subject, binding.predicate, binding.object);
                     });
                     bindingsStreamCallFullGraph.on('end', () => {
@@ -1053,7 +1056,17 @@ function format_query_clicked_node(clicked_node_id) {
                 OPTIONAL {
                     ?s a ?s_type .
                     ?s ?p_literal ?s_literal .
-                    FILTER isLiteral(?s_literal)
+                    FILTER isLiteral(?s_literal) .
+                }
+            }
+            UNION
+            {
+                ?s ?p <${clicked_node_id}> .
+                
+                OPTIONAL {
+                    ?s a ?s_type .
+                    ?s ?p_literal ?s_literal .
+                    FILTER isNumeric(?s_literal) .
                 }
             }
             UNION
@@ -1063,7 +1076,17 @@ function format_query_clicked_node(clicked_node_id) {
                 OPTIONAL {
                     ?o a ?o_type .
                     ?o ?p_literal ?o_literal .
-                    FILTER isLiteral(?o_literal)
+                    FILTER isLiteral(?o_literal) .
+                }
+            }
+            UNION
+            {
+                <${clicked_node_id}> ?p ?o .
+                
+                OPTIONAL {
+                    ?o a ?o_type .
+                    ?o ?p_literal ?o_literal .
+                    FILTER isNumeric(?o_literal) .
                 }
             }
             UNION
@@ -1178,6 +1201,12 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
             let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj[type_name] ? nodes_graph_config_obj[type_name] : graph_node_config_obj_default['default']) };
             // displayed_literals_format:defaultValue:yes/defaultValue:no
             // displayed_information:title/literals/both
+            cleaned_title = type_name;
+            if ('displayed_type_name' in node_properties) {
+                let ele = document.createElement("div");
+                ele.innerHTML = node_properties['displayed_type_name'];
+                cleaned_title = ele.textContent;
+            }
             if ('displayed_information' in node_properties) {
                 switch (node_properties['displayed_information']) {
                     case 'title':
@@ -1193,17 +1222,17 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 }
 
                 if ('displayed_type_name' in node_properties)
-                    subj_node_to_update['title'] = node_properties['displayed_type_name'];
+                    subj_node_to_update['title'] = cleaned_title;
                 else
                     subj_node_to_update['title'] = type_name;
             } else {
                 if ('displayed_type_name' in node_properties) {
                     subj_node_to_update['label'] = `<b>${node_properties['displayed_type_name']}</b>\n`;
-                    subj_node_to_update['title'] = node_properties['displayed_type_name'];
+                    subj_node_to_update['title'] = cleaned_title;
                 }
                 else {
-                    subj_node_to_update['label'] = subj_node_to_update['title'] = `<b>${type_name}</b>\n`;
-                    subj_node_to_update['title'] = type_name;
+                    subj_node_to_update['label'] = `<b>${type_name}</b>\n`;
+                    subj_node_to_update['title'] = cleaned_title;
                 }
             }
             let config_value = node_properties['config_file'];
