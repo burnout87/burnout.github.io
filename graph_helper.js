@@ -1310,6 +1310,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     let literal_label = '';
                     let default_literal_label = '';
                     let original_literal_label = '';
+                    let node_properties = undefined;
                     if (subj_node_to_update !== null && 'type_name' in subj_node_to_update) {
                         let type_name = subj_node_to_update['type_name'];
                         let nodes_graph_config_obj_type_entry = undefined;
@@ -1319,7 +1320,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                                 nodes_graph_config_obj_type_entry = nodes_graph_config_obj[type_key];
                         });
 
-                        let node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj_type_entry ? nodes_graph_config_obj_type_entry : graph_node_config_obj_default['default']) };
+                        node_properties = { ...graph_node_config_obj_default['default'], ... (nodes_graph_config_obj_type_entry ? nodes_graph_config_obj_type_entry : graph_node_config_obj_default['default']) };
                         // displayed_literals_format: defaultValue:yes / defaultValue:no
                         // displayed_information: title / literals / both
                         // literals_keyword_to_substitute: title:get_images,query_object,query_region (search keywords to substitue eg title, withn a certain literal and apply substitution)
@@ -1368,19 +1369,31 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                         literal_label = literal_predicate + ': ' + obj_node['label'];
                     }
                     original_literal_label = literal_label;
-                    if (literal_label !== '' && subj_node_to_update['label'].indexOf(literal_label) === -1) {
-                        if (subj_node_to_update['label']) {
-                            literal_label = "\n" + literal_label;
+                    if (default_literal_label !== '' && subj_node_to_update['default_label'].indexOf(default_literal_label) === -1) {
+                        if (subj_node_to_update['default_label'])
                             default_literal_label = "\n" + default_literal_label;
+                        nodes.update({
+                            id: subj_id,
+                            default_label: subj_node_to_update['default_label'] + default_literal_label
+                        });
+                    }
+                    if(node_properties !== undefined) {
+                        let config_value = node_properties['config_file'];
+                        let checkbox_config = document.getElementById('config_' + config_value);
+                        if (checkbox_config && !checkbox_config.checked)
+                            literal_label = default_literal_label;
+                    }
+                    if (literal_label !== '' && subj_node_to_update['label'].indexOf(literal_label) === -1) {
+                        if (subj_node_to_update['label'] && !literal_label.startsWith("\n")) {
+                            literal_label = "\n" + literal_label;
                         }
-                        if (subj_node_to_update['original_label']) {
+                        if (subj_node_to_update['original_label'] && original_literal_label !== '') {
                             original_literal_label = "\n" + original_literal_label;
                         }
                         nodes.update({
                             id: subj_id,
                             label: subj_node_to_update['label'] + literal_label,
-                            original_label: subj_node_to_update['original_label'] + original_literal_label,
-                            default_label: subj_node_to_update['default_label'] + default_literal_label
+                            original_label: subj_node_to_update['original_label'] + original_literal_label
                         });
                     }
                 }
