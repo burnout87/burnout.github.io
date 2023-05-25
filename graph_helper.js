@@ -600,8 +600,8 @@ function build_legend(types_array) {
     for (let config in nodes_graph_config_obj) {
         let check_box_config = document.getElementById('config_' + nodes_graph_config_obj[config]['config_file']);
         if (check_box_config && check_box_config.checked && (types_array === null || types_array.indexOf(config) > -1)) {
-
             let legend_label = config;
+
             let outer_li = document.createElement("li");
             outer_li.setAttribute("id", `span_${config}`);
             outer_li.setAttribute("style", "position: relative; margin: 5px; font-size: small;");
@@ -615,8 +615,11 @@ function build_legend(types_array) {
             let name_span = document.createElement("span");
             name_span.setAttribute("style", "margin-left: 20px;");
 
-            if (nodes_graph_config_obj[config].hasOwnProperty("displayed_type_name"))
-                legend_label = nodes_graph_config_obj[config].displayed_type_name;
+            if (nodes_graph_config_obj[config].hasOwnProperty("displayed_type_name")) {
+                let ele = document.createElement("div");
+                ele.innerHTML = nodes_graph_config_obj[config].displayed_type_name;
+                legend_label = ele.textContent;
+            }
 
             name_span.innerText = legend_label;
 
