@@ -1141,8 +1141,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         style: graph_node_config_obj_default['default']['style'],
         border: graph_node_config_obj_default['default']['border'],
         cellborder: graph_node_config_obj_default['default']['cellborder'],
-        value: graph_node_config_obj_default['default']['value'],
-        level: graph_node_config_obj_default['default']['level'],
         config_file: graph_node_config_obj_default['default']['config_file'],
         margin: graph_node_config_obj_default['default']['margin'],
         hidden: apply_invisibility_new_nodes,
@@ -1171,9 +1169,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         style: graph_node_config_obj_default['default']['style'],
         border: graph_node_config_obj_default['default']['border'],
         cellborder: graph_node_config_obj_default['default']['cellborder'],
-        value: graph_node_config_obj_default['default']['value'],
         config_file: graph_node_config_obj_default['default']['config_file'],
-        level: graph_node_config_obj_default['default']['level'],
         margin: graph_node_config_obj_default['default']['margin'],
         hidden: apply_invisibility_new_nodes,
         font: {
