@@ -15,7 +15,9 @@ This JSON configuration file is used to define various graphical properties for 
 
 <details>
 
-<summary markdown="p">List of properties for a node of the graph</summary>
+<p><summary><b>List of properties for a node of the graph</b></summary></p>
+
+
 
 Below is a detailed description of each property within the JSON object:
 
