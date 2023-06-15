@@ -3,7 +3,6 @@ const graph_node_config_obj_default = {
     "default": {
         "shape": "box",
         "color": "#FFFFFF",
-        "style": "filled",
         "border": 0,
         "cellborder": 0,
         "config_file": null,
@@ -658,8 +657,6 @@ function toggle_graph_config(check_box_element) {
                     border: node_properties['border'],
                     cellborder: node_properties['cellborder'],
                     shape: node_properties['shape'],
-                    style: node_properties['style'],
-                    value: node_properties['value'],
                     config_file: node_properties['config_file'],
                     label: nodes_to_update[i]['original_label'],
                     font: node_properties['font']
@@ -701,8 +698,6 @@ function toggle_graph_config(check_box_element) {
                 border: node_properties['border'],
                 cellborder: node_properties['cellborder'],
                 shape: node_properties['shape'],
-                style: node_properties['style'],
-                value: node_properties['value'],
                 config_file: node_properties['config_file'],
                 label: nodes_to_update[i]['default_label'],
                 font: node_properties['font']
@@ -1138,7 +1133,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         right_clicked_hidden: false,
         color: graph_node_config_obj_default['default']['color'],
         shape: graph_node_config_obj_default['default']['shape'],
-        style: graph_node_config_obj_default['default']['style'],
         border: graph_node_config_obj_default['default']['border'],
         cellborder: graph_node_config_obj_default['default']['cellborder'],
         config_file: graph_node_config_obj_default['default']['config_file'],
@@ -1166,7 +1160,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         right_clicked_hidden: false,
         color: graph_node_config_obj_default['default']['color'],
         shape: graph_node_config_obj_default['default']['shape'],
-        style: graph_node_config_obj_default['default']['style'],
         border: graph_node_config_obj_default['default']['border'],
         cellborder: graph_node_config_obj_default['default']['cellborder'],
         config_file: graph_node_config_obj_default['default']['config_file'],
@@ -1263,8 +1256,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 border: node_properties['border'],
                 cellborder: node_properties['cellborder'],
                 shape: node_properties['shape'],
-                style: node_properties['style'],
-                value: node_properties['value'],
                 config_file: node_properties['config_file'],
                 font: node_properties['font']
             });
