@@ -13,22 +13,24 @@ The functionalities implemented within the `graph_helper.js` javascript module e
 
 This JSON configuration file is used to define various graphical properties for the nodes within the graph. For the nodes, it defines the properties for each `rdf:type` (eg `owl:Class`).
 
-#### List of properties for a node of the graph
+<details>
+
+<summary markdown="p">List of properties for a node of the graph</summary>
 
 Below is a detailed description of each property within the JSON object:
 
   *  __shape__ : Specifies the shape of the node. For example, "ellipse", "circle", "box".
-     ### example
+     #### example
      <!-- TODO example -->
   *  __color__ : Defines the backgroun color of the node. The color can be specified using hexadecimal values.
   *  __displayed_information__: Specifies the type of information displayed for the object. Options include "literals", "title", or "both", defaults to "both".
-     ### example
+     #### example
      <!-- TODO example -->
   *  __displayed_literals_format__ : Defines the format for displaying literals, in particular, for the given node type, which literals should be shown and whether or not with the relative title. The format is the following: "literal_name:yes/no" For example, "`parameter_name:no`" means the literal parameter_name will be displayed without the relative label, "`parameter_name:yes`" will instead display the title of the literal.
-     ### example
+     #### example
      <!-- TODO example -->
   *  __displayed_type_name__ (string): Specifies the title to display for the node type. It supports some HTML tags for text formatting, namely <b>bold</b>, <i>italic</i> and `code`. For instance, <i>OntologyClass</i> will render as italicized "OntologyClass".
-     ### example
+     #### example
      <!-- TODO example -->
   * __font__ (object): Contains font-related properties for customizing the object's text display.
     * __face__ : Specifies the font face, such as "courier", "arial", or "times".
@@ -53,7 +55,7 @@ Below is a detailed description of each property within the JSON object:
    }
 }
 ```
-
+</details>
 
 The module can be imported in the header as such:
 
