@@ -9,6 +9,8 @@ The functionalities implemented within the `graph_helper.js` javascript module e
   * __subset selection of nodes__
   * __absorption/expansion of nodes__
 
+## Graph configurations
+
 ### __graphical__
 
 This JSON configuration file is used to define various graphical properties for the nodes within the graph. For the nodes, it defines the properties for each `rdf:type` (eg `owl:Class`).
