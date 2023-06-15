@@ -6,7 +6,6 @@ const graph_node_config_obj_default = {
         "style": "filled",
         "border": 0,
         "cellborder": 0,
-        "value": 20,
         "config_file": null,
         "font": {
             "multi": "html",
