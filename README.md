@@ -24,42 +24,53 @@ This JSON configuration file is used to define various graphical properties for 
 Below is a detailed description of each property within the JSON object:
 
   *  __shape__ : Specifies the shape of the node. For example, "ellipse", "circle", "box".
-     #### example
-     <!-- TODO example -->
   *  __color__ : Defines the backgroun color of the node. The color can be specified using hexadecimal values.
   *  __displayed_information__: Specifies the type of information displayed for the object. Options include "literals", "title", or "both", defaults to "both".
-     #### example
-     <!-- TODO example -->
   *  __displayed_literals_format__ : Defines the format for displaying literals, in particular, for the given node type, which literals should be shown and whether or not with the relative title. The format is the following: "literal_name:yes/no" For example, "`parameter_name:no`" means the literal parameter_name will be displayed without the relative label, "`parameter_name:yes`" will instead display the title of the literal.
-     #### example
-     <!-- TODO example -->
   *  __displayed_type_name__ (string): Specifies the title to display for the node type. It supports some HTML tags for text formatting, namely <b>bold</b>, <i>italic</i> and `code`. For instance, <i>OntologyClass</i> will render as italicized "OntologyClass".
-     #### example
-     <!-- TODO example -->
   * __font__ (object): Contains font-related properties for customizing the object's text display.
     * __face__ : Specifies the font face, such as "courier", "arial", or "times".
     * __size__ : Determines the font size for the object's text.
     * __boldital__ : Contains properties for customizing bold and italic text.
       * __size__ : Specifies the font size for bold and italic text.
 
+  </details>
+
 #### example
+For the nodes of type `Activity`, the title as well as all the literals properties will be displayed (along with the property name).
 ```json
-"Class": {
-   "shape": "box",
-   "color": "#ffffff",
-   "displayed_information": "literals",
-   "displayed_literals_format": "parameter_name:no",
-   "displayed_type_name": "<i>OntologyClass</i>",
-   "font": {
-      "face": "courier",
-      "size": 38,
-      "boldital": {
-         "size": 21
-      }
-   }
-}
+"Activity": {
+      "shape": "box",
+      "color": "#00FC10",
+      "font": {
+        "face": "courier",
+        "size": 24,
+        "bold": {
+            "size": 36
+        }
+    }
+  }
 ```
-</details>
+
+<div align="center">
+<img width="75%" src="readme_imgs/activity_example.png">
+</div>
+
+
+Instead for the nodes of type `StartTime` and `EndTime`, the title will not be displayed, and for the literal property `parameter_name` only the value will be displayed (eg `T1`) and for the value property instead the title and value will be displayed (`value: 2010-03-06T13:26:48.0`).
+
+```json
+"StartTime,EndTime": {
+      "shape": "box",
+      "color": "#bcddc9",
+      "displayed_information": "literals",
+      "displayed_literals_format": "parameter_name:no,value:yes"
+  },
+```
+
+<div align="center">
+<img width="75%" src="readme_imgs/start_time_example.png">
+</div>
 
 The module can be imported in the header as such:
 
