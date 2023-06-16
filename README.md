@@ -72,13 +72,17 @@ Instead for the nodes of type `StartTime` and `EndTime`, the title will not be d
 <img width="75%" src="readme_imgs/start_time_example.png">
 </div>
 
+
+
+# Library usage
+
 The module can be imported in the header as such:
 
 ```html
 <script type="application/javascript" src="graph_helper.js"></script>
 ```
 
-An exmaple code that uses this library can be found [here](index.html), and the relative live version can be found [here](https://odahub.io/renku-aqs-graph-library/).
+An examaple code that uses this library can be found [here](index.html), and the relative live version can be found [here](https://odahub.io/renku-aqs-graph-library/).
 
 Otherwise the [`aqs` renku plugin](https://github.com/oda-hub/renku-aqs/tree/cli-display-graph) makes usage of this library to build the interactive graph via the `show-graph` command.
 
