@@ -72,6 +72,10 @@ Instead for the nodes of type `StartTime` and `EndTime`, the title will not be d
 <img width="75%" src="readme_imgs/start_time_example.png">
 </div>
 
+### __subset selection of nodes__
+
+
+### __absorption/expansion of nodes__
 
 
 # Library usage
