@@ -87,15 +87,11 @@ Below is a detailed description of each property within the JSON object:
 * __query_where__ : This field contains the WHERE clauses (for the related subset of nodes) of the SPARQL query used in the construction of the overall graph.
 * __ontology_url__ : This field provides the URL to the ontology file associated with the subset of ndoes, if this is available. Currently turtle is the only supported format.
 
-<div align="center">
-<img width="75%" src="readme_imgs/animation_subset_oda_1.gif">
-</div>
-
 </details>
 
 ### ___example___
 
-For the `oda` subset.
+For the `oda` subset the related json is the following.
 
 ```json
 "oda": {
@@ -106,6 +102,10 @@ For the `oda` subset.
     "ontology_url": "http://odahub.io/ontology/ontology.ttl"
   }
 ```
+
+<div align="center">
+<img width="75%" src="readme_imgs/animation_subset_oda_1.gif">
+</div>
 
 ### __absorption/expansion of nodes__
 
