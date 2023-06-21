@@ -111,12 +111,6 @@ For the `oda` subset the related json is the following.
 
 This JSON configuration file is used to define a list of absorption rules. In each of those are listed the predicates that, for a given class of nodes (eg `Activity`) can be "absorbed" inside the node. An example of this can be seen in the images below.
 
-<div align="center">
-<img align="center" width="37%" src="readme_imgs/reduced_activity.png">
-<img align="center" width="38%" src="readme_imgs/expanded_activity.png">
-</div>
-<br clear="left"/>
-
 <details>
 
 <p><summary><b>List of properties for a rule of absorptions of nodes in the graph</b></summary></p>
@@ -135,6 +129,10 @@ For the `Activity` nodes.
     "predicates_to_absorb": "hasOutputs,hasInputs"
   }
 ```
+
+<div align="center">
+<img width="75%" src="readme_imgs/expanded_reduced_activity_animation.gif">
+</div>
 
 
 # Library usage
