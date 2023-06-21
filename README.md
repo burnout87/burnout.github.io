@@ -77,11 +77,11 @@ This JSON configuration file is used to define a list of separate set of propert
 
 <details>
 
-<p><summary><b>List of properties for a subset of ndoes of the graph</b></summary></p>
+<p><summary><b>List of properties for a subset of nodes of the graph</b></summary></p>
 
 Below is a detailed description of each property within the JSON object:
 
-* __prefixes__ : This field stores the prefixes associated with the "oda"-related nodes. In the example below, those are "oda" and "odas".
+* __prefixes__ : This field lists the prefixes associated with the "oda"-related nodes. In the example below, those are "oda" and "odas".
 * __description__ : This field provides a brief description of the related subset of nodes, and it will be visualized next to the related check-box.
 * __query_construct__ : This field contains the CONSTRUCT part (for the related subset of nodes) of the SPARQL query used in the extraction of the overall graph.
 * __query_where__ : This field contains the WHERE clauses (for the related subset of nodes) of the SPARQL query used in the construction of the overall graph.
@@ -90,6 +90,8 @@ Below is a detailed description of each property within the JSON object:
 <div align="center">
 <img width="75%" src="readme_imgs/animation_subset_oda_1.gif">
 </div>
+
+</details>
 
 ### ___example___
 
@@ -105,11 +107,34 @@ For the `oda` subset.
   }
 ```
 
+### __absorption/expansion of nodes__
 
+This JSON configuration file is used to define a list of absorption rules. In each of those are listed the predicates that, for a given class of nodes (eg `Activity`) can be "absorbed" inside the node. An example of this can be seen in the images below.
+
+<div align="center">
+<img align="center" width="37%" src="readme_imgs/reduced_activity.png">
+<img align="center" width="38%" src="readme_imgs/expanded_activity.png">
+</div>
+<br clear="left"/>
+
+<details>
+
+<p><summary><b>List of properties for a rule of absorptions of nodes in the graph</b></summary></p>
+
+* __name__ : This field provides a brief description of the related set of rules, and it will be visualized next to the related check-box.
+* __predicates_to_absorb__ : This field lists the predicates involved in the rule. In the example below, the absorbed nodes into the `Activity` nodes will be those that appear as objects in the triples where the predicate is one of those here listed (eg `hasOutputs`, `hasInputs`) and the subject is the `Activity` node.
 </details>
 
+### ___example___
 
-### __absorption/expansion of nodes__
+For the `Activity` nodes.
+
+```json
+  "Activity": {
+    "name": "Inputs and outputs",
+    "predicates_to_absorb": "hasOutputs,hasInputs"
+  }
+```
 
 
 # Library usage
