@@ -395,7 +395,7 @@ function parse_and_query_ttl_graph(ttl_data_to_parse) {
                 console.error(error);
             }
             if (triple) {
-                // console.log(triple.subject.id + " " + triple.predicate.id + " " + triple.object.id);
+                console.log(triple.subject.id + " " + triple.predicate.id + " " + triple.object.id);
                 store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
             } else {
                 prefixes_graph = prefixes;
@@ -964,8 +964,8 @@ function format_full_graph_query() {
         <https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
         <https://swissdatasciencecenter.github.io/renku-ontology#hasOutputs> ?entityOutput ;
         <https://swissdatasciencecenter.github.io/renku-ontology#argument> ?entityArgument .
-
-`
+        
+        `
 
     let where_query_full_graph = `WHERE {
 
@@ -998,34 +998,34 @@ function format_full_graph_query() {
 
     construct_query_full_graph += `}`;
     where_query_full_graph += `}
-        
-        {
-            SELECT ?activity (GROUP_CONCAT(?entityArgumentPrefixedDefaultValue; separator=" ") AS ?entityArgument) 
-            WHERE 
+        OPTIONAL {
             {
+                SELECT ?activity (GROUP_CONCAT(?entityArgumentPrefixedDefaultValue; separator=" ") AS ?entityArgument) 
+                WHERE 
                 {
-                    SELECT ?activity (CONCAT(COALESCE(?entityArgumentPrefix, "")," ",?entityArgumentDefaultValue) AS ?entityArgumentPrefixedDefaultValue) ?entityArgumentDefaultValue
-                    WHERE {
-                        OPTIONAL {
-                            ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
-                                    <http://www.w3.org/ns/prov#hadPlan>/
-                                    <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments> ?argument .
-                        
-                            ?argument <https://swissdatasciencecenter.github.io/renku-ontology#position> ?entityArgumentPosition ;
-                                    <http://schema.org/defaultValue> ?entityArgumentDefaultValue .
-    
+                    {
+                        SELECT ?activity (CONCAT(IF(BOUND(?entityArgumentPrefix), ?entityArgumentPrefix, "")," ",?entityArgumentDefaultValue) AS ?entityArgumentPrefixedDefaultValue) ?entityArgumentDefaultValue
+                        WHERE {
                             OPTIONAL {
-                                ?argument <https://swissdatasciencecenter.github.io/renku-ontology#prefix> ?entityArgumentPrefix .
+                                ?activity <http://www.w3.org/ns/prov#qualifiedAssociation>/
+                                        <http://www.w3.org/ns/prov#hadPlan>/
+                                        <https://swissdatasciencecenter.github.io/renku-ontology#hasArguments> ?argument .
+                            
+                                ?argument <https://swissdatasciencecenter.github.io/renku-ontology#position> ?entityArgumentPosition ;
+                                        <http://schema.org/defaultValue> ?entityArgumentDefaultValue .
+        
+                                OPTIONAL {
+                                    ?argument <https://swissdatasciencecenter.github.io/renku-ontology#prefix> ?entityArgumentPrefix .
+                                }
                             }
+                        
                         }
-                    
+                        ORDER BY ASC(?entityArgumentPosition)
                     }
-                    ORDER BY ASC(?entityArgumentPosition)
                 }
+                GROUP BY ?activity
             }
-            GROUP BY ?activity
         }
-
     }`
 
     return construct_query_full_graph + where_query_full_graph;
