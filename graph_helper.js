@@ -56,29 +56,52 @@ var legend_content_main;
 var context_menu;
 var right_clicked_node;
 
+function hide_node_right_click_function() {
+    hide_right_clicked_node();
+    $(".custom-context-menu").hide(100);
+}
+
+function highlight_node_right_click_function() {
+    hide_all_the_other_annotation_nodes();
+    $(".custom-context-menu").hide(100);
+}
+
 function load_graph() {
     $('#right-click-hide-button').prop("disabled", true);
     // creating html of the context menu
     var context_menu = document.createElement("ul");
     context_menu.classList.add('custom-context-menu');
 
-    let context_menu_eye_icon = document.createElement("i");
+    var context_menu_eye_icon = document.createElement("i");
     context_menu_eye_icon.classList.add("bi");
     context_menu_eye_icon.classList.add("bi-eye-slash");
     context_menu_eye_icon.classList.add("me-1");
     
-    let context_menu_text = document.createElement("span");
-    context_menu_text.innerText = "Hide node";
+    let context_menu_text_hide_node = document.createElement("span");
+    context_menu_text_hide_node.innerText = "Hide node";
 
-    let context_menu_item = document.createElement("li");
-    context_menu_item.appendChild(context_menu_eye_icon);
-    context_menu_item.appendChild(context_menu_text);
+    let context_menu_item_hide_node = document.createElement("li");
+    context_menu_item_hide_node.appendChild(context_menu_eye_icon);
+    context_menu_item_hide_node.appendChild(context_menu_text_hide_node);
 
-    context_menu.appendChild(context_menu_item);
-    context_menu_item.onclick = function () {
-        hide_right_clicked_node();
-        $(".custom-context-menu").hide(100);
-    };
+    context_menu_item_hide_node.onclick = hide_node_right_click_function;
+
+    let context_menu_stars_icon = document.createElement("i");
+    context_menu_stars_icon.classList.add("bi");
+    context_menu_stars_icon.classList.add("bi-stars");
+    context_menu_stars_icon.classList.add("me-1");
+
+    let context_menu_text_highlight_node = document.createElement("span");
+    context_menu_text_highlight_node.innerText = "Highlight node";
+
+    var context_menu_item_highlight_node = document.createElement("li");
+    context_menu_item_highlight_node.appendChild(context_menu_stars_icon);
+    context_menu_item_highlight_node.appendChild(context_menu_text_highlight_node);
+
+    context_menu.appendChild(context_menu_item_hide_node);
+    context_menu.appendChild(context_menu_item_highlight_node);
+    
+    context_menu_item_highlight_node.onclick = highlight_node_right_click_function;
 
     document.body.appendChild(context_menu);
 
@@ -226,6 +249,24 @@ function load_graph() {
         params.event.preventDefault();
         right_clicked_node = network.getNodeAt(params.pointer.DOM);
         if (right_clicked_node !== undefined) {
+            let right_clicked_node_obj = nodes.get(right_clicked_node);
+            if (right_clicked_node_obj.hasOwnProperty("type_name")){
+                if (right_clicked_node_obj.type_name === 'Activity') {
+                    context_menu_item_highlight_node.style.background = "#FFF";
+                    context_menu_item_highlight_node.addEventListener('mouseover', () => {
+                        context_menu_item_highlight_node.style.backgroundColor = '#DEF';
+                    });
+                    context_menu_item_highlight_node.onclick = highlight_node_right_click_function;
+                }
+                else {
+                    context_menu_item_highlight_node.style.background = "lightgray";
+                    context_menu_item_highlight_node.addEventListener('mouseover', () => {
+                        context_menu_item_highlight_node.style.backgroundColor = "lightgray";
+                    });
+                    context_menu_item_highlight_node.onclick = "return false";
+                }
+            }
+
             $(".custom-context-menu").finish().toggle(100);
             $(".custom-context-menu").css({
                 top: params.event.pageY + "px",
@@ -395,7 +436,7 @@ function parse_and_query_ttl_graph(ttl_data_to_parse) {
                 console.error(error);
             }
             if (triple) {
-                console.log(triple.subject.id + " " + triple.predicate.id + " " + triple.object.id);
+                // console.log(triple.subject.id + " " + triple.predicate.id + " " + triple.object.id);
                 store_full_graph.addQuad(triple.subject, triple.predicate, triple.object);
             } else {
                 prefixes_graph = prefixes;
@@ -750,6 +791,10 @@ function show_right_clicked_hidden_nodes() {
     });
 
     $('#right-click-hide-button').prop("disabled", true);
+}
+
+function hide_all_the_other_annotation_nodes() {
+    let right_clicked_node_obj = nodes.get(right_clicked_node);
 }
 
 function hide_right_clicked_node() {
