@@ -56,6 +56,16 @@ var legend_content_main;
 var context_menu;
 var right_clicked_node;
 
+function set_context_menu_style(context_menu_element, defaultColor, hoverColor) {
+    context_menu_element.style.background = defaultColor;
+    context_menu_element.addEventListener('mouseover', () => {
+        context_menu_element.style.backgroundColor = hoverColor;
+    });
+    context_menu_element.addEventListener('mouseout', () => {
+        context_menu_element.style.backgroundColor = defaultColor;
+    });
+  }
+
 function hide_node_right_click_function() {
     hide_right_clicked_node();
     $(".custom-context-menu").hide(100);
@@ -76,7 +86,7 @@ function load_graph() {
     context_menu_eye_icon.classList.add("bi");
     context_menu_eye_icon.classList.add("bi-eye-slash");
     context_menu_eye_icon.classList.add("me-1");
-    
+
     let context_menu_text_hide_node = document.createElement("span");
     context_menu_text_hide_node.innerText = "Hide node";
 
@@ -100,7 +110,7 @@ function load_graph() {
 
     context_menu.appendChild(context_menu_item_hide_node);
     context_menu.appendChild(context_menu_item_highlight_node);
-    
+
     context_menu_item_highlight_node.onclick = highlight_node_right_click_function;
 
     document.body.appendChild(context_menu);
@@ -249,29 +259,28 @@ function load_graph() {
         params.event.preventDefault();
         right_clicked_node = network.getNodeAt(params.pointer.DOM);
         if (right_clicked_node !== undefined) {
-            let right_clicked_node_obj = nodes.get(right_clicked_node);
-            if (right_clicked_node_obj.hasOwnProperty("type_name")){
+            const right_clicked_node_obj = nodes.get(right_clicked_node);
+            if (right_clicked_node_obj.hasOwnProperty("type_name")) {
                 if (right_clicked_node_obj.type_name === 'Activity') {
-                    context_menu_item_highlight_node.style.background = "#FFF";
-                    context_menu_item_highlight_node.addEventListener('mouseover', () => {
-                        context_menu_item_highlight_node.style.backgroundColor = '#DEF';
-                    });
+                    set_context_menu_style(context_menu_item_highlight_node, "#FFF", "#DEF");
                     context_menu_item_highlight_node.onclick = highlight_node_right_click_function;
                 }
                 else {
-                    context_menu_item_highlight_node.style.background = "lightgray";
-                    context_menu_item_highlight_node.addEventListener('mouseover', () => {
-                        context_menu_item_highlight_node.style.backgroundColor = "lightgray";
-                    });
-                    context_menu_item_highlight_node.onclick = "return false";
+                    set_context_menu_style(context_menu_item_highlight_node, "lightgray", "lightgray");
+                    context_menu_item_highlight_node.onclick = () => false;
                 }
             }
 
-            $(".custom-context-menu").finish().toggle(100);
-            $(".custom-context-menu").css({
-                top: params.event.pageY + "px",
-                left: params.event.pageX + "px"
-            });
+            const $customContextMenu = $(".custom-context-menu");
+            const { pageX, pageY } = params.event;
+
+            $customContextMenu
+                .finish()
+                .toggle(100)
+                .css({
+                    top: pageY + "px",
+                    left: pageX + "px"
+                });
         }
     });
 
@@ -355,7 +364,7 @@ function load_graph() {
                             const hidden_nodes_ids = nodes.get({
                                 filter: function (item) {
                                     return (item.hasOwnProperty("hidden") &&
-                                        item.hidden === true && 
+                                        item.hidden === true &&
                                         item.filtered_out === false &&
                                         item.right_clicked_hidden === false);
                                 }
@@ -389,7 +398,7 @@ function load_graph() {
                                             absorb_node = false;
                                     }
                                 }
-                                if(absorb_node) {
+                                if (absorb_node) {
                                     nodes_to_remove.push(connected_to_node);
                                     edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
                                 }
@@ -596,13 +605,13 @@ function remove_unused_edges() {
 }
 
 
-    
+
 function reset_legend() {
     let span_config_list = document.querySelectorAll('[id^="span_"]');
     for (i = 0; i < span_config_list.length; i++) {
         span_config_list[i].remove();
     }
-        
+
     // get list of classes in the graph
     let types_array = [];
 
@@ -613,10 +622,10 @@ function reset_legend() {
             ?s rdf:type ?s_type .
             
             BIND(STRAFTER(STR(?s_type), "#") AS ?s_type_extracted) .
-        }`, 
-        {
-            sources: [store_full_graph],
-        });
+        }`,
+            {
+                sources: [store_full_graph],
+            });
 
         bindingsStreamCall.on('data', (binding) => {
             types_array.push(binding.get('s_type_extracted').value);
@@ -629,7 +638,7 @@ function reset_legend() {
             build_legend(null);
         });
     })();
-    
+
 }
 
 function build_legend(types_array) {
@@ -782,12 +791,12 @@ function show_right_clicked_hidden_nodes() {
         }
     });
     right_click_hidden_nodes_ids.forEach(node => {
-        nodes.update({ 
-            id: node.id, 
-            hidden: false, 
+        nodes.update({
+            id: node.id,
+            hidden: false,
             right_clicked_hidden: false,
 
-         });
+        });
     });
 
     $('#right-click-hide-button').prop("disabled", true);
@@ -1411,7 +1420,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                             default_label: subj_node_to_update['default_label'] + default_literal_label
                         });
                     }
-                    if(node_properties !== undefined) {
+                    if (node_properties !== undefined) {
                         let config_value = node_properties['config_file'];
                         let checkbox_config = document.getElementById('config_' + config_value);
                         if (checkbox_config && !checkbox_config.checked)
