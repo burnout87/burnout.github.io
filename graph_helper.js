@@ -421,14 +421,13 @@ function load_graph() {
         }
     });
 
-    var container_configure = document.getElementsByClassName("vis-configuration-wrapper");
-    if (container_configure && container_configure.length > 0) {
-        container_configure = container_configure[0];
-        container_configure.style = {};
-        container_configure.style.height = "300px";
-        container_configure.style.overflow = "scroll";
-    }
 
+    // const container_configure = document.querySelector(".vis-configuration-wrapper");
+
+    // if (container_configure) {
+    //     container_configure.style.height = "300px";
+    //     container_configure.style.overflow = "scroll";
+    // }
 
     return network;
 }
