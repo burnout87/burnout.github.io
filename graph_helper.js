@@ -67,7 +67,7 @@ function set_context_menu_style(context_menu_element, defaultColor, hoverColor) 
   }
 
 function hide_node_right_click_function() {
-    hide_right_clicked_node();
+    hide_node();
     $(".custom-context-menu").hide(100);
 }
 
@@ -677,7 +677,7 @@ function build_legend(types_array) {
         }
     }
 
-    var legend_content_container = document.getElementById("legend_container");
+    const legend_content_container = document.getElementById("legend_container");
     legend_content_container.innerHTML = legend_content.outerHTML;
 }
 
@@ -805,7 +805,9 @@ function hide_all_the_other_annotation_nodes() {
     let right_clicked_node_obj = nodes.get(right_clicked_node);
 }
 
-function hide_right_clicked_node() {
+function hide_node(node_to_hide) {
+    if (node_to_hide === undefined)
+        node_to_hide = right_clicked_node;
     let right_clicked_node_obj = nodes.get(right_clicked_node);
     let connected_to_nodes = network.getConnectedNodes(right_clicked_node);
     let nodes_to_remove = [];
