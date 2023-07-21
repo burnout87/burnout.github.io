@@ -823,6 +823,7 @@ function hide_all_the_other_annotation_nodes() {
 
 function recursively_get_nodes_to_remove_during_hide(node_to_hide, parent_node) {
     let connected_to_nodes_to_remove = [];
+    console.log(node_to_hide);
     let connected_to_nodes = network.getConnectedNodes(node_to_hide);
     if (connected_to_nodes.length == 1 && connected_to_nodes[0] == parent_node)
         connected_to_nodes_to_remove.push(node_to_hide);
@@ -861,25 +862,25 @@ function hide_node(node_to_hide) {
     let edges_to_remove = [];
     if (connected_to_nodes.length > 0) {
         for (let i in connected_to_nodes) {
-            nodes_to_remove.push(...recursively_get_nodes_to_remove_during_hide(connected_to_nodes[i], node_to_hide));
-            // let connected_to_node = connected_to_nodes[i];
-            // let connected_to_node_obj = nodes.get(connected_to_node);
+            // nodes_to_remove.push(...recursively_get_nodes_to_remove_during_hide(connected_to_nodes[i], node_to_hide));
+            let connected_to_node = connected_to_nodes[i];
+            let connected_to_node_obj = nodes.get(connected_to_node);
 
-            // let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
-            // if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
-            //     let right_click_hide_node = true;
-            //     for (let j in connected_to_connected_to_nodes) {
-            //         if (connected_to_connected_to_nodes[j] !== node_to_hide) {
-            //             let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
-            //             if (!connected_to_connected_to_node_obj.hidden)
-            //                 right_click_hide_node = false;
-            //         }
-            //     }
-            //     if (right_click_hide_node) {
-            //         nodes_to_remove.push(connected_to_node);
-            //         edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
-            //     }
-            // }
+            let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
+            if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
+                let right_click_hide_node = true;
+                for (let j in connected_to_connected_to_nodes) {
+                    if (connected_to_connected_to_nodes[j] !== node_to_hide) {
+                        let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
+                        if (!connected_to_connected_to_node_obj.hidden)
+                            right_click_hide_node = false;
+                    }
+                }
+                if (right_click_hide_node) {
+                    nodes_to_remove.push(connected_to_node);
+                    edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+                }
+            }
         }
     }
 
@@ -895,6 +896,7 @@ function hide_node(node_to_hide) {
 
     edges.remove(edges_to_remove);
     nodes.remove(nodes_to_remove);
+    remove_unused_edges();
 
     $('#right-click-hide-button').prop("disabled", false);
 }
