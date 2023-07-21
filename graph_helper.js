@@ -802,42 +802,90 @@ function show_right_clicked_hidden_nodes() {
 }
 
 function hide_all_the_other_annotation_nodes() {
-    let right_clicked_node_obj = nodes.get(right_clicked_node);
+    // let right_clicked_node_obj = nodes.get(right_clicked_node);
+
+    let activity_node_list = nodes.get({
+        filter: function (item) {
+            return (item.hasOwnProperty("type_name") && item.type_name == "Activity" && item.id != right_clicked_node);
+        }
+    });
+
+    activity_node_list.forEach(node => {
+        hide_node(node.id);
+    });
+}
+
+// // Function to check if there is an edge between two nodes
+// function isEdgeBetweenNodes(node1, node2) {
+//     const connectedEdges1 = network.getConnectedEdges(node1);
+//     return connectedEdges1.includes(node2);
+//   }
+
+function recursively_get_nodes_to_remove_during_hide(node_to_hide, parent_node) {
+    let connected_to_nodes_to_remove = [];
+    let connected_to_nodes = network.getConnectedNodes(node_to_hide);
+    if (connected_to_nodes.length == 1 && connected_to_nodes[0] == parent_node)
+        connected_to_nodes_to_remove.push(node_to_hide);
+    else {
+        for (let i in connected_to_nodes) {
+            let connected_to_node = connected_to_nodes[i];
+            if(connected_to_node !== parent_node) {
+                let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
+                if (connected_to_connected_to_nodes.length == 1 && connected_to_connected_to_nodes[0] == node_to_hide)
+                    connected_to_nodes_to_remove.push(connected_to_node);
+                else
+                    for (let j in connected_to_connected_to_nodes)
+                        connected_to_nodes_to_remove.push(...recursively_get_nodes_to_remove_during_hide(connected_to_connected_to_nodes[j], connected_to_node));
+            }
+        }
+    }
+    let remove_node_to_hide = true;
+    if (!connected_to_nodes_to_remove.includes(node_to_hide) && connected_to_nodes_to_remove.length !== (connected_to_nodes.length - 1))
+        for (let i in connected_to_nodes)
+            if (connected_to_nodes[i] !== parent_node && !connected_to_nodes[i] in connected_to_nodes_to_remove)
+                remove_node_to_hide == false;
+                
+    if (remove_node_to_hide)        
+        connected_to_nodes_to_remove.push(node_to_hide);
+
+    return connected_to_nodes_to_remove;
 }
 
 function hide_node(node_to_hide) {
     if (node_to_hide === undefined)
         node_to_hide = right_clicked_node;
-    let right_clicked_node_obj = nodes.get(right_clicked_node);
-    let connected_to_nodes = network.getConnectedNodes(right_clicked_node);
+    let node_to_hide_obj = nodes.get(node_to_hide);
+    let connected_to_nodes = network.getConnectedNodes(node_to_hide);
     let nodes_to_remove = [];
     // let edges_to_remove = [...network.getConnectedEdges(right_clicked_node)];
     let edges_to_remove = [];
     if (connected_to_nodes.length > 0) {
         for (let i in connected_to_nodes) {
-            let connected_to_node = connected_to_nodes[i];
-            let connected_to_node_obj = nodes.get(connected_to_node);
-            let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
-            if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
-                let right_click_hide_node = true;
-                for (let j in connected_to_connected_to_nodes) {
-                    if (connected_to_connected_to_nodes[j] !== right_clicked_node) {
-                        let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
-                        if (!connected_to_connected_to_node_obj.hidden)
-                            right_click_hide_node = false;
-                    }
-                }
-                if (right_click_hide_node) {
-                    nodes_to_remove.push(connected_to_node);
-                    edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
-                }
-            }
+            nodes_to_remove.push(...recursively_get_nodes_to_remove_during_hide(connected_to_nodes[i], node_to_hide));
+            // let connected_to_node = connected_to_nodes[i];
+            // let connected_to_node_obj = nodes.get(connected_to_node);
+
+            // let connected_to_connected_to_nodes = network.getConnectedNodes(connected_to_node);
+            // if (!connected_to_node_obj.hidden && connected_to_connected_to_nodes.length >= 1) {
+            //     let right_click_hide_node = true;
+            //     for (let j in connected_to_connected_to_nodes) {
+            //         if (connected_to_connected_to_nodes[j] !== node_to_hide) {
+            //             let connected_to_connected_to_node_obj = nodes.get(connected_to_connected_to_nodes[j]);
+            //             if (!connected_to_connected_to_node_obj.hidden)
+            //                 right_click_hide_node = false;
+            //         }
+            //     }
+            //     if (right_click_hide_node) {
+            //         nodes_to_remove.push(connected_to_node);
+            //         edges_to_remove.push(...network.getConnectedEdges(connected_to_node));
+            //     }
+            // }
         }
     }
 
-    let original_label = right_clicked_node_obj.hasOwnProperty('original_label') ? right_clicked_node_obj.original_label : right_clicked_node_obj.label;
+    let original_label = node_to_hide_obj.hasOwnProperty('original_label') ? node_to_hide_obj.original_label : node_to_hide_obj.label;
     nodes.update({
-        id: right_clicked_node,
+        id: node_to_hide,
         label: original_label,
         child_nodes_list_content: [],
         expanded: false,
