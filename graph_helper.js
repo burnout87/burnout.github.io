@@ -321,7 +321,6 @@ function load_graph() {
                             process_binding(binding, clicked_node, apply_invisibility_new_nodes);
                         });
                         bindingsStreamCall.on('end', () => {
-                            console.log(clicked_node);
                             // enable/disable subsets of nodes selection from the graph
                             for (let prefix_idx in prefixes_graph) {
                                 let checkbox_config = document.getElementById(prefix_idx + '_filter');
@@ -805,15 +804,46 @@ function show_right_clicked_hidden_nodes() {
 function hide_all_the_other_annotation_nodes() {
     // let right_clicked_node_obj = nodes.get(right_clicked_node);
 
-    let activity_node_list = nodes.get({
+    const activity_node_list = nodes.get({
         filter: function (item) {
-            return (item.hasOwnProperty("type_name") && item.type_name == "Activity" && item.id != right_clicked_node);
+            return (item.hasOwnProperty("type_name") && item.type_name === "Activity" && item.id !== right_clicked_node);
         }
     });
 
-    activity_node_list.forEach(node => {
-        hide_node(node.id);
+    activity_node_list.forEach(activity_node => {
+        // hide_node(node.id);
+        const related_to_activity_node_list = nodes.get({
+            filter: function (item) {
+                return (item.hasOwnProperty("type_name") && item.type_name !== "Activity" && 
+                    item.hasOwnProperty("activity_ids") && item.activity_ids.includes(activity_node.id));
+            }
+        });
+        // nodes.update(related_to_activity_node_list);
+        related_to_activity_node_list.forEach(related_node => {
+            nodes.update({
+                id: related_node.id,
+                activity_ids: related_node.activity_ids.filter(a => a !== activity_node.id)
+            });
+        });
+        const node_to_delete_list = nodes.get({
+            filter: function (item) {
+                return (item.hasOwnProperty("activity_ids") && item.activity_ids.length == 0);
+            }
+        });
+        nodes.remove(node_to_delete_list);
+        let original_label = activity_node.hasOwnProperty('original_label') ? activity_node.original_label : activity_node.label;
+        nodes.update({
+            id: activity_node.id,
+            label: original_label,
+            child_nodes_list_content: [],
+            expanded: false,
+            hidden: true,
+            right_clicked_hidden: true
+        });
+
     });
+    remove_unused_edges();
+    $('#right-click-hide-button').prop("disabled", false);
 }
 
 function recursively_get_nodes_to_remove_during_hide(node_to_hide, parent_node) {
@@ -1291,43 +1321,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         let prefix = info_obj[1];
         let subj_node_to_update = nodes.get(subj_id);
 
-        // if (clicked_node !== undefined) {
-        //     // deal with ids of activity the ndoe is connected
-        //     activity_ids = []
-        //     if(clicked_node['type_name'] === 'Activity')
-        //         node_to_update = nodes.get(subj_id);
-        //     else
-        //         node_to_update = clicked_node;
-            
-        //     if (node_to_update) {
-        //         if('activity_ids' in node_to_update) {
-        //             activity_ids = node_to_update['activity_ids'];
-        //         }
-        //         else if(node_to_update['type_name'] === 'Activity') {
-        //             if (!activity_ids.includes(clicked_node.id))
-        //                 activity_ids.push(clicked_node.id);
-        //         }
-        //     }
-        //     // if (type_name !== 'Activity') {
-        //     if(clicked_node['type_name'] === 'Activity') {
-        //         if (!activity_ids.includes(clicked_node.id))
-        //             activity_ids.push(clicked_node.id);
-        //     }
-        //     else {
-        //         if('activity_ids' in clicked_node)
-        //             clicked_node.activity_ids.forEach( id => {
-        //                 if(!activity_ids.includes(id))
-        //                     activity_ids.push(id);
-        //             })
-        //     }
-        //     // }
-        //     nodes.update({
-        //         id: subj_id,
-        //         activity_ids: activity_ids
-        //     });
-        // }
-
-
         // check type_name property of the node ahs already been defined previously
         if (subj_node_to_update !== null && !('type_name' in subj_node_to_update)) {
             let nodes_graph_config_obj_type_entry = undefined;
@@ -1570,13 +1563,13 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                                 });
                             }
                             else {
-                                activity_ids_to.forEach( id_to => {
-                                    if(!activity_ids_from.includes(id_to))
-                                        activity_ids_from.push(id_to);
+                                activity_ids_from.forEach( id_from => {
+                                    if(!activity_ids_to.includes(id_from))
+                                        activity_ids_to.push(id_from);
                                 })
                                 nodes.update({
-                                    id: edge_obj.from,
-                                    activity_ids: activity_ids_from
+                                    id: edge_obj.to,
+                                    activity_ids: activity_ids_to
                                 });
                             }
                         }
