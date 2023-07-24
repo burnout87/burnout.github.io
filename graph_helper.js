@@ -321,6 +321,7 @@ function load_graph() {
                             process_binding(binding, clicked_node, apply_invisibility_new_nodes);
                         });
                         bindingsStreamCall.on('end', () => {
+                            console.log(clicked_node);
                             // enable/disable subsets of nodes selection from the graph
                             for (let prefix_idx in prefixes_graph) {
                                 let checkbox_config = document.getElementById(prefix_idx + '_filter');
@@ -815,12 +816,6 @@ function hide_all_the_other_annotation_nodes() {
     });
 }
 
-// // Function to check if there is an edge between two nodes
-// function isEdgeBetweenNodes(node1, node2) {
-//     const connectedEdges1 = network.getConnectedEdges(node1);
-//     return connectedEdges1.includes(node2);
-//   }
-
 function recursively_get_nodes_to_remove_during_hide(node_to_hide, parent_node) {
     let connected_to_nodes_to_remove = [];
     console.log(node_to_hide);
@@ -1295,6 +1290,44 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         let type_name = info_obj[0];
         let prefix = info_obj[1];
         let subj_node_to_update = nodes.get(subj_id);
+
+        // if (clicked_node !== undefined) {
+        //     // deal with ids of activity the ndoe is connected
+        //     activity_ids = []
+        //     if(clicked_node['type_name'] === 'Activity')
+        //         node_to_update = nodes.get(subj_id);
+        //     else
+        //         node_to_update = clicked_node;
+            
+        //     if (node_to_update) {
+        //         if('activity_ids' in node_to_update) {
+        //             activity_ids = node_to_update['activity_ids'];
+        //         }
+        //         else if(node_to_update['type_name'] === 'Activity') {
+        //             if (!activity_ids.includes(clicked_node.id))
+        //                 activity_ids.push(clicked_node.id);
+        //         }
+        //     }
+        //     // if (type_name !== 'Activity') {
+        //     if(clicked_node['type_name'] === 'Activity') {
+        //         if (!activity_ids.includes(clicked_node.id))
+        //             activity_ids.push(clicked_node.id);
+        //     }
+        //     else {
+        //         if('activity_ids' in clicked_node)
+        //             clicked_node.activity_ids.forEach( id => {
+        //                 if(!activity_ids.includes(id))
+        //                     activity_ids.push(id);
+        //             })
+        //     }
+        //     // }
+        //     nodes.update({
+        //         id: subj_id,
+        //         activity_ids: activity_ids
+        //     });
+        // }
+
+
         // check type_name property of the node ahs already been defined previously
         if (subj_node_to_update !== null && !('type_name' in subj_node_to_update)) {
             let nodes_graph_config_obj_type_entry = undefined;
@@ -1348,6 +1381,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 node_properties = graph_node_config_obj_default['default'];
                 subj_node_to_update['label'] = default_label;
             }
+
             nodes.update({
                 id: subj_id,
                 label: subj_node_to_update['label'],
@@ -1364,6 +1398,7 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 config_file: node_properties['config_file'],
                 font: node_properties['font']
             });
+
         }
     }
     else {
@@ -1378,16 +1413,6 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
         if (literal_predicate) {
             edge_obj['prefix'] = edge_obj['title'].replace(literal_predicate, '');
             edge_obj['title'] = literal_predicate;
-        }
-        if (!edges.get(edge_id)) {
-
-            let edge_properties = { ...graph_edge_config_obj_default['default'], ... (edges_graph_config_obj[edge_obj['title']] ? edges_graph_config_obj[edge_obj['title']] : graph_edge_config_obj_default['default']) };
-            edge_obj['original_label'] = literal_predicate;
-            edge_obj['label'] = edge_properties.hasOwnProperty('displayed_type_name') ? edge_properties['displayed_type_name'] : literal_predicate;
-            edge_obj['font'] = edge_properties['font'];
-            edge_obj['config_file'] = edge_properties['config_file'];
-
-            edges.add([edge_obj]);
         }
         if (!nodes.get(obj_id)) {
             if (binding.object.termType === "Literal") {
@@ -1494,6 +1519,71 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
             }
             else
                 nodes.add([obj_node]);
+        }
+        if (!edges.get(edge_id)) {
+
+            let edge_properties = { ...graph_edge_config_obj_default['default'], ... (edges_graph_config_obj[edge_obj['title']] ? edges_graph_config_obj[edge_obj['title']] : graph_edge_config_obj_default['default']) };
+            edge_obj['original_label'] = literal_predicate;
+            edge_obj['label'] = edge_properties.hasOwnProperty('displayed_type_name') ? edge_properties['displayed_type_name'] : literal_predicate;
+            edge_obj['font'] = edge_properties['font'];
+            edge_obj['config_file'] = edge_properties['config_file'];
+
+            edges.add([edge_obj]);
+            if(clicked_node !== undefined) {
+                // update activity_ids
+                to_node = nodes.get(edge_obj.to);
+                from_node = nodes.get(edge_obj.from);
+                if(to_node !== undefined && to_node !== null && from_node !== undefined && from_node !== null) {
+                    activity_ids_from = from_node['activity_ids'] ? from_node['activity_ids'] : [];
+                    activity_ids_to = to_node['activity_ids'] ? to_node['activity_ids'] : [];
+
+                    if(clicked_node.id === edge_obj.from) {
+                        // expanding down-wards
+                        if(clicked_node['type_name'] === 'Activity') {
+                            if (!activity_ids_to.includes(clicked_node.id))
+                                activity_ids_to.push(clicked_node.id);
+                        }
+                        else {
+                            activity_ids_from.forEach( id_from => {
+                                if(!activity_ids_to.includes(id_from))
+                                    activity_ids_to.push(id_from);
+                            })
+                        }
+                        
+                        nodes.update({
+                            id: edge_obj.to,
+                            activity_ids: activity_ids_to
+                        });
+                    }
+                    else if(clicked_node.id === edge_obj.to) {
+                        // expanding up-wards
+                        if(clicked_node['type_name'] === 'Activity') {
+                            if (!activity_ids_from.includes(clicked_node.id))
+                                activity_ids_from.push(clicked_node.id);
+                        } else {
+                            if(from_node['type_name'] === 'Activity') {
+                                if (!activity_ids_to.includes(from_node.id))
+                                    activity_ids_to.push(from_node.id);
+                                nodes.update({
+                                    id: edge_obj.to,
+                                    activity_ids: activity_ids_to
+                                });
+                            }
+                            else {
+                                activity_ids_to.forEach( id_to => {
+                                    if(!activity_ids_from.includes(id_to))
+                                        activity_ids_from.push(id_to);
+                                })
+                                nodes.update({
+                                    id: edge_obj.from,
+                                    activity_ids: activity_ids_from
+                                });
+                            }
+                        }
+                        
+                    }
+                }
+            }
         }
     }
 }
