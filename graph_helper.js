@@ -72,7 +72,7 @@ function hide_node_right_click_function() {
 }
 
 function highlight_node_right_click_function() {
-    hide_all_the_other_annotation_nodes();
+    highlight_annotation_node();
     $(".custom-context-menu").hide(100);
 }
 
@@ -593,6 +593,19 @@ function apply_layout(layout_name) {
     }
 }
 
+function remove_hidden_edges() {
+    // remove edges that are not visible because one of the connected nodes has been removed
+    let edges_to_remove = edges.get({
+        filter: function (item) {
+            from_node = nodes.get(item.from);
+            to_node = nodes.get(item.to);
+            return ((from_node !== null && from_node.hasOwnProperty("hidden") && from_node.hidden) ||
+                (to_node !== null && to_node.hasOwnProperty("hidden") && to_node.hidden));
+        }
+    });
+    edges.remove(edges_to_remove);
+}
+
 function remove_unused_edges() {
     // remove edges that are not visible because one of the connected nodes has been removed
     let edges_to_remove = edges.get({
@@ -835,9 +848,7 @@ function show_right_clicked_hidden_nodes() {
     $('#right-click-hide-button').prop("disabled", true);
 }
 
-function hide_all_the_other_annotation_nodes() {
-    // let right_clicked_node_obj = nodes.get(right_clicked_node);
-
+function highlight_annotation_node() {
     const activity_node_list = nodes.get({
         filter: function (item) {
             return (item.hasOwnProperty("type_name") && item.type_name === "Activity" && item.id !== right_clicked_node);
@@ -877,6 +888,7 @@ function hide_all_the_other_annotation_nodes() {
 
     });
     remove_unused_edges();
+    remove_hidden_edges();
     $('#right-click-hide-button').prop("disabled", false);
 }
 
