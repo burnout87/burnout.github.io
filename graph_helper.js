@@ -603,7 +603,41 @@ function remove_unused_edges() {
     edges.remove(edges_to_remove);
 }
 
+function query_node_type(node_id) {
+    let type_extracted = "";
+    
+    myEngine.queryBindings(`
+    SELECT DISTINCT ?node_type_extracted
+    {
+        ?node_id rdf:type ?node_type .
 
+        FILTER ( STR(?node_id) = '${node_id}' ) .
+
+        BIND(STRAFTER(STR(?node_type), "#") AS ?node_type_extracted) .
+        
+    }`,
+    {
+        sources: [store_full_graph],
+    }).then(function (typeBindingsStreamCall) {
+        typeBindingsStreamCall.on('data', function (data) {
+            type_extracted = data.get('node_type_extracted').value;
+            console.log(`Type of node ${node_id} extracted is ${type_extracted}`);
+        });
+    });;
+
+    // typeBindingsStreamCall.on('data', (binding) => {
+    //     type_extracted = binding.get('node_type_extracted').value;
+    // });
+    // typeBindingsStreamCall.on('end', () => {
+    //     console.log(`Type of node ${node_id} extracted`);
+    // });
+    // typeBindingsStreamCall.on('error', (error) => {
+    //     console.error(error);
+    // });
+    
+
+    return type_extracted;
+}
 
 function reset_legend() {
     let span_config_list = document.querySelectorAll('[id^="span_"]');
@@ -1529,10 +1563,18 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                 if(to_node !== undefined && to_node !== null && from_node !== undefined && from_node !== null) {
                     activity_ids_from = from_node['activity_ids'] ? from_node['activity_ids'] : [];
                     activity_ids_to = to_node['activity_ids'] ? to_node['activity_ids'] : [];
+                    
+                    let clicked_node_type = clicked_node['type_name']
+                    if (clicked_node_type === undefined && clicked_node.id.indexOf('activities'))
+                        clicked_node_type = 'Activity';
+                    let from_node_type = from_node['type_name']
+                    if (from_node_type === undefined && from_node.id.indexOf('activities'))
+                        from_node_type = 'Activity';
+                    // const to_node_type = query_node_type(to_node.id);
 
                     if(clicked_node.id === edge_obj.from) {
                         // expanding down-wards
-                        if(clicked_node['type_name'] === 'Activity') {
+                        if(clicked_node_type === 'Activity') {
                             if (!activity_ids_to.includes(clicked_node.id))
                                 activity_ids_to.push(clicked_node.id);
                         }
@@ -1550,11 +1592,11 @@ function process_binding(binding, clicked_node, apply_invisibility_new_nodes) {
                     }
                     else if(clicked_node.id === edge_obj.to) {
                         // expanding up-wards
-                        if(clicked_node['type_name'] === 'Activity') {
+                        if(clicked_node_type === 'Activity') {
                             if (!activity_ids_from.includes(clicked_node.id))
                                 activity_ids_from.push(clicked_node.id);
                         } else {
-                            if(from_node['type_name'] === 'Activity') {
+                            if(from_node_type === 'Activity') {
                                 if (!activity_ids_to.includes(from_node.id))
                                     activity_ids_to.push(from_node.id);
                                 nodes.update({
