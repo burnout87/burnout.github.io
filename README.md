@@ -9,6 +9,25 @@ The functionalities implemented within the `graph_helper.js` javascript module e
   * __subset selection of nodes__
   * __absorption/expansion of nodes__
 
+## Node Context Menu Functionalities
+
+When right-clicking on a node within the graph, a context menu appears as displayed in the image below.
+
+<div align="center">
+<img width="50%" src="readme_imgs/context_menu.png">
+</div>
+
+The context menu offers two primary actions:
+
+* __Hide a Node__: This option allows users to hide the selected node. Hidden nodes can be unhidden using the dedicated button "Show hidden nodes".
+
+* __Highlight node__: This option is currently implemented only for __Activity__ nodes. Choosing this option results in hiding all the nodes of this type within the graph, except the selected one. The highlight operation results in hiding also all the nodes that are related to the activities which nodes have been hidden. This feature helps users focus on a specific __Activity__. The animation below shows an example of an highlighting operation.
+
+<div align="center">
+<img width="50%" src="readme_imgs/highligh_animation.gif">
+</div>
+
+
 ## Graph configurations
 
 ### __graphical__
