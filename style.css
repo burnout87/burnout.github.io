@@ -152,3 +152,8 @@ h3 {
 .custom-context-menu li:hover {
     background-color: #DEF;
 }
+
+#githubIssueLink {
+    text-decoration-line: none;
+    color: #fff;
+}

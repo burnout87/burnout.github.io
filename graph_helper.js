@@ -56,6 +56,15 @@ var legend_content_main;
 var context_menu;
 var right_clicked_node;
 
+function includeTitleGithubIssueLink() {
+    var github_issue_link = document.getElementById("githubIssueLink");
+    if (github_issue_link !== null) {
+        let body_content = "Suggestion for the graph:<br /><br />";
+        github_issue_link.href = "https://github.com/oda-hub/renku-aqs-graph-library/issues/new?labels=graph+suggestion&amp;title=Suggestion+for+the+graph&body=" + body_content;
+    }
+}
+  
+
 function set_context_menu_style(context_menu_element, defaultColor, hoverColor) {
     context_menu_element.style.background = defaultColor;
     context_menu_element.addEventListener('mouseover', () => {
