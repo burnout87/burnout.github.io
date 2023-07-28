@@ -157,6 +157,14 @@ For the `Activity` nodes.
 <img width="75%" src="readme_imgs/expanded_reduced_activity_animation.gif">
 </div>
 
+# Provide Feedback
+
+If you would like to provide feedback or report a bug during usage, you can do so by using the "Make a Suggestion" button located at the top right corner. Clicking on this button will open a dedicated issue on this repository where you can share your feedback or report the bug. Our development team will be notified and ready to assist you.
+
+<div align="center">
+<img width="75%" src="readme_imgs/make_suggestion_button.png">
+</div>
+
 
 # Library usage
 
@@ -176,3 +184,6 @@ The following javascript libraries have been used:
 * [N3](https://github.com/rdfjs/N3.js/) - a library that offers the functionalities to handle RDF, in particular to 
 perform operations of parsing, writing and storing triples in several various formats (eg Turtle, TriG, N-Triples, N-Quads to name some), 
 * [Comunica](https://github.com/comunica/comunica) - for querying the graph
+
+
+
