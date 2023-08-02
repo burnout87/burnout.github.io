@@ -1,17 +1,18 @@
 # renku-aqs-graph-library
 
-The functionalities implemented within the `graph_helper.js` javascript module enable the interaction with the graph, as well as its graphical behavior. In particular:
+This javascript library serves as the component that enables user interaction with the project Knowledge Graph and controls its graphical behavior. It is to be used in conjunction with the renku plugin [`renkgu-graph-vis`](https://github.com/oda-hub/renku-graph-vis/), which main output is indeed an interactive representation of the graph.
 
-* __graph drawing__: draw the graph starting from an export of the graph, currently `ttl` format is supported
-* __graph user-interaction__: 
-  * query the triples, thus drawing the relative nodes and edges directly connected to the clicked node
-  * hide or highlight user selected node using a dedicated context menu
-* __graph customization__: various types of configuration can be applied:
+In particular, the main functionalities offered are:
+
+* `graph drawing`: draw the graph starting from an export of the graph, currently `ttl` format is supported.
+* `graph user-interaction`: 
+  * query the triples, thus drawing the relative nodes and edges directly connected to the clicked node.
+  * hide or highlight user selected node using a dedicated context menu.
+* `graph configuration`: various types of configuration can be applied:
   * __graphical__
   * __subset selection of nodes__
   * __absorption/expansion of nodes__
 
-This library is to be used in conjunction with the renku plugin [`renkgu-graph-vis`](https://github.com/oda-hub/renku-graph-vis/), which main output is an interactive representation of the project Knowledge Graph.
 
 ## Node context menu functionalities
 
