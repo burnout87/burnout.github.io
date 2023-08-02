@@ -1165,8 +1165,16 @@ function format_full_graph_query() {
     
         ?activity a ?activityType ;
             <http://www.w3.org/ns/prov#startedAtTime> ?activityTime ;
+            <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?action_activity ;
             <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan>/<https://swissdatasciencecenter.github.io/renku-ontology#command> ?activityCommand ;
             <http://www.w3.org/ns/prov#qualifiedUsage>/<http://www.w3.org/ns/prov#entity> ?entityInput .
+
+        FILTER(
+            !EXISTS {
+                ?action_removed <http://www.w3.org/ns/prov#wasDerivedFrom> ?action_activity ;
+                    <http://www.w3.org/ns/prov#invalidatedAtTime> ?invalidationTime .
+            }
+        )
 
         OPTIONAL 
         {
